@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+{% load staticfiles %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!--- Boostrap --->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <title>Title</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+<!--         Main div - contains everything        -->
+        <div class="row">
+
+<!--            column containing question description-->
+            <div class="col-md-3 bg-dark text-white border border-white rounded-lg">
+            <h1>Question page</h1>
+            This section will be filled with text describing the question.
+
+            </div>
+<!--                column containing interative section-->
+            <div class="col-md-9 bg-dark text-white border border-white rounded-lg">
+<!--                Input and output row-->
+                <div class="row">
+
+<!--                    input col-->
+                    <div class="col-md-8 bg-dark text-white border border-white rounded-lg">
+
+<!--                        tabs-->
+                        <div class="row">
+                            <div class="tab col-md-4 p-2 border border-white rounded-lg" data-file="textarea1">File1</div>
+                            <div class="tab col-md-4 p-2 border border-white rounded-lg" data-file="textarea2">File2</div>
+                            <div class="tab col-md-4 p-2 border border-white rounded-lg" data-file="textarea3">File3</div>
+                        </div>
+
+                        <div class="row">
+                            <div style="width:100%;">
+                                <textarea class="textarea form-control" id="textarea1" rows="20">Test1</textarea>
+                            </div>
+                            <div style="width:100%;">
+                                <textarea class="textarea form-control" style="display:none;" id="textarea2" rows="20">Test2</textarea>
+                            </div>
+                            <div style="width:100%;">
+                                <textarea class="textarea form-control" style="display:none;" type="hidden" id="textarea3" rows="20">Test3</textarea>
+                            </div>
+                        </div>
+
+<!--                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="20">Test1</textarea>-->
+<!--                        </div>-->
+
+                    </div>
+<!--                    output col -->
+                    <div class="col-md-4 bg-dark text-white border border-white rounded-lg">
+                        <h5>Output</h5>
+                    </div>
+                </div>
+
+<!--                Submission button row-->
+                <div class="row">
+                    <div class="col-md-8">
+                        <button type="button" class="btn btn-primary float-right m-2">Submit</button>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+<!--    <img src="{% static 'images/yoshi.jpg' %}"-->
+<!--         alt="Picture of yoshi" />-->
+
+
+<!--    - js CDNs- -->
+
+<!--    - JQuery - -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+
+<!--    JQuery functions for question.html-->
+    <script src="{% static 'js/question-jquery.js' %}" crossorigin="anonymous"></script>
+
+<!--    - Boostrap - -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+
+<!--&lt;!&ndash;    Util.js&ndash;&gt;-->
+<!--    <script src="{% static 'js/util.js' %}" crossorigin="anonymous"></script>-->
+
+<!--    - Popper.js - -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+</body>
+
+
+</html>
