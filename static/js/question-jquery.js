@@ -1,9 +1,9 @@
 $(document).ready(function(){
 
      $(".tab").hover(function(){
-        $(this).addClass('bg-secondary');
+        $(this).addClass('highlightGray');
      }, function(){
-        $(this).removeClass('bg-secondary');
+        $(this).removeClass('highlightGray');
      });
 
     // when a tab is clicked
@@ -13,7 +13,7 @@ $(document).ready(function(){
         var targetTab;
         targetTab = $(this).attr('data-file');
 
-        $(".tab").css('background-color', 'darkslategray');
+        $(".tab").css('background-color', '#424242');
 
 
         // hide all text areas
@@ -23,7 +23,7 @@ $(document).ready(function(){
 
         // show the selected area
         $("#" + targetTab).show();
-        this.style.setProperty('background-color', 'darkgray');
+        this.style.setProperty('background-color', '#828282');
 
 
     });
