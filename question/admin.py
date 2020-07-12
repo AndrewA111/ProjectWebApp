@@ -1,6 +1,5 @@
 from django.contrib import admin
-from question.models import Question, QuestionFiles, File
+from question.models import Question, File
 
 admin.site.register(Question)
-admin.site.register(QuestionFiles)
 admin.site.register(File)

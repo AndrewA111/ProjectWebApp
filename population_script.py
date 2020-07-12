@@ -1,25 +1,50 @@
 import os
 import project_web_app.settings
-import pprint
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project_web_app.settings')
 
 import django
 django.setup()
+
+import pprint
+from question.models import File, Question
+from django.db import models
+
 
 def populate():
 
     root = project_web_app.settings.BASE_DIR
     questions = os.path.join(root, 'questionFiles')
 
-    # ArrayList question
+    # loop through directories containing questions
+    for questionDir in getQuestions(questions):
 
-    # folder
-    arrayListFolder = os.path.join(questions, 'arrayList')
+        # get question dir path
+        questionPath = os.path.join(questions, questionDir)
 
-    arrayListDetails = readQuestionFiles(arrayListFolder)
-    pprint.pprint(arrayListDetails)
+        # read relevant files from dir
+        questionDetails = readQuestionFiles(questionPath)
 
+        # pretty print data for debugging
+        # pprint.pprint(questionDetails)
+
+        # make question
+        question = add_question(questionDir, questionDetails['testFile']['contents'])
+
+        # loop through files and create file objects
+        for file in questionDetails['questionFiles']:
+            add_file(question, file['name'], file['contents'])
+
+
+def add_question(name, testFile):
+    q, created = Question.objects.get_or_create(name=name, testFile=testFile)
+    q.save()
+    return q
+
+
+def add_file(question, name, contents):
+    f, created = File.objects.get_or_create(question=question, name=name, contents=contents)
+    f.save()
+    return f
 
 
 # function to return details of question files
@@ -53,6 +78,17 @@ def readQuestionFiles(questionDir):
     return fileDetails
 
 
+# method to get list of question folders given the containing dir
+def getQuestions(questionsDir):
+
+    dirList = []
+
+    # loop through dir
+    for file in os.listdir(questionsDir):
+        dirList.append(file)
+
+    return dirList
+
 
 def readFile(fileName, questionDir):
 
@@ -64,13 +100,4 @@ def readFile(fileName, questionDir):
 
 
 if __name__ == '__main__':
-
-    # test code to open files
-    # root = project_web_app.settings.BASE_DIR
-    # questions = os.path.join(root, 'questionFiles')
-    # questionFolder = os.path.join(questions, 'calculator')
-    # question = os.path.join(questionFolder, 'Calculator.java')
-    # output = readFile(question)
-    # print(output)
-
     populate()
