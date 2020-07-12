@@ -20,7 +20,7 @@
 
 <!--            column containing question description-->
             <div class="col-md-3 mainGray text-white border border-white rounded-lg">
-            <h1>Question page</h1>
+            <h1>{{ question.name }}</h1>
             This section will be filled with text describing the question.
 
             </div>
@@ -34,21 +34,36 @@
 
 <!--                        tabs-->
                         <div class="row">
-                            <div class="tab col-md-4 p-2 border border-white rounded-lg" data-file="textarea1">File1</div>
-                            <div class="tab col-md-4 p-2 border border-white rounded-lg" data-file="textarea2">File2</div>
-                            <div class="tab col-md-4 p-2 border border-white rounded-lg" data-file="textarea3">File3</div>
+                            {% for file in files %}
+                            <div class="tab col-md-4 p-2 border border-white rounded-lg" data-file="textarea{{ forloop.counter }}">{{ file.name }}</div>
+                            {% endfor %}
+<!--                            <div class="tab col-md-4 p-2 border border-white rounded-lg" data-file="textarea1">File1</div>-->
+<!--                            <div class="tab col-md-4 p-2 border border-white rounded-lg" data-file="textarea2">File2</div>-->
+<!--                            <div class="tab col-md-4 p-2 border border-white rounded-lg" data-file="textarea3">File3</div>-->
                         </div>
 
                         <div class="row">
+
+                            {% for file in files %}
                             <div style="width:100%;">
-                                <textarea class="textarea form-control" id="textarea1" rows="20">Test1</textarea>
+                                {% if forloop.counter == 1 %}
+                                <textarea class="textarea form-control" id="textarea{{ forloop.counter }}" rows="20">{{ file.contents }}</textarea>
+                                {% else %}
+                                <textarea class="textarea form-control" style="display:none;" id="textarea{{ forloop.counter }}" rows="20">{{ file.contents }}</textarea>
+                                {% endif %}
+
+
                             </div>
-                            <div style="width:100%;">
-                                <textarea class="textarea form-control" style="display:none;" id="textarea2" rows="20">Test2</textarea>
-                            </div>
-                            <div style="width:100%;">
-                                <textarea class="textarea form-control" style="display:none;" type="hidden" id="textarea3" rows="20">Test3</textarea>
-                            </div>
+                            {% endfor %}
+<!--                            <div style="width:100%;">-->
+<!--                                <textarea class="textarea form-control" id="textarea1" rows="20">Test1</textarea>-->
+<!--                            </div>-->
+<!--                            <div style="width:100%;">-->
+<!--                                <textarea class="textarea form-control" style="display:none;" id="textarea2" rows="20">Test2</textarea>-->
+<!--                            </div>-->
+<!--                            <div style="width:100%;">-->
+<!--                                <textarea class="textarea form-control" style="display:none;" type="hidden" id="textarea3" rows="20">Test3</textarea>-->
+<!--                            </div>-->
                         </div>
 
 <!--                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="20">Test1</textarea>-->
