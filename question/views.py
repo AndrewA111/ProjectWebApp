@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from question.models import Question, File
+from question.forms import SubmissionFileForm
 from django.forms.models import model_to_dict
 from django.core import serializers
 
@@ -38,6 +39,15 @@ def question(request):
     # get files
     files = File.objects.filter(question=question_obj)
 
+    file_forms = []
+
+    for file in files:
+        file_forms.append({'file': file, 'form': SubmissionFileForm(initial={'name': file.name, 'contents': file.contents})})
+        # file_forms[file.name] = SubmissionFileForm(initial={'name': "test1", 'contents': "test2"})
+        print('test', file.name, file.contents)
+
+    form = SubmissionFileForm(initial={'name': "test1", 'contents': "test2"})
+
     # testing
     for file in files:
         file_dict = model_to_dict(file)
@@ -46,7 +56,11 @@ def question(request):
     # create context dict to pass to template
     context_dict = {
         'question': question_obj,
-        'files': files
+        'files': files,
+        # test only
+        'form': form,
+        # actual forms
+        'file_forms': file_forms
     }
 
     return render(request, 'question/question.html', context=context_dict)

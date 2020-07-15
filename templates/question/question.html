@@ -34,27 +34,61 @@
 
 <!--                        tabs-->
                         <div class="row">
-                            {% for file in files %}
-                            <div class="tab col-md-4 p-2 border border-white rounded-lg" data-file="textarea{{ forloop.counter }}">{{ file.name }}</div>
+                            {% for file_form in file_forms %}
+                            <div class="tab col-md-4 p-2 border border-white rounded-lg" data-file="textarea{{ forloop.counter }}">{{ file_form.file.name }}</div>
                             {% endfor %}
-<!--                            <div class="tab col-md-4 p-2 border border-white rounded-lg" data-file="textarea1">File1</div>-->
-<!--                            <div class="tab col-md-4 p-2 border border-white rounded-lg" data-file="textarea2">File2</div>-->
-<!--                            <div class="tab col-md-4 p-2 border border-white rounded-lg" data-file="textarea3">File3</div>-->
                         </div>
 
                         <div class="row">
-
-                            {% for file in files %}
                             <div style="width:100%;">
-                                {% if forloop.counter == 1 %}
-                                <textarea class="textarea form-control" id="textarea{{ forloop.counter }}" rows="20">{{ file.contents }}</textarea>
-                                {% else %}
-                                <textarea class="textarea form-control" style="display:none;" id="textarea{{ forloop.counter }}" rows="20">{{ file.contents }}</textarea>
-                                {% endif %}
+<!--                            <form>-->
 
 
+
+                                {% for file_form in file_forms %}
+                                    {% if forloop.counter == 1 %}
+                                    <div class="textarea" id="textarea{{ forloop.counter }}">
+                                    {% else %}
+                                    <div class="textarea" style="display:none;" id="textarea{{ forloop.counter }}">
+                                    {% endif %}
+                                    {% for hidden in file_form.form.hidden_fields %}
+                                        {{ hidden }}
+                                    {% endfor %}
+                                    {% for field in file_form.form.visible_fields %}
+                                        {{ field.errors }}
+                                        {{ field.errors }}
+                                        {{ field }}
+                                    {% endfor %}
+                                    </div>
+                                {% endfor %}
+
+
+
+<!--                            {% for file_form in file_forms %}-->
+<!--                            {% for hidden in file_form.hidden_fields %}-->
+<!--                                { hidden }-->
+<!--                            {% endfor %}-->
+<!--                            {% for field in file_form.visible_fields %}-->
+<!--                                {{ field.errors }}-->
+<!--                                {{ field.errors }}-->
+<!--                                {{ field }}-->
+<!--                            {% endfor %}-->
+<!--                            {% endfor %}-->
+<!--                            </form>-->
                             </div>
-                            {% endfor %}
+
+
+<!--                            {% for file in files %}-->
+<!--                            <div style="width:100%;">-->
+<!--                                {% if forloop.counter == 1 %}-->
+<!--                                <textarea class="textarea form-control" id="textarea{{ forloop.counter }}" rows="20">{{ file.contents }}</textarea>-->
+<!--                                {% else %}-->
+<!--                                <textarea class="textarea form-control" style="display:none;" id="textarea{{ forloop.counter }}" rows="20">{{ file.contents }}</textarea>-->
+<!--                                {% endif %}-->
+
+
+<!--                            <div style="width:100%;">-->
+<!--                            {% endfor %}-->
 <!--                            <div style="width:100%;">-->
 <!--                                <textarea class="textarea form-control" id="textarea1" rows="20">Test1</textarea>-->
 <!--                            </div>-->
@@ -73,6 +107,14 @@
 <!--                    output col -->
                     <div class="col-md-4 mainGray text-white border border-white rounded-lg">
                         <h5>Output</h5>
+                        {% for hidden in form.hidden_fields %}
+                            { hidden }
+                        {% endfor %}
+                        {% for field in form.visible_fields %}
+                            {{ field.errors }}
+                            {{ field.errors }}
+                            {{ field }}
+                        {% endfor %}
                     </div>
                 </div>
 
