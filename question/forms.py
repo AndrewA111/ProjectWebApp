@@ -7,13 +7,9 @@ from question.models import SubmissionFile, Submission
 
 class SubmissionFileForm(forms.ModelForm):
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE, default=None)
-    name = forms.CharField(max_length=32)
-    contents = forms.CharField(widget=forms.Textarea)
+    name = forms.CharField(widget=forms.HiddenInput(), max_length=32)
+    contents = forms.CharField(widget=forms.Textarea(attrs={'style': 'width: 100%;', 'rows': '20'}))
 
     class Meta:
         model = SubmissionFile
         exclude = ('submission',)
-
-
-def CreateSubmissionFormset(n):
-    return formset_factory(SubmissionFileForm, extra=n)

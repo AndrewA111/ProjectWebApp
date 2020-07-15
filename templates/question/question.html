@@ -47,57 +47,26 @@
 
                                 {% for file_form in file_forms %}
                                     {% if forloop.counter == 1 %}
-                                    <div class="textarea" id="textarea{{ forloop.counter }}">
+                                    <div class="textarea" style="width=100%;" id="textarea{{ forloop.counter }}">
                                     {% else %}
-                                    <div class="textarea" style="display:none;" id="textarea{{ forloop.counter }}">
+                                    <div class="textarea" style="display:none; width=100%;" id="textarea{{ forloop.counter }}">
                                     {% endif %}
                                     {% for hidden in file_form.form.hidden_fields %}
                                         {{ hidden }}
                                     {% endfor %}
-                                    {% for field in file_form.form.visible_fields %}
-                                        {{ field.errors }}
-                                        {{ field.errors }}
-                                        {{ field }}
-                                    {% endfor %}
+
+                                    {{ file_form.form.contents.errors }}
+                                    {{ file_form.form.contents.help_text }}
+                                    {{ file_form.form.contents }}
+
                                     </div>
                                 {% endfor %}
 
-
-
-<!--                            {% for file_form in file_forms %}-->
-<!--                            {% for hidden in file_form.hidden_fields %}-->
-<!--                                { hidden }-->
-<!--                            {% endfor %}-->
-<!--                            {% for field in file_form.visible_fields %}-->
-<!--                                {{ field.errors }}-->
-<!--                                {{ field.errors }}-->
-<!--                                {{ field }}-->
-<!--                            {% endfor %}-->
-<!--                            {% endfor %}-->
 <!--                            </form>-->
                             </div>
 
 
-<!--                            {% for file in files %}-->
-<!--                            <div style="width:100%;">-->
-<!--                                {% if forloop.counter == 1 %}-->
-<!--                                <textarea class="textarea form-control" id="textarea{{ forloop.counter }}" rows="20">{{ file.contents }}</textarea>-->
-<!--                                {% else %}-->
-<!--                                <textarea class="textarea form-control" style="display:none;" id="textarea{{ forloop.counter }}" rows="20">{{ file.contents }}</textarea>-->
-<!--                                {% endif %}-->
 
-
-<!--                            <div style="width:100%;">-->
-<!--                            {% endfor %}-->
-<!--                            <div style="width:100%;">-->
-<!--                                <textarea class="textarea form-control" id="textarea1" rows="20">Test1</textarea>-->
-<!--                            </div>-->
-<!--                            <div style="width:100%;">-->
-<!--                                <textarea class="textarea form-control" style="display:none;" id="textarea2" rows="20">Test2</textarea>-->
-<!--                            </div>-->
-<!--                            <div style="width:100%;">-->
-<!--                                <textarea class="textarea form-control" style="display:none;" type="hidden" id="textarea3" rows="20">Test3</textarea>-->
-<!--                            </div>-->
                         </div>
 
 <!--                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="20">Test1</textarea>-->
@@ -107,14 +76,6 @@
 <!--                    output col -->
                     <div class="col-md-4 mainGray text-white border border-white rounded-lg">
                         <h5>Output</h5>
-                        {% for hidden in form.hidden_fields %}
-                            { hidden }
-                        {% endfor %}
-                        {% for field in form.visible_fields %}
-                            {{ field.errors }}
-                            {{ field.errors }}
-                            {{ field }}
-                        {% endfor %}
                     </div>
                 </div>
 
@@ -133,8 +94,6 @@
 
     </div>
 
-<!--    <img src="{% static 'images/yoshi.jpg' %}"-->
-<!--         alt="Picture of yoshi" />-->
 
 
 <!--    - js CDNs- -->

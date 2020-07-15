@@ -42,11 +42,10 @@ def question(request):
     file_forms = []
 
     for file in files:
-        file_forms.append({'file': file, 'form': SubmissionFileForm(initial={'name': file.name, 'contents': file.contents})})
-        # file_forms[file.name] = SubmissionFileForm(initial={'name': "test1", 'contents': "test2"})
+        #  store each file, along with a form, pre-populated with that file's name and contents
+        # set prefix to differentiate forms on frontend
+        file_forms.append({'file': file, 'form': SubmissionFileForm(initial={'name': file.name, 'contents': file.contents}, prefix=file.name)})
         print('test', file.name, file.contents)
-
-    form = SubmissionFileForm(initial={'name': "test1", 'contents': "test2"})
 
     # testing
     for file in files:
@@ -56,9 +55,6 @@ def question(request):
     # create context dict to pass to template
     context_dict = {
         'question': question_obj,
-        'files': files,
-        # test only
-        'form': form,
         # actual forms
         'file_forms': file_forms
     }
