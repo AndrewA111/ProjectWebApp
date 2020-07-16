@@ -11,3 +11,7 @@
 .selectedGray{
     background-color: #828282;
 }
+
+.fillheight{
+    height: 100vh;
+}

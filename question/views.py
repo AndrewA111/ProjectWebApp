@@ -27,30 +27,36 @@ def index(request):
 #
 #     return render(request, 'question/index.html', context=context_dict)
 
-def question(request):
+def question(request, question_slug):
 
     # get question
-    question_obj = Question.objects.get(name='arrayList')
+    question_obj = Question.objects.get(slug=question_slug)
 
-    # testing
-    question_dict = model_to_dict(question_obj)
-    print(question_dict)
+    if(request.method == 'POST'):
+        print(dict(request.POST.lists()))
+
+
+
+    # # testing
+    # question_dict = model_to_dict(question_obj)
+    # print(question_dict)
 
     # get files
     files = File.objects.filter(question=question_obj)
 
     file_forms = []
 
-    for file in files:
+    # loop through files, enumerate to give index to use for prefix
+    for counter, file in enumerate(files):
         #  store each file, along with a form, pre-populated with that file's name and contents
         # set prefix to differentiate forms on frontend
-        file_forms.append({'file': file, 'form': SubmissionFileForm(initial={'name': file.name, 'contents': file.contents}, prefix=file.name)})
-        print('test', file.name, file.contents)
+        file_forms.append({'file': file, 'form': SubmissionFileForm(initial={'name': file.name, 'contents': file.contents}, prefix="file" + str(counter))})
+        # print('test', file.name, file.contents)
 
     # testing
     for file in files:
         file_dict = model_to_dict(file)
-        print(file_dict)
+        # print(file_dict)
 
     # create context dict to pass to template
     context_dict = {

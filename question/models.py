@@ -1,10 +1,23 @@
 from django.db import models
+from django.template.defaultfilters import slugify
 
 
 # Model to store question data
 class Question(models.Model):
+
+    # question name
     name = models.CharField(max_length=128)
+
+    # test file (contents)
     testFile = models.TextField(default=None)
+
+    # slug for urls
+    slug = models.SlugField(default=None, unique=True)
+
+    # update the slug whenever Quesiton is created/changed
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Question, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name

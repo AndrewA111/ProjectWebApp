@@ -16,7 +16,8 @@
     <div class="container-fluid">
 
 <!--         Main div - contains everything        -->
-        <div class="row">
+        <div class="row fillheight
+">
 
 <!--            column containing question description-->
             <div class="col-md-3 mainGray text-white border border-white rounded-lg">
@@ -25,7 +26,9 @@
 
             </div>
 <!--                column containing interative section-->
+
             <div class="col-md-9 mainGray text-white border border-white rounded-lg">
+                <form id="submission_form" method="post" action="/question/">
 <!--                Input and output row-->
                 <div class="row">
 
@@ -41,29 +44,28 @@
 
                         <div class="row">
                             <div style="width:100%;">
-<!--                            <form>-->
 
+                                    {% for file_form in file_forms %}
 
+                                        {% if forloop.counter == 1 %}
+                                        <div class="textarea" style="width=100%;" id="textarea{{ forloop.counter }}">
+                                        {% else %}
+                                        <div class="textarea" style="display:none; width=100%;" id="textarea{{ forloop.counter }}">
+                                        {% endif %}
+                                        {% csrf_token %}
+                                        {% for hidden in file_form.form.hidden_fields %}
+                                            {{ hidden }}
+                                        {% endfor %}
 
-                                {% for file_form in file_forms %}
-                                    {% if forloop.counter == 1 %}
-                                    <div class="textarea" style="width=100%;" id="textarea{{ forloop.counter }}">
-                                    {% else %}
-                                    <div class="textarea" style="display:none; width=100%;" id="textarea{{ forloop.counter }}">
-                                    {% endif %}
-                                    {% for hidden in file_form.form.hidden_fields %}
-                                        {{ hidden }}
+                                        {{ file_form.form.contents.errors }}
+                                        {{ file_form.form.contents.help_text }}
+                                        {{ file_form.form.contents }}
+                                        </div>
+
                                     {% endfor %}
-
-                                    {{ file_form.form.contents.errors }}
-                                    {{ file_form.form.contents.help_text }}
-                                    {{ file_form.form.contents }}
-
                                     </div>
-                                {% endfor %}
 
-<!--                            </form>-->
-                            </div>
+
 
 
 
@@ -82,15 +84,17 @@
 <!--                Submission button row-->
                 <div class="row">
                     <div class="col-md-8">
-                        <button type="button" class="btn btn-primary float-right m-2">Submit</button>
+                        <button type="submit" name="submit" class="btn btn-primary float-right m-2">Submit</button>
                     </div>
 
                 </div>
 
 
             </div>
+            </form>
 
         </div>
+
 
     </div>
 
