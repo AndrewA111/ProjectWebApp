@@ -6,7 +6,7 @@ from question.models import SubmissionFile, Submission
 
 
 class SubmissionFileForm(forms.ModelForm):
-    submission = models.ForeignKey(Submission, on_delete=models.CASCADE, default=None)
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE, default=None, null=True)
     name = forms.CharField(widget=forms.HiddenInput(), max_length=32)
     contents = forms.CharField(widget=forms.Textarea(attrs={'style': 'width: 100%; height: 80vh', 'rows': '20'}))
 

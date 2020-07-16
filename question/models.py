@@ -51,7 +51,7 @@ class Submission(models.Model):
 class SubmissionFile(models.Model):
 
     # associated submission
-    submission = models.ForeignKey(Submission, on_delete=models.CASCADE, default=None)
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE, default=None, null=True)
 
     # file name
     name = models.CharField(max_length=32)

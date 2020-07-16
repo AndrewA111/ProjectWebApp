@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from question.models import Question, File
+from question.models import Question, File, Submission
 from question.forms import SubmissionFileForm
 from django.forms.models import model_to_dict
 from django.core import serializers
@@ -32,17 +32,36 @@ def question(request, question_slug):
     # get question
     question_obj = Question.objects.get(slug=question_slug)
 
+    # get files
+    files = File.objects.filter(question=question_obj)
+
     if(request.method == 'POST'):
         print(dict(request.POST.lists()))
 
+        form_submissions = [];
 
+        submission = Submission.objects.get_or_create(question=question_obj)
+        submission[0].save()
+
+        for i in range(files.count()):
+            form_submissions.append(SubmissionFileForm(request.POST, prefix="file" + str(i)))
+
+        for i in range(files.count()):
+            if form_submissions[i].is_valid():
+                submission_file = form_submissions[i].save(commit=False)
+                # print("Submissing Q name: " + submission[0].question.name + str(submission[0].question.id))
+                # print("Submission id: " + str(submission[0].id))
+                submission_file.submission = submission[0]
+                # print("FormSubmission[i].question " + form_submissions[i].submission.question.name)
+                submission_file.save()
+
+        return render(request, '')
 
     # # testing
     # question_dict = model_to_dict(question_obj)
     # print(question_dict)
 
-    # get files
-    files = File.objects.filter(question=question_obj)
+
 
     file_forms = []
 
