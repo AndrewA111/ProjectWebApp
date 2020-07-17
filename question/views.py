@@ -4,6 +4,11 @@ from question.models import Question, File, Submission
 from question.forms import SubmissionFileForm
 from django.forms.models import model_to_dict
 from django.core import serializers
+import json
+import requests
+
+# URL to submit questions
+API_URL = "http://localhost:8080/java/submit"
 
 
 def index(request):
@@ -51,6 +56,11 @@ def question(request, question_slug):
         # list to store updated forms containing submitted files
         file_forms = []
 
+        # dict to send to API
+        API_dict = {
+            'files': []
+        }
+
         # build a form for each submitted file
         for i in range(files.count()):
             form_submissions.append(SubmissionFileForm(request.POST, prefix="file" + str(i)))
@@ -72,6 +82,23 @@ def question(request, question_slug):
                                    'form': SubmissionFileForm(initial={'name': submission_file.name,
                                                                        'contents': submission_file.contents},
                                                               prefix="file" + str(i))})
+
+                # add submitted files to submission dict
+                API_dict['files'].append({
+                    'name': submission_file.name,
+                    'content': submission_file.contents
+                })
+
+                API_dict['files'].append({
+                    'name': "Tests.java",
+                    'content': question_obj.testFile
+                })
+
+        # print("To send to API: " + json.dumps(API_dict))
+
+        results = requests.post(url=API_URL, json=API_dict)
+
+        print(results.content)
 
         # create context dict to pass to template
         context_dict = {
@@ -109,3 +136,5 @@ def question(request, question_slug):
 
         # render question with default/original files
         return render(request, 'question/question.html', context=context_dict)
+
+
