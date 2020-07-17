@@ -39,6 +39,7 @@ class File(models.Model):
         return self.name
 
 
+# Model to represent a question submission
 class Submission(models.Model):
 
     # associated question
@@ -47,7 +48,7 @@ class Submission(models.Model):
     def __str__(self):
         return self.question.name
 
-
+# Model to represent a file submitted as part of a submission
 class SubmissionFile(models.Model):
 
     # associated submission
