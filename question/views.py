@@ -89,6 +89,7 @@ def question(request, question_slug):
                     'content': submission_file.contents
                 })
 
+                # add the test file
                 API_dict['files'].append({
                     'name': "Tests.java",
                     'content': question_obj.testFile
@@ -96,15 +97,23 @@ def question(request, question_slug):
 
         # print("To send to API: " + json.dumps(API_dict))
 
+        # make request
         results = requests.post(url=API_URL, json=API_dict)
 
         print(results.content)
 
+
+
         # create context dict to pass to template
         context_dict = {
+            # question
             'question': question_obj,
+
             # actual forms
-            'file_forms': file_forms
+            'file_forms': file_forms,
+
+            # results
+            'result': results.content
         }
 
         # render page showing submitted files
