@@ -102,6 +102,10 @@ def question(request, question_slug):
 
         print(results.content)
 
+        json_results = json.loads(results.content)
+
+        print(json_results)
+
 
 
         # create context dict to pass to template
@@ -113,7 +117,10 @@ def question(request, question_slug):
             'file_forms': file_forms,
 
             # results
-            'result': results.content
+            'result': results.content,
+
+            # json results
+            'json_results': json_results
         }
 
         # render page showing submitted files

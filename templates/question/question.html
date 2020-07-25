@@ -28,7 +28,7 @@
             This section will be filled with text describing the question.
 
             </div>
-<!--                column containing interative section-->
+<!--                column containing interactive section-->
 
             <div class="col-md-9 mainGray text-white border border-white rounded-lg">
                 <form id="submission_form" method="post" action="/question/{{ question.slug }}/">
@@ -80,8 +80,17 @@
                     </div>
 <!--                    output col -->
                     <div class="col-md-4 mainGray text-white border border-white rounded-lg">
-                        <h5>Test Results</h5>
-                        <p>{{ result }}</p>
+                        <h4 class="mt-1">Test Results</h4></br>
+<!--                        <p>{{ result }}</p>-->
+
+                        {% for key, values in json_results.items %}
+                        <div class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">
+                            <h6>{{ values.name }}</h6>
+                            <p>{{ values.description }}</p>
+                            <p>{{ values.passed }}</p>
+                            <strong><p class="redHighlight">{{ values.failureText }}</p></strong>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
 
