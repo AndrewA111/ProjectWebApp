@@ -19,8 +19,7 @@
     <div class="container-fluid">
 
 <!--         Main div - contains everything        -->
-        <div class="row fillheight
-">
+        <div class="row">
 
 <!--            column containing question description-->
             <div class="col-md-3 mainGray text-white border border-white rounded-lg">
@@ -144,6 +143,7 @@
 <!--        Codemirror (including clike mode file, which is used for java syntax-->
         <script src="{% static 'js/codemirror.js' %}" crossorigin="anonymous"></script>
         <script src="{% static 'js/clike.js' %}" crossorigin="anonymous"></script>
+        <script src="{% static 'js/autorefresh.js' %}" crossorigin="anonymous"></script>
 
 <!--    - Boostrap - -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
@@ -161,6 +161,7 @@
             var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
                                 lineNumbers: true,
                                 mode: "text/x-java",
+                                autoRefresh: true,
                               });
         {% endfor %}
     </script>
