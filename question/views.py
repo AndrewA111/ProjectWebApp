@@ -100,13 +100,20 @@ def question(request, question_slug):
         # make request
         results = requests.post(url=API_URL, json=API_dict)
 
-        print(results.content)
+        # print(results.content)
 
+        # get results
         json_results = json.loads(results.content)
 
         print(json_results)
 
+        # deserialize sub-object
+        try:
+            json_output = json.loads(json_results['output'])
+        except ValueError:
+            json_output = json_results['output']
 
+        json_errors = json_results['errors']
 
         # create context dict to pass to template
         context_dict = {
@@ -116,11 +123,11 @@ def question(request, question_slug):
             # actual forms
             'file_forms': file_forms,
 
-            # results
-            'result': results.content,
-
             # json results
-            'json_results': json_results
+            'output': json_output,
+
+            # json errors
+            'errors': json_errors
         }
 
         # render page showing submitted files
