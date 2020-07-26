@@ -27,16 +27,19 @@ def populate():
         # pretty print data for debugging
         # pprint.pprint(questionDetails)
 
+        # get description
+        description = readFile("Description.txt", questionPath)
+
         # make question
-        question = add_question(questionDir, questionDetails['testFile']['contents'])
+        question = add_question(questionDir, questionDetails['testFile']['contents'], description)
 
         # loop through files and create file objects
         for file in questionDetails['questionFiles']:
             add_file(question, file['name'], file['contents'])
 
 
-def add_question(name, testFile):
-    q, created = Question.objects.get_or_create(name=name, testFile=testFile)
+def add_question(name, testFile, description):
+    q, created = Question.objects.get_or_create(name=name, testFile=testFile, description=description)
     q.save()
     return q
 

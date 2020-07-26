@@ -100,7 +100,7 @@ def question(request, question_slug):
         # make request
         results = requests.post(url=API_URL, json=API_dict)
 
-        # print(results.content)
+        print(results.content)
 
         # get results
         json_results = json.loads(results.content)

@@ -24,8 +24,8 @@
 
 <!--            column containing question description-->
             <div class="col-md-3 mainGray text-white border border-white rounded-lg">
-            <h1>{{ question.name }}</h1>
-            This section will be filled with text describing the question.
+                <h1>{{ question.name }}</h1>
+                {{ question.description }}
 
             </div>
 <!--                column containing interactive section-->
@@ -95,7 +95,7 @@
                                     <h6>{{ values.name }}</h6>
                                     <p>{{ values.description }}</p>
                                     <p>{{ values.passed }}</p>
-                                    <strong><p class="redHighlight">{{ values.failureText }}</p></strong>
+                                    <p class="redHighlight">{{ values.failureText }}</p>
                                 </div>
                                 {% endfor %}
                             {% else %}
