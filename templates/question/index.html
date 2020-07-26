@@ -5,6 +5,10 @@
     <title>Title</title>
 </head>
 <body>
-    <h4>Home Page</h4>
+    <h3>Home Page</h3>
+    <h4>Questions</h4>
+    {% for question in questions %}
+        <p><a href="/question/{{ question.slug }}">{{ question.name }}</a></p>
+    {% endfor %}
 </body>
 </html>

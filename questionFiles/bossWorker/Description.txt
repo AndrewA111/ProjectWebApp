@@ -1,0 +1,3 @@
+Complete the constuctor in Worker.java.
+
+When constucting a worker, a boss should be added to the worker and that worker should be added to the boss's list of workers.

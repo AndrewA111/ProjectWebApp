@@ -13,7 +13,11 @@ API_URL = "http://localhost:8080/java/submit"
 
 def index(request):
 
+    questions = Question.objects.all()
+
+
     context_dict = {
+        'questions': questions
     }
 
     return render(request, 'question/index.html', context=context_dict)

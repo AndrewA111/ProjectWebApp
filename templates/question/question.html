@@ -94,7 +94,15 @@
                                 <div class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">
                                     <h6>{{ values.name }}</h6>
                                     <p>{{ values.description }}</p>
-                                    <p>{{ values.passed }}</p>
+                                    <p>Passed:
+                                        {% if values.passed == True %}
+                                            <p class="greenHighlight"> {{ values.passed }}</p>
+                                        {% else %}
+                                            <p class="redHighlight"> {{ values.passed }}</p>
+                                        {% endif %}
+
+
+                                    </p>
                                     <p class="redHighlight">{{ values.failureText }}</p>
                                 </div>
                                 {% endfor %}
