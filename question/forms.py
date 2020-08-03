@@ -26,7 +26,7 @@ class SubmissionFileForm(forms.ModelForm):
 class UploadFileForm(forms.Form):
 
     # file name
-    name = forms.CharField(widget=forms.HiddenInput(), max_length=32)
+    name = forms.CharField(max_length=32)
 
     # file contents
     contents = forms.CharField(widget=forms.Textarea())

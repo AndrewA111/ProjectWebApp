@@ -33,3 +33,22 @@ body {
     padding: 0;
     margin: 0;
 }
+
+.scroll{
+    overflow: auto;
+}
+
+.popupdiv{
+  position: absolute;
+  top: 35%;
+  right: 35%;
+  width: 30%;
+  height: 30%;
+  border: 3px solid #000000;
+  border-radius: 5vh;
+  background-color: #ebebe0;
+}
+
+.displayNone{
+    display: none;
+}

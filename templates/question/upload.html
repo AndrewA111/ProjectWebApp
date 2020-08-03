@@ -25,14 +25,31 @@
 
 <!--            Description section-->
             <div class="col-md-3 bg-secondary text-white rounded-lg">
-             <h3>Upload New Question</h3><br/>
-             <h4>
-                 Question name
 
-             </h4>
-            <a href="#" class="badge badge-light">Edit</a><br/>
-             Text describing question
-                <br/><a href="#" class="badge badge-light">Edit</a>
+                <h3>Upload New Question</h3><br/>
+
+<!--                Question title-->
+
+                <h4 id="questionTitle">{Question name}</h4>
+                <a href="#" id="editQName" class="badge badge-light">Edit</a>
+
+                <div class="displayNone" id="qNameDiv">
+                        <p>Enter question name:</p>
+                        <input type="text" id="qNameInput" name="qNameInput">
+                        <a href="#" id="submitQName" class="badge badge-light">Submit</a>
+                </div>
+                <br/><br/>
+
+<!--                Question description-->
+                <p id="questionDesc">{Text describing question}</p>
+                <a href="#" id="editQDesc" class="badge badge-light">Edit</a>
+
+                <div class="displayNone" id="qDescDiv">
+                    <p>Enter question description:</p>
+                    <textarea class="fill90" id="qDescInput" name="qDescInput" rows="5" cols="10"></textarea>
+                    <a href="#" id="submitQDesc" class="badge badge-light">Submit</a>
+                </div>
+
             </div>
 
 <!--            Code/results section-->
@@ -46,26 +63,30 @@
 
 
                         <!--                    input col-->
-                        <div class="col-md-7 bg-secondary text-white border border-white rounded-lg">
+                        <div class="col-md-7 bg-secondary text-white border border-white rounded-lg fill100">
                             Text
 
-                            {{ upload_form.question_name }}
-                            {{ upload_form.question_description }}
-                            {{ upload_form.test_file }}
-                            Test
-                            {{ upload_file_formset.management_form }}
 
-                            {% for upload_file_form in upload_file_formset %}
-                                {{ upload_file_form.name }}
-                                {{ upload_file_form.contents }}
-                            {% endfor %}
 
 
                         </div>
 
     <!--                    output col -->
-                        <div class="col-md-5 bg-secondary text-white border border-white rounded-lg">
-                            Text
+                        <div class="col-md-5 scroll bg-secondary text-white border border-white rounded-lg fill100">
+
+                                Q Name: {{ upload_form.question_name }}<br/>
+                                Q Desc: {{ upload_form.question_description }}<br/>
+                                Test file: {{ upload_form.test_file }}<br/>
+
+                                {{ upload_file_formset.management_form }}
+
+                                {% for upload_file_form in upload_file_formset %}
+                                    form.name
+                                    {{ upload_file_form.name }}<br/>
+                                    form.contents
+                                    {{ upload_file_form.contents }}<br/>
+                                {% endfor %}
+
                         </div>
 
                     </div>
