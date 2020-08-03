@@ -13,7 +13,7 @@
 <!--    Codemirror-->
     <link rel="stylesheet" type="text/css" href="{% static 'css/codemirror.css' %}">
 
-    <title>Title</title>
+    <title>{{ question.name }}</title>
 </head>
 <body>
     <div class="container-fluid">
@@ -30,7 +30,7 @@
 <!--                column containing interactive section-->
 
             <div class="col-md-9 mainGray text-white border border-white rounded-lg">
-                <form id="submission_form" method="post" action="/question/{{ question.slug }}/">
+                <form id="submission_form" method="post" action="/question/submit/{{ question.slug }}/">
 <!--                Input and output row-->
                 <div class="row">
 

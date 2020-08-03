@@ -20,3 +20,22 @@ class SubmissionFileForm(forms.ModelForm):
     class Meta:
         model = SubmissionFile
         exclude = ('submission',)
+
+
+# Form for uploading a file
+class UploadFileForm(forms.Form):
+
+    # file name
+    name = forms.CharField(widget=forms.HiddenInput(), max_length=32)
+
+    # file contents
+    contents = forms.CharField(widget=forms.Textarea())
+
+
+class UploadForm(forms.Form):
+
+    question_name = forms.CharField(max_length=32);
+
+    question_description = forms.CharField(max_length=128)
+
+    test_file = forms.CharField(widget=forms.Textarea)

@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from question.models import Question, File, Submission
-from question.forms import SubmissionFileForm
+from question.forms import SubmissionFileForm, UploadFileForm, UploadForm
 from django.forms.models import model_to_dict
 from django.core import serializers
 import json
 import requests
+from django.forms.formsets import formset_factory
+from django.forms.formsets import BaseFormSet
 
 # URL to submit questions
 API_URL = "http://localhost:8080/java/submit"
@@ -165,3 +167,21 @@ def question(request, question_slug):
         return render(request, 'question/question.html', context=context_dict)
 
 
+def upload(request):
+
+    # Get request
+    if (request.method == 'GET'):
+
+        # set of forms for files
+        UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet)
+        upload_file_formset = UploadFileFormSet()
+
+        # form for rest of question data
+        upload_form = UploadForm()
+
+        context_dict = {
+            'upload_form': upload_form,
+            'upload_file_formset': upload_file_formset,
+        }
+
+        return render(request, 'question/upload.html', context_dict)

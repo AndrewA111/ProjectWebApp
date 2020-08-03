@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+{% load staticfiles %}
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+      <!--- Boostrap --->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/upload.css' %}">
+
+    <!--    Codemirror-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/codemirror.css' %}">
+
+    <title>Title</title>
+</head>
+<body>
+
+    <div class="container-fluid h-100">
+
+        <div class="row h-100">
+
+<!--            Description section-->
+            <div class="col-md-3 bg-secondary text-white rounded-lg">
+             <h3>Upload New Question</h3><br/>
+             <h4>
+                 Question name
+
+             </h4>
+            <a href="#" class="badge badge-light">Edit</a><br/>
+             Text describing question
+                <br/><a href="#" class="badge badge-light">Edit</a>
+            </div>
+
+<!--            Code/results section-->
+            <div class="col-md-9 h-100 noPadNoMargin bg-secondary text-white border border-white rounded-lg">
+
+<!--                Input and output row-->
+
+                <div class="fill90">
+                    <div class="row fill100">
+
+
+
+                        <!--                    input col-->
+                        <div class="col-md-7 bg-secondary text-white border border-white rounded-lg">
+                            Text
+
+                            {{ upload_form.question_name }}
+                            {{ upload_form.question_description }}
+                            {{ upload_form.test_file }}
+                            Test
+                            {{ upload_file_formset.management_form }}
+
+                            {% for upload_file_form in upload_file_formset %}
+                                {{ upload_file_form.name }}
+                                {{ upload_file_form.contents }}
+                            {% endfor %}
+
+
+                        </div>
+
+    <!--                    output col -->
+                        <div class="col-md-5 bg-secondary text-white border border-white rounded-lg">
+                            Text
+                        </div>
+
+                    </div>
+                </div>
+
+<!--                Submission button row-->
+                <div class="fill10">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" name="submit" class="btn btn-primary float-right m-2">Submit</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+<!--    - JQuery - -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+
+<!--    JQuery functions for question.html-->
+    <script src="{% static 'js/upload-jquery.js' %}" crossorigin="anonymous"></script>
+
+<!--        Codemirror (including clike mode file, which is used for java syntax-->
+        <script src="{% static 'js/codemirror.js' %}" crossorigin="anonymous"></script>
+        <script src="{% static 'js/clike.js' %}" crossorigin="anonymous"></script>
+        <script src="{% static 'js/autorefresh.js' %}" crossorigin="anonymous"></script>
+
+<!--    - Boostrap - -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+<!--    - Popper.js - -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+</body>
+</html>

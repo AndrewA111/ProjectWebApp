@@ -8,7 +8,9 @@
     <h3>Home Page</h3>
     <h4>Questions</h4>
     {% for question in questions %}
-        <p><a href="/question/{{ question.slug }}">{{ question.name }}</a></p>
+        <p><a href="/question/submit/{{ question.slug }}">{{ question.name }}</a></p>
     {% endfor %}
+
+    <p><a href="/question/upload/">Upload new question</a></p>
 </body>
 </html>

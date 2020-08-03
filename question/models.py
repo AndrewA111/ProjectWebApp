@@ -11,7 +11,7 @@ class Question(models.Model):
     # test file (contents)
     testFile = models.TextField(default=None)
 
-    # textual descirption describing question
+    # textual description describing question
     description = models.TextField(default=None)
 
     # slug for urls

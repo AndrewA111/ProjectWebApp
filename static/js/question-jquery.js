@@ -25,6 +25,7 @@ $(document).ready(function(){
         $("#" + targetTab).show();
         this.style.setProperty('background-color', '#828282');
 
+        // focus on codemirror to force refresh
         $("#" + targetTab + " .CodeMirror").focus();
 
     });
