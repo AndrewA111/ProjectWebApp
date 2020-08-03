@@ -29,7 +29,7 @@
                 <h3>Upload New Question</h3><br/>
 
 <!--                Question title-->
-
+                <h5>Question name:</h5>
                 <h4 id="questionTitle">{Question name}</h4>
                 <a href="#" id="editQName" class="badge badge-light">Edit</a>
 
@@ -41,6 +41,7 @@
                 <br/><br/>
 
 <!--                Question description-->
+                <h5>Question description:</h5>
                 <p id="questionDesc">{Text describing question}</p>
                 <a href="#" id="editQDesc" class="badge badge-light">Edit</a>
 
@@ -64,7 +65,18 @@
 
                         <!--                    input col-->
                         <div class="col-md-7 bg-secondary text-white border border-white rounded-lg fill100">
-                            Text
+
+                            <!--                        tabs-->
+                            <div class="row">
+                                <div class="tab col-md-4 p-2 border border-white rounded-lg" >{{ upload_file_formset.0.name.value|default_if_none:"" }}
+                                    <a href="#" id="FileNameTab" class="badge badge-light">Edit</a>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div style="width:100%">{{ upload_file_formset.0.contents }}</div>
+                            </div>
+
 
 
 
@@ -80,12 +92,9 @@
 
                                 {{ upload_file_formset.management_form }}
 
-                                {% for upload_file_form in upload_file_formset %}
-                                    form.name
-                                    {{ upload_file_form.name }}<br/>
-                                    form.contents
-                                    {{ upload_file_form.contents }}<br/>
-                                {% endfor %}
+                                form.name:
+                                {{ upload_file_formset.0.name }}
+
 
                         </div>
 
@@ -123,5 +132,15 @@
 <!--    - Popper.js - -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 
+    <script>
+
+    myTextArea = document.getElementById("id_form-0-contents")
+    var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
+                        lineNumbers: true,
+                        mode: "text/x-java",
+                        autoRefresh: true,
+                      });
+
+    </script>
 </body>
 </html>

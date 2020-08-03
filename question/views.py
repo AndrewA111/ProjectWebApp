@@ -173,8 +173,12 @@ def upload(request):
     if (request.method == 'GET'):
 
         # set of forms for files
-        UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet)
-        upload_file_formset = UploadFileFormSet()
+        UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
+        upload_file_formset = UploadFileFormSet(initial=[{
+            'name': "FileName",
+             'contents': "<write file contents here>",
+             },
+        ])
 
         # form for rest of question data
         upload_form = UploadForm()
