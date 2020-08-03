@@ -29,6 +29,10 @@ body {
   margin: 0;
 }
 
+max60{
+    max-width: 60%;
+}
+
 .noPadNoMargin{
     padding: 0;
     margin: 0;
@@ -40,10 +44,18 @@ body {
 
 .popupdiv{
   position: absolute;
-  top: 35%;
+  top: 30%;
   right: 35%;
   width: 30%;
-  height: 30%;
+  height: 20%;
+}
+
+.popupdivoriginal{
+  position: absolute;
+  top: 40%;
+  right: 35%;
+  width: 30%;
+  height: 20%;
   border: 3px solid #000000;
   border-radius: 5vh;
   background-color: #ebebe0;
@@ -51,4 +63,8 @@ body {
 
 .displayNone{
     display: none;
+}
+
+.sameLine{
+    display: flex;
 }

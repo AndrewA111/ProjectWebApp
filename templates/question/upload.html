@@ -68,8 +68,18 @@
 
                             <!--                        tabs-->
                             <div class="row">
-                                <div class="tab col-md-4 p-2 border border-white rounded-lg" >{{ upload_file_formset.0.name.value|default_if_none:"" }}
-                                    <a href="#" id="FileNameTab" class="badge badge-light">Edit</a>
+                                <div id="tab1" class="tab col-md-4 p-2 border border-white rounded-lg" >
+                                    <div class="sameLine">
+                                        <p id="tab1text">{{ upload_file_formset.0.name.value|default_if_none:'' }}</p>
+                                        <p> &nbsp
+                                            <a href="#" id="tab1Edit"
+                                           class="tabEdit badge badge-light"
+                                           data-name="1">
+                                            Edit
+                                            </a>
+                                        </p>
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -110,6 +120,19 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <div id="popup" class="popupdiv displayNone">
+        <div class="container-fluid h-100 w-100">
+            <div class="row fill100">
+                <div class="col-md-12 bg-secondary text-white rounded-lg">
+                    Enter file name:<br/><br/>
+                    <input type="text" id="fileNameInput" name="fileNameInput">
+                    <a href="#" id="submitFileName" class="badge badge-light" data-tab="1">Submit</a>
+
+                </div>
             </div>
         </div>
     </div>

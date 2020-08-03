@@ -36,4 +36,48 @@ $(document).ready(function(){
         $("#id_question_description").val(title);
     })
 
+    // --- Tab functionality ---
+
+    // when a tab is clicked
+    $(".tabEdit").click(function(){
+
+        // get the target text area
+        var tabDiv = $(this).parent();
+
+        var tabNo = $(this).attr('data-name');
+
+        // show popup to take entry
+        $("#popup").show();
+
+        // set submit button to track which tab name is being edited
+        $('#submitFileName').attr("data-tab", tabNo)
+
+        // hide all edit buttons (only one change at a time)
+        $(".tabEdit").hide();
+    });
+
+    // when a new file name is submitted
+    $("#submitFileName").click(function(){
+
+        // get the target text area
+        var name = $("#fileNameInput").val();
+
+        // get tab number
+        var tabNo = $("#submitFileName").attr('data-tab');
+
+        // identify elements
+        var tabID = "#tab" + tabNo
+        var textID = tabID + "text"
+
+        // update tab name
+        $(textID).text(name);
+
+        // hide the popup
+        $("#popup").hide();
+
+        // show edits buttons again
+        $(".tabEdit").show();
+
+    });
+
 });
