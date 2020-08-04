@@ -174,8 +174,13 @@ def upload(request):
 
         # set of forms for files
         UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
-        upload_file_formset = UploadFileFormSet(initial=[{
-            'name': "FileName",
+        upload_file_formset = UploadFileFormSet(initial=[
+            {
+                'name': "File",
+                'contents': "<write file contents here>",
+            },
+            {
+            'name': "FileName.java",
              'contents': "<write file contents here>",
              },
         ])

@@ -1,3 +1,5 @@
+var tabCount = 1;
+
 $(document).ready(function(){
 
     // --- Question name input ---
@@ -6,6 +8,9 @@ $(document).ready(function(){
     $("#editQName").click(function(){
         $("#editQName").hide();
         $("#qNameDiv").show();
+
+        tabCount++;
+        alert(tabCount);
     })
 
     // once input, hide input and show edit button
@@ -39,7 +44,10 @@ $(document).ready(function(){
     // --- Tab functionality ---
 
     // when a tab is clicked
-    $(".tabEdit").click(function(){
+//    $(".tabEdit").click(function(){
+    $(document).on("click", ".tabEdit", function(){
+
+        console.log("test");
 
         // get the target text area
         var tabDiv = $(this).parent();
@@ -60,23 +68,73 @@ $(document).ready(function(){
     $("#submitFileName").click(function(){
 
         // get the target text area
-        var name = $("#fileNameInput").val();
+        var inputName = $("#fileNameInput").val();
+
+        // disallow spaces and append with .java if required
+        var name = inputName.split(/[\s.]/)[0] + ".java"
 
         // get tab number
         var tabNo = $("#submitFileName").attr('data-tab');
 
         // identify elements
-        var tabID = "#tab" + tabNo
-        var textID = tabID + "text"
+        var tabID = "#tab" + tabNo;
+        var textID = tabID + "text";
+        var inputID = "#id_form-" + tabNo + "-name";
 
         // update tab name
         $(textID).text(name);
+
+        // update input field
+        $(inputID).val(name);
 
         // hide the popup
         $("#popup").hide();
 
         // show edits buttons again
         $(".tabEdit").show();
+
+    });
+
+    // --- adding a new tab ---
+
+    $("#addTab").click(function(){
+
+        // increment tab count
+        tabCount++;
+
+        var tabName = "tab" + tabCount
+
+        // clone hidden template
+        var clone = $("#tabTemplateDiv").clone().attr("id", tabName);
+
+        // remove 'displayNone' to show
+        clone.removeClass("displayNone");
+
+        clone.appendTo("#tabs");
+
+        // set IDs
+        var tabText = $($("#" + tabName).find("p")[0]).attr("id", "tab" + tabCount + "text");
+
+        var tabEdit = $($("#" + tabName).find("a")[0]).attr("id", "tab" + tabCount + "Edit");
+        var tabEdit = $($("#" + tabName).find("a")[0]).attr("data-name", tabCount);
+
+        // hide all text areas
+        $(".textarea").hide();
+
+        // add code box
+        var codeClone = $("#id_form-0-contents").clone().attr("id", "id_form-" + tabCount + "-contents");
+        codeClone.appendTo("#textareaholder")
+        $("#id_form-" + tabCount + "-contents").attr("name", "form-" + tabCount + "-contents");
+
+        $("#id_form-" + tabCount + "-contents").wrap("<div class='textarea'></div>");
+
+        // convert textarea to codemirror display
+        myTextArea = document.getElementById("id_form-" + tabCount + "-contents")
+        var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
+                        lineNumbers: true,
+                        mode: "text/x-java",
+                        autoRefresh: true,
+                      });
 
     });
 

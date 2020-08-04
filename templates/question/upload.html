@@ -18,7 +18,7 @@
     <title>Title</title>
 </head>
 <body>
-
+    {{ upload_file_formset.management_form }}
     <div class="container-fluid h-100">
 
         <div class="row h-100">
@@ -67,11 +67,11 @@
                         <div class="col-md-7 bg-secondary text-white border border-white rounded-lg fill100">
 
                             <!--                        tabs-->
-                            <div class="row">
+                            <div id="tabs" class="row">
                                 <div id="tab1" class="tab col-md-4 p-2 border border-white rounded-lg" >
                                     <div class="sameLine">
-                                        <p id="tab1text">{{ upload_file_formset.0.name.value|default_if_none:'' }}</p>
-                                        <p> &nbsp
+                                        <p class=noMargin id="tab1text">{{ upload_file_formset.1.name.value|default_if_none:'' }}</p>
+                                        <p class="noMargin"> &nbsp
                                             <a href="#" id="tab1Edit"
                                            class="tabEdit badge badge-light"
                                            data-name="1">
@@ -79,12 +79,23 @@
                                             </a>
                                         </p>
                                     </div>
-
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div style="width:100%">{{ upload_file_formset.0.contents }}</div>
+                                <div id="addTab" class="tab col-md-1 p-2 border border-white rounded-lg" >
+                                    <p class="noMargin center"> + </p>
+                                </div>
+                            </div>
+
+
+<!--                            File contents-->
+                            <div class="row">
+                                <div id="textareaholder" style="width:100%">
+                                    <div class="textarea">
+                                        {{ upload_file_formset.1.contents }}
+                                    </div>
+                                </div>
                             </div>
 
 
@@ -100,15 +111,23 @@
                                 Q Desc: {{ upload_form.question_description }}<br/>
                                 Test file: {{ upload_form.test_file }}<br/>
 
-                                {{ upload_file_formset.management_form }}
+
 
                                 form.name:
-                                {{ upload_file_formset.0.name }}
+                                {{ upload_file_formset.1.name }}
+
+<!--                                hidden field for creating forms-->
+                                <div>
+                                    <br/> Hidden fields for creating new tabs/files
+
+                                    {{ upload_file_formset.0.name }}
+
+                                    {{ upload_file_formset.0.contents }}
+                                </div>
+
 
 
                         </div>
-
-                    </div>
                 </div>
 
 <!--                Submission button row-->
@@ -138,6 +157,21 @@
     </div>
 
 
+        <div id="tabTemplateDiv" class="displayNone tab col-md-4 p-2 border border-white rounded-lg" >
+            <div class="sameLine">
+                <p class=noMargin>Empty</p>
+                <p class="noMargin"> &nbsp
+                    <a href="#"
+                   class="tabEdit badge badge-light"
+                   data-name="1">
+                    Edit
+                    </a>
+                </p>
+            </div>
+        </div>
+
+
+
 <!--    - JQuery - -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 
@@ -157,7 +191,7 @@
 
     <script>
 
-    myTextArea = document.getElementById("id_form-0-contents")
+    myTextArea = document.getElementById("id_form-1-contents")
     var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
                         lineNumbers: true,
                         mode: "text/x-java",

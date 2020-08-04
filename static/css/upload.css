@@ -68,3 +68,11 @@ max60{
 .sameLine{
     display: flex;
 }
+
+.noMargin{
+    margin: 0;
+}
+
+.center{
+    text-align: center;
+}
