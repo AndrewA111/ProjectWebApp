@@ -179,24 +179,67 @@ def upload(request):
         print(decoded)
 
         formset = UploadFileFormSet(request.POST)
+        upload_form = UploadForm(request.POST)
 
-        formset_data = []
+        # print("Upload form:" + str(upload_form))
+
+        # dict to send to API
+        API_dict = {
+            'files': []
+        }
 
         if formset.is_valid():
 
-            for f in formset:
+            # loop from 2nd form (first is empty)
+            for f in formset[1:]:
 
                 cleaned_data = f.cleaned_data
 
-                formset_data.append({
+                API_dict['files'].append({
                     'name': cleaned_data['name'],
-                    'contents': cleaned_data['contents']
+                    'content': cleaned_data['contents']
                 })
+
+
+
+            if upload_form.is_valid():
+
+                # get form data
+                cleaned_data = upload_form.cleaned_data
+
+                print("Cleaned:\n" + str(cleaned_data))
+
+                # add test to dictionary
+                API_dict['files'].append({
+                    'name': "Tests.java",
+                    'content': cleaned_data['test_file'],
+                })
+
+                # testing
+                print("API_dict:\n" + json.dumps(API_dict))
+
+                # make request
+                results = requests.post(url=API_URL, json=API_dict)
+
+                # get results
+                json_results = json.loads(results.content)
+
+                print("Results from compiler:\n" + str(json_results))
+
+
+            else:
+                print(upload_form.errors)
+
+
+
+            # make request
+            results = requests.post(url=API_URL, json=API_dict)
         else:
             print(formset.errors)
 
-        #testing
-        print(json.dumps(formset_data))
+
+
+        # upload_form = UploadForm(request.POST)
 
 
 
