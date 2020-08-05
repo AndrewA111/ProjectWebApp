@@ -89,7 +89,15 @@
                                 <div id="addTab" class="col-md-1 p-2 border border-white rounded-lg" >
                                     <p class="noMargin center"> + </p>
                                 </div>
+
+                                <div id="tabTest" class="tab col-md-4 p-2 border border-white rounded-lg ml-auto" data-no="Test">
+                                    <div class="sameLine">
+                                        <p class=noMargin id="tabTesttext">Tests.java</p>
+                                    </div>
+                                </div>
                             </div>
+
+
 
 
 <!--                            File contents-->
@@ -98,7 +106,12 @@
                                     <div id="textarea1" class="textarea">
                                         {{ upload_file_formset.1.contents }}
                                     </div>
+                                    <div id="textareaTest" class="textarea displayNone">
+                                        {{ upload_form.test_file }}
+                                    </div>
                                 </div>
+
+
                             </div>
 
 
@@ -112,7 +125,7 @@
                             <div id="hiddenInputs">
                                 Q Name: {{ upload_form.question_name }}<br/>
                                 Q Desc: {{ upload_form.question_description }}<br/>
-                                Test file: {{ upload_form.test_file }}<br/>
+<!--                                Test file: {{ upload_form.test_file }}<br/>-->
 
 
 
@@ -198,6 +211,13 @@
 
     myTextArea = document.getElementById("id_form-1-contents")
     var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
+                        lineNumbers: true,
+                        mode: "text/x-java",
+                        autoRefresh: true,
+                      });
+
+    testTextArea = document.getElementById("id_test_file")
+    var testCodeMirror = CodeMirror.fromTextArea(testTextArea, {
                         lineNumbers: true,
                         mode: "text/x-java",
                         autoRefresh: true,

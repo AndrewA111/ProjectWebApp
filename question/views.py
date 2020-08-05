@@ -173,11 +173,8 @@ def upload(request):
     UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
 
     if request.method == 'POST':
-        print("Posted")
 
-        # content = json.loads(request.body.decode(encoding='UTF-8'))
-        #
-
+        #testing
         decoded = request.body.decode('utf-8')
         print(decoded)
 
@@ -185,7 +182,7 @@ def upload(request):
 
         formset_data = []
 
-        if(formset.is_valid()):
+        if formset.is_valid():
 
             for f in formset:
 
@@ -198,7 +195,10 @@ def upload(request):
         else:
             print(formset.errors)
 
+        #testing
         print(json.dumps(formset_data))
+
+
 
         return render(request, 'question/index.html')
 
@@ -218,7 +218,11 @@ def upload(request):
         ])
 
         # form for rest of question data
-        upload_form = UploadForm()
+        upload_form = UploadForm(initial={
+            'test_file': 'import static org.junit.Assert.*;\n' +
+                         'import org.junit.Test;\n\n' +
+                         'public class Tests{\n\n}'
+        })
 
         context_dict = {
             'upload_form': upload_form,

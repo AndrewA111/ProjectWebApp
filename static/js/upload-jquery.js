@@ -161,21 +161,13 @@ $(document).ready(function(){
 
         // get the target text area
         var targetTab;
-//        targetTab = $(this).attr('data-file');
         targetTab = $(this).attr('data-no');
-
-
-//        $(".tab").css('background-color', '#424242');
 
         // hide all text areas
         $(".textarea").hide();
 
         // show the selected area
         $("#textarea" + targetTab).show();
-//        this.style.setProperty('background-color', '#828282');
-//
-//        // focus on codemirror to force refresh
-//        $("#" + targetTab + " .CodeMirror").focus();
 
     });
 
