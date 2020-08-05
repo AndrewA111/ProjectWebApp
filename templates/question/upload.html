@@ -18,7 +18,7 @@
     <title>Title</title>
 </head>
 <body>
-    {{ upload_file_formset.management_form }}
+
     <div class="container-fluid h-100">
 
         <div class="row h-100">
@@ -41,7 +41,8 @@
                 <br/><br/>
 
 <!--                Question description-->
-                <h5>Question description:</h5>
+                <h5>
+                    Question description:</h5>
                 <p id="questionDesc">{Text describing question}</p>
                 <a href="#" id="editQDesc" class="badge badge-light">Edit</a>
 
@@ -57,8 +58,10 @@
             <div class="col-md-9 h-100 noPadNoMargin bg-secondary text-white border border-white rounded-lg">
 
 <!--                Input and output row-->
+                <form class="fill90" id="submission_form" method="post" action="/question/upload/">
 
-                <div class="fill90">
+                    {% csrf_token %}
+                    {{ upload_file_formset.management_form }}
                     <div class="row fill100">
 
 
@@ -141,7 +144,7 @@
                     </div>
                 </div>
 
-            </div>
+            </form>
         </div>
     </div>
 

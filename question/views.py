@@ -169,11 +169,43 @@ def question(request, question_slug):
 
 def upload(request):
 
+    # set of forms for files
+    UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
+
+    if request.method == 'POST':
+        print("Posted")
+
+        # content = json.loads(request.body.decode(encoding='UTF-8'))
+        #
+
+        decoded = request.body.decode('utf-8')
+        print(decoded)
+
+        formset = UploadFileFormSet(request.POST)
+
+        formset_data = []
+
+        if(formset.is_valid()):
+
+            for f in formset:
+
+                cleaned_data = f.cleaned_data
+
+                formset_data.append({
+                    'name': cleaned_data['name'],
+                    'contents': cleaned_data['contents']
+                })
+        else:
+            print(formset.errors)
+
+        print(json.dumps(formset_data))
+
+        return render(request, 'question/index.html')
+
     # Get request
     if (request.method == 'GET'):
 
-        # set of forms for files
-        UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
+
         upload_file_formset = UploadFileFormSet(initial=[
             {
                 'name': "File",

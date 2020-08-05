@@ -146,6 +146,11 @@ $(document).ready(function(){
         var nameClone = $("#id_form-0-name").clone().attr("id", "id_form-" + tabCount + "-name");
         nameClone.appendTo("#hiddenInputs");
         $("#id_form-" + tabCount + "-name").val(tabTitle);
+        $("#id_form-" + tabCount + "-name").attr("name", "form-" + tabCount + "-name");
+
+        // update formset data
+        $("#id_form-TOTAL_FORMS").val(tabCount + 1);
+
 
     });
 
