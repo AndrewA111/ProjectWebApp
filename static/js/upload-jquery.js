@@ -10,7 +10,6 @@ $(document).ready(function(){
         $("#qNameDiv").show();
 
         tabCount++;
-        alert(tabCount);
     })
 
     // once input, hide input and show edit button
@@ -43,11 +42,9 @@ $(document).ready(function(){
 
     // --- Tab functionality ---
 
-    // when a tab is clicked
 //    $(".tabEdit").click(function(){
     $(document).on("click", ".tabEdit", function(){
 
-        console.log("test");
 
         // get the target text area
         var tabDiv = $(this).parent();
@@ -104,19 +101,29 @@ $(document).ready(function(){
 
         var tabName = "tab" + tabCount
 
+        var tabTitle = "File" + tabCount + ".java";
+
         // clone hidden template
-        var clone = $("#tabTemplateDiv").clone().attr("id", tabName);
+//        var clone = $("#tabTemplateDiv").clone().attr("id", tabName);
+        var clone = $("#tabTemplateDiv").clone().attr({
+                                                'id': tabName,
+                                                'data-no': tabCount});
 
         // remove 'displayNone' to show
         clone.removeClass("displayNone");
 
         clone.appendTo("#tabs");
 
+
+
         // set IDs
         var tabText = $($("#" + tabName).find("p")[0]).attr("id", "tab" + tabCount + "text");
 
         var tabEdit = $($("#" + tabName).find("a")[0]).attr("id", "tab" + tabCount + "Edit");
         var tabEdit = $($("#" + tabName).find("a")[0]).attr("data-name", tabCount);
+
+        // update tab text
+        $("#tab" + tabCount + "text").text(tabTitle);
 
         // hide all text areas
         $(".textarea").hide();
@@ -125,8 +132,7 @@ $(document).ready(function(){
         var codeClone = $("#id_form-0-contents").clone().attr("id", "id_form-" + tabCount + "-contents");
         codeClone.appendTo("#textareaholder")
         $("#id_form-" + tabCount + "-contents").attr("name", "form-" + tabCount + "-contents");
-
-        $("#id_form-" + tabCount + "-contents").wrap("<div class='textarea'></div>");
+        $("#id_form-" + tabCount + "-contents").wrap("<div id='textarea" + tabCount + "' class='textarea'></div>");
 
         // convert textarea to codemirror display
         myTextArea = document.getElementById("id_form-" + tabCount + "-contents")
@@ -135,6 +141,36 @@ $(document).ready(function(){
                         mode: "text/x-java",
                         autoRefresh: true,
                       });
+
+        // add file name hidden input field
+        var nameClone = $("#id_form-0-name").clone().attr("id", "id_form-" + tabCount + "-name");
+        nameClone.appendTo("#hiddenInputs");
+        $("#id_form-" + tabCount + "-name").val(tabTitle);
+
+    });
+
+    // --- tab switching ---
+        // when a tab is clicked
+//    $(".tab").click(function(){
+    $(document).on("click", ".tab", function(){
+
+        // get the target text area
+        var targetTab;
+//        targetTab = $(this).attr('data-file');
+        targetTab = $(this).attr('data-no');
+
+
+//        $(".tab").css('background-color', '#424242');
+
+        // hide all text areas
+        $(".textarea").hide();
+
+        // show the selected area
+        $("#textarea" + targetTab).show();
+//        this.style.setProperty('background-color', '#828282');
+//
+//        // focus on codemirror to force refresh
+//        $("#" + targetTab + " .CodeMirror").focus();
 
     });
 

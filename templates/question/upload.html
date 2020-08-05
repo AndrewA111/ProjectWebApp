@@ -68,7 +68,7 @@
 
                             <!--                        tabs-->
                             <div id="tabs" class="row">
-                                <div id="tab1" class="tab col-md-4 p-2 border border-white rounded-lg" >
+                                <div id="tab1" class="tab col-md-4 p-2 border border-white rounded-lg" data-no="1">
                                     <div class="sameLine">
                                         <p class=noMargin id="tab1text">{{ upload_file_formset.1.name.value|default_if_none:'' }}</p>
                                         <p class="noMargin"> &nbsp
@@ -83,7 +83,7 @@
                             </div>
 
                             <div class="row">
-                                <div id="addTab" class="tab col-md-1 p-2 border border-white rounded-lg" >
+                                <div id="addTab" class="col-md-1 p-2 border border-white rounded-lg" >
                                     <p class="noMargin center"> + </p>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
 <!--                            File contents-->
                             <div class="row">
                                 <div id="textareaholder" style="width:100%">
-                                    <div class="textarea">
+                                    <div id="textarea1" class="textarea">
                                         {{ upload_file_formset.1.contents }}
                                     </div>
                                 </div>
@@ -106,7 +106,7 @@
 
     <!--                    output col -->
                         <div class="col-md-5 scroll bg-secondary text-white border border-white rounded-lg fill100">
-
+                            <div id="hiddenInputs">
                                 Q Name: {{ upload_form.question_name }}<br/>
                                 Q Desc: {{ upload_form.question_description }}<br/>
                                 Test file: {{ upload_form.test_file }}<br/>
@@ -115,15 +115,17 @@
 
                                 form.name:
                                 {{ upload_file_formset.1.name }}
+                            </div>
+
 
 <!--                                hidden field for creating forms-->
-                                <div>
-                                    <br/> Hidden fields for creating new tabs/files
+                            <div>
+                                <br/> Hidden fields for creating new tabs/files
 
-                                    {{ upload_file_formset.0.name }}
+                                {{ upload_file_formset.0.name }}
 
-                                    {{ upload_file_formset.0.contents }}
-                                </div>
+                                {{ upload_file_formset.0.contents }}
+                            </div>
 
 
 
