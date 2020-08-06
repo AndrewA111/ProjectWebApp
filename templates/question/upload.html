@@ -108,10 +108,19 @@
                             <div class="row">
                                 <div id="textareaholder" style="width:100%">
                                     {% for form in upload_file_formset %}
+<!--                                        ignore first (empty template) form-->
                                         {% if not forloop.first %}
-                                        <div id="textarea{{ forloop.counter0 }}" class="textarea">
-                                            {{ form.contents }}
-                                        </div>
+<!--                                            render first form-->
+                                            {% if forloop.counter0 == 1 %}
+                                                <div id="textarea{{ forloop.counter0 }}" class="textarea">
+                                                    {{ form.contents }}
+                                                </div>
+<!--                                            hide other forms-->
+                                            {% else %}
+                                                <div style="display:none;" id="textarea{{ forloop.counter0 }}" class="textarea">
+                                                    {{ form.contents }}
+                                                </div>
+                                            {% endif %}
                                         {% endif %}
                                     {% endfor %}
                                         <div id="textareaTest" class="textarea displayNone">
