@@ -1,6 +1,10 @@
-var tabCount = 1;
+var tabCount;
 
 $(document).ready(function(){
+
+    // set tab count based on number of forms
+    // (-1 for hidden form)
+    tabCount = $("#id_form-TOTAL_FORMS").val() - 1
 
     // --- Question name input ---
 
