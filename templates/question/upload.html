@@ -30,7 +30,7 @@
 
 <!--                Question title-->
                 <h5>Question name:</h5>
-                <h4 id="questionTitle">{Question name}</h4>
+                <h4 id="questionTitle">{{ upload_form.initial.question_name }}</h4>
                 <a href="#" id="editQName" class="badge badge-light">Edit</a>
 
                 <div class="displayNone" id="qNameDiv">
@@ -43,7 +43,7 @@
 <!--                Question description-->
                 <h5>
                     Question description:</h5>
-                <p id="questionDesc">{Text describing question}</p>
+                <p id="questionDesc">{{ upload_form.initial.question_description }}</p>
                 <a href="#" id="editQDesc" class="badge badge-light">Edit</a>
 
                 <div class="displayNone" id="qDescDiv">
@@ -148,7 +148,13 @@
 
 
                                 form.name:
-                                {{ upload_file_formset.1.name }}
+
+                                {% for form in upload_file_formset %}
+                                    {% if not forloop.first %}
+                                        {{ form.name }}
+                                    {% endif %}
+                                {% endfor %}
+
                             </div>
 
 

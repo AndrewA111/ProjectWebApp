@@ -188,6 +188,16 @@ def upload(request):
             'files': []
         }
 
+        # data for context dict
+
+        # populate formset with first empty/hidden entry
+        formset_data = [{
+                'name': "File",
+                'contents': "<write file contents here>",
+            },
+        ]
+        form_data = None
+
         if formset.is_valid():
 
             # loop from 2nd form (first is empty)
@@ -198,6 +208,11 @@ def upload(request):
                 API_dict['files'].append({
                     'name': cleaned_data['name'],
                     'content': cleaned_data['contents']
+                })
+
+                formset_data.append({
+                    'name': cleaned_data['name'],
+                    'contents': cleaned_data['contents']
                 })
 
 
@@ -226,6 +241,11 @@ def upload(request):
 
                 print("Results from compiler:\n" + str(json_results))
 
+                form_data = {
+                    'question_name': cleaned_data['question_name'],
+                    'question_description': cleaned_data['question_description'],
+                    'test_file': cleaned_data['test_file'],
+                }
 
             else:
                 print(upload_form.errors)
@@ -233,7 +253,7 @@ def upload(request):
 
 
             # make request
-            results = requests.post(url=API_URL, json=API_dict)
+            # results = requests.post(url=API_URL, json=API_dict)
         else:
             print(formset.errors)
 
@@ -241,15 +261,21 @@ def upload(request):
 
         # upload_form = UploadForm(request.POST)
 
+        # populate context dict forms with uploaded data
+        formset_context = UploadFileFormSet(initial=formset_data)
+        form_context = UploadForm(initial=form_data)
+        context_dict = {
+            'upload_form': form_context,
+            'upload_file_formset': formset_context,
+        }
 
-
-        return render(request, 'question/index.html')
+        return render(request, 'question/upload.html', context_dict)
 
     # Get request
     if (request.method == 'GET'):
 
 
-        upload_file_formset = UploadFileFormSet(initial=[
+        formset_context = UploadFileFormSet(initial=[
             {
                 'name': "File",
                 'contents': "<write file contents here>",
@@ -261,15 +287,17 @@ def upload(request):
         ])
 
         # form for rest of question data
-        upload_form = UploadForm(initial={
+        form_context = UploadForm(initial={
+            'question_name': "{Question-name}",
+            'question_description': "{Text-describing question}",
             'test_file': 'import static org.junit.Assert.*;\n' +
                          'import org.junit.Test;\n\n' +
                          'public class Tests{\n\n}'
         })
 
         context_dict = {
-            'upload_form': upload_form,
-            'upload_file_formset': upload_file_formset,
+            'upload_form': form_context,
+            'upload_file_formset': formset_context,
         }
 
         return render(request, 'question/upload.html', context_dict)
