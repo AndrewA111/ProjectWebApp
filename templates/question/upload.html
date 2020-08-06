@@ -71,18 +71,22 @@
 
                             <!--                        tabs-->
                             <div id="tabs" class="row">
-                                <div id="tab1" class="tab col-md-4 p-2 border border-white rounded-lg" data-no="1">
-                                    <div class="sameLine">
-                                        <p class=noMargin id="tab1text">{{ upload_file_formset.1.name.value|default_if_none:'' }}</p>
-                                        <p class="noMargin"> &nbsp
-                                            <a href="#" id="tab1Edit"
-                                           class="tabEdit badge badge-light"
-                                           data-name="1">
-                                            Edit
-                                            </a>
-                                        </p>
-                                    </div>
-                                </div>
+                                {% for form in upload_file_formset %}
+                                    {% if not forloop.first %}
+                                        <div id="tab{{ forloop.counter0 }}" class="tab col-md-4 p-2 border border-white rounded-lg" data-no="{{ forloop.counter0 }}">
+                                            <div class="sameLine">
+                                                <p class=noMargin id="tab{{ forloop.counter0 }}text">{{ form.name.value|default_if_none:'' }}</p>
+                                                <p class="noMargin"> &nbsp
+                                                    <a href="#" id="tab{{ forloop.counter0 }}Edit"
+                                                   class="tabEdit badge badge-light"
+                                                   data-name="{{ forloop.counter0 }}">
+                                                    Edit
+                                                    </a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
 
                             <div class="row">
@@ -103,12 +107,17 @@
 <!--                            File contents-->
                             <div class="row">
                                 <div id="textareaholder" style="width:100%">
-                                    <div id="textarea1" class="textarea">
-                                        {{ upload_file_formset.1.contents }}
-                                    </div>
-                                    <div id="textareaTest" class="textarea displayNone">
-                                        {{ upload_form.test_file }}
-                                    </div>
+                                    {% for form in upload_file_formset %}
+                                        {% if not forloop.first %}
+                                        <div id="textarea{{ forloop.counter0 }}" class="textarea">
+                                            {{ form.contents }}
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                        <div id="textareaTest" class="textarea displayNone">
+                                            {{ upload_form.test_file }}
+                                        </div>
+
                                 </div>
 
 
