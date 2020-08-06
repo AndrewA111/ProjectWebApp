@@ -9,7 +9,6 @@ $(document).ready(function(){
         $("#editQName").hide();
         $("#qNameDiv").show();
 
-        tabCount++;
     })
 
     // once input, hide input and show edit button
