@@ -2,6 +2,51 @@ var tabCount;
 
 $(document).ready(function(){
 
+    $("#ajaxGet").click(function(){
+        $.get('/question/ajax_test/', function(data){
+            console.log(data);
+            alert(data);
+            });
+
+    })
+
+    $("#ajaxPost").click(function(){
+
+        var formData = $("#submission_form").serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: "/question/ajax_test/",
+            data: formData,
+            success: function(response){
+                alert(response);
+            }
+        });
+
+    })
+
+    $("#submission_form").submit(function(e){
+
+        // prevent page refresh
+        e.preventDefault();
+
+        for (i = 0; i < codeMirrorInstances.length; i++){
+            codeMirrorInstances[i].save();
+        }
+
+        var formData = $("#submission_form").serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: "/question/ajax_test/",
+            data: formData,
+            success: function(response){
+                alert(response);
+            }
+        });
+
+    })
+
     // set tab count based on number of forms
     // (-1 for hidden form)
     tabCount = $("#id_form-TOTAL_FORMS").val() - 1
@@ -139,11 +184,11 @@ $(document).ready(function(){
 
         // convert textarea to codemirror display
         myTextArea = document.getElementById("id_form-" + tabCount + "-contents")
-        var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
+        codeMirrorInstances.push(CodeMirror.fromTextArea(myTextArea, {
                         lineNumbers: true,
                         mode: "text/x-java",
                         autoRefresh: true,
-                      });
+                      }));
 
         // add file name hidden input field
         var nameClone = $("#id_form-0-name").clone().attr("id", "id_form-" + tabCount + "-name");

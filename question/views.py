@@ -301,3 +301,21 @@ def upload(request):
         }
 
         return render(request, 'question/upload.html', context_dict)
+
+
+def ajax_test(request):
+
+    # Get request
+    if (request.method == 'GET'):
+        print("Get request received.")
+
+        return HttpResponse("http response from GET call")
+
+    # Post request
+    if (request.method == 'POST'):
+
+        # testing
+        decoded = request.body.decode('utf-8')
+        print(decoded)
+
+        return HttpResponse("http response from POST call")
