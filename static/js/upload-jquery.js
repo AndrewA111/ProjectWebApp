@@ -52,16 +52,16 @@ $(document).ready(function(){
                 // loop through results and add results boxes to the DOM
 
 
-                for(var key in output){
-                    test = key;
-                    console.log(test);
-                    console.log(output[test]);
-                    console.log(output[test]['name']);
+                for(var i = 0; i < output['tests'].length; i++){
+//                    test = key;
+//                    console.log(test);
+//                    console.log(output[test]);
+//                    console.log(output[test]['name']);
 
-                    var name = output[test]['name'];
-                    var description = output[test]['description'];
-                    var passed = output[test]['passed'];
-                    var failure = output[test]['failureText'];
+                    var name = output['tests'][i]['name'];
+                    var description = output['tests'][i]['description'];
+                    var passed = output['tests'][i]['passed'];
+                    var failure = output['tests'][i]['failureText'];
 
                     console.log(name);
                     console.log(description);

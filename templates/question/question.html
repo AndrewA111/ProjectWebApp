@@ -88,8 +88,8 @@
 
                         {% if output %}
                             <h5>Output</h5>
-                            {% if output.items %}
-                                {% for key, values in output.items %}
+                            {% if output.tests %}
+                                {% for values in output.tests %}
                                 <div class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">
                                     <h6>{{ values.name }}</h6>
                                     <p>{{ values.description }}</p>
