@@ -172,6 +172,16 @@ def upload(request):
     # set of forms for files
     UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
 
+    pre_load_questions = True
+
+    if(pre_load_questions):
+
+        # get question
+        question_obj = Question.objects.get(slug="calculator")
+
+        # get files
+        files = File.objects.filter(question=question_obj)
+
     if request.method == 'POST':
 
         #testing
@@ -274,26 +284,51 @@ def upload(request):
     # Get request
     if (request.method == 'GET'):
 
+        if pre_load_questions:
 
-        formset_context = UploadFileFormSet(initial=[
-            {
+            formset_data = [{
                 'name': "File",
                 'contents': "<write file contents here>",
             },
-            {
-            'name': "FileName.java",
-             'contents': "<write file contents here>",
-             },
-        ])
+            ]
 
-        # form for rest of question data
-        form_context = UploadForm(initial={
-            'question_name': "{Question-name}",
-            'question_description': "{Text-describing question}",
-            'test_file': 'import static org.junit.Assert.*;\n' +
-                         'import org.junit.Test;\n\n' +
-                         'public class Tests{\n\n}'
-        })
+            for file in files:
+                formset_data.append({
+                    'name': file.name,
+                    'contents': file.contents
+                })
+
+            form_data = {
+                'question_name': question_obj.name,
+                'question_description': question_obj.description,
+                'test_file': question_obj.testFile
+            }
+
+            formset_context = UploadFileFormSet(initial=formset_data)
+
+            # form for rest of question data
+            form_context = UploadForm(initial=form_data)
+        else:
+
+            formset_context = UploadFileFormSet(initial=[
+                {
+                    'name': "File",
+                    'contents': "<write file contents here>",
+                },
+                {
+                'name': "FileName.java",
+                 'contents': "<write file contents here>",
+                 },
+            ])
+
+            # form for rest of question data
+            form_context = UploadForm(initial={
+                'question_name': "{Question-name}",
+                'question_description': "{Text-describing question}",
+                'test_file': 'import static org.junit.Assert.*;\n' +
+                             'import org.junit.Test;\n\n' +
+                             'public class Tests{\n\n}'
+            })
 
         context_dict = {
             'upload_form': form_context,
@@ -304,6 +339,9 @@ def upload(request):
 
 
 def ajax_test(request):
+
+    # set of forms for files
+    UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
 
     # Get request
     if (request.method == 'GET'):
@@ -317,5 +355,89 @@ def ajax_test(request):
         # testing
         decoded = request.body.decode('utf-8')
         print(decoded)
+
+        formset = UploadFileFormSet(request.POST)
+        upload_form = UploadForm(request.POST)
+
+        # print("Upload form:" + str(upload_form))
+
+        # dict to send to API
+        API_dict = {
+            'files': []
+        }
+
+        # data for context dict
+
+        # populate formset with first empty/hidden entry
+        formset_data = [{
+            'name': "File",
+            'contents': "<write file contents here>",
+        },
+        ]
+        form_data = None
+
+        if formset.is_valid():
+
+            # loop from 2nd form (first is empty)
+            for f in formset[1:]:
+                cleaned_data = f.cleaned_data
+
+                API_dict['files'].append({
+                    'name': cleaned_data['name'],
+                    'content': cleaned_data['contents']
+                })
+
+                formset_data.append({
+                    'name': cleaned_data['name'],
+                    'contents': cleaned_data['contents']
+                })
+
+            if upload_form.is_valid():
+
+                # get form data
+                cleaned_data = upload_form.cleaned_data
+
+                print("Cleaned:\n" + str(cleaned_data))
+
+                # add test to dictionary
+                API_dict['files'].append({
+                    'name': "Tests.java",
+                    'content': cleaned_data['test_file'],
+                })
+
+                # testing
+                print("API_dict:\n" + json.dumps(API_dict))
+
+                # make request
+                results = requests.post(url=API_URL, json=API_dict)
+
+                # get results
+                json_results = json.loads(results.content)
+
+                print("Results from compiler:\n" + str(json_results))
+
+                form_data = {
+                    'question_name': cleaned_data['question_name'],
+                    'question_description': cleaned_data['question_description'],
+                    'test_file': cleaned_data['test_file'],
+                }
+
+            else:
+                print(upload_form.errors)
+
+            # make request
+            # results = requests.post(url=API_URL, json=API_dict)
+        else:
+            print(formset.errors)
+
+        # upload_form = UploadForm(request.POST)
+
+        # populate context dict forms with uploaded data
+        formset_context = UploadFileFormSet(initial=formset_data)
+        form_context = UploadForm(initial=form_data)
+        context_dict = {
+            'upload_form': form_context,
+            'upload_file_formset': formset_context,
+        }
 
         return HttpResponse("http response from POST call")

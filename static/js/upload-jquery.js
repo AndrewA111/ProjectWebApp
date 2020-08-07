@@ -199,6 +199,10 @@ $(document).ready(function(){
         // update formset data
         $("#id_form-TOTAL_FORMS").val(tabCount + 1);
 
+        for (i = 0; i < codeMirrorInstances.length; i++){
+            codeMirrorInstances[i].refresh();
+        }
+
 
     });
 
