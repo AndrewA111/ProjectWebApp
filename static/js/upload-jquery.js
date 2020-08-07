@@ -42,6 +42,52 @@ $(document).ready(function(){
             data: formData,
             success: function(response){
                 alert(response);
+                var results = JSON.parse(response);
+                console.log(results);
+
+                var output = results.output;
+
+                console.log("Output: " + output)
+
+                // loop through results and add results boxes to the DOM
+
+
+                for(var key in output){
+                    test = key;
+                    console.log(test);
+                    console.log(output[test]);
+                    console.log(output[test]['name']);
+
+                    var name = output[test]['name'];
+                    var description = output[test]['description'];
+                    var passed = output[test]['passed'];
+                    var failure = output[test]['failureText'];
+
+                    console.log(name);
+                    console.log(description);
+                    console.log(passed);
+
+                    var clone = $("#testTemplate").clone().attr({'id': "test" + name});
+                    clone.appendTo("#testResults");
+
+
+                    $($("#test" + name).find("h6")[0]).attr("id", "test" + name + "Name");
+                    $("#test" + name + "Name").text(name);
+
+                    $($("#test" + name).find("p")[0]).attr("id", "test" + name + "Description");
+                    $("#test" + name + "Description").text(description);
+
+                    $($("#test" + name).find("p")[1]).attr("id", "test" + name + "Result");
+                    $("#test" + name + "Result").text(passed);
+
+                    $($("#test" + name).find("p")[2]).attr("id", "test" + name + "Failure");
+                    $("#test" + name + "Failure").text(failure);
+
+                    $($("#test" + name).show());
+//                    var tabEdit = $($("#" + tabName).find("a")[0]).attr("id", "tab" + tabCount + "Edit");
+//                    var tabEdit = $($("#" + tabName).find("a")[0]).attr("data-name", tabCount);
+
+                }
             }
         });
 

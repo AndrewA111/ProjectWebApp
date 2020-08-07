@@ -150,12 +150,7 @@
                                 <div class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1" style="overflow-x: auto;"> - space for errors - </div>
 
                                 <h5>Output</h5>
-                                        <div id="testTemplate" class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">
 
-                                            <h6 id="testTemplateName">Name</h6>
-                                            <p id="testTemplateDescription">Description</p>
-                                            <p id="testTemplateResult">Passed: True/False</p>
-                                        </div>
 
 
                             </div>
@@ -186,6 +181,13 @@
                                 {{ upload_file_formset.0.name }}
 
                                 {{ upload_file_formset.0.contents }}
+
+                                <div id="testTemplate" class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">
+                                    <h6 id="testTemplateName">Name</h6>
+                                    <p id="testTemplateDescription">Description</p>
+                                    <p id="testTemplateResult">Passed: True/False</p>
+                                    <p id="testTemplateFailure" class="redHighlight">Failure Text</p>
+                                </div>
                             </div>
 
 

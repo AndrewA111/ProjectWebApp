@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from question.models import Question, File, Submission
 from question.forms import SubmissionFileForm, UploadFileForm, UploadForm
 from django.forms.models import model_to_dict
@@ -411,10 +411,30 @@ def ajax_test(request):
                 # make request
                 results = requests.post(url=API_URL, json=API_dict)
 
-                # get results
-                json_results = json.loads(results.content)
+                print("Actual request response:\n" + str(results.content))
 
-                print("Results from compiler:\n" + str(json_results))
+                decodedResults = results.content.decode('utf-8')
+
+                # get results
+                json_results = json.loads(decodedResults)
+
+                print("Decoded:\n" + str(json_results))
+
+                output = json.loads(json_results['output'])
+                print("Output:\n" + str(output))
+
+                if json_results['errors'] != '':
+                    errors = json.loads(json_results['errors'])
+                else:
+                    errors = ''
+                print("Output:\n" + str(errors))
+
+                json_return_object = {
+                    'output': output,
+                    'errors': errors
+                }
+
+                print("Json return object:\n" + str(json_return_object))
 
                 form_data = {
                     'question_name': cleaned_data['question_name'],
@@ -440,4 +460,9 @@ def ajax_test(request):
             'upload_file_formset': formset_context,
         }
 
-        return HttpResponse("http response from POST call")
+        print("just before responding: \n" + str(json_results))
+
+        # return JsonResponse(json_return_object)
+        # return HttpResponse(json.dumps(json_results))
+
+        return HttpResponse(json.dumps(json_return_object))
