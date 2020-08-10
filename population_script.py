@@ -39,7 +39,10 @@ def populate():
 
 
 def add_question(name, testFile, description):
-    q, created = Question.objects.get_or_create(name=name, testFile=testFile, description=description)
+    q, created = Question.objects.get_or_create(name=name,
+                                                testFile=testFile,
+                                                description=description,
+                                                solved=True)
     q.save()
     return q
 

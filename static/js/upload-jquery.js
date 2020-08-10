@@ -98,6 +98,11 @@ $(document).ready(function(){
 
                         if(results.summaryCode == 1){
                                 alert("Upload valid. Now solve to verify.");
+
+                                // switch UI to allow user to solve question
+                                $(".edit").hide();
+                                $("#upload").hide();
+                                $('#solve').show();
                         }
                     } catch(e){
                         // output could not be parsed and displayed

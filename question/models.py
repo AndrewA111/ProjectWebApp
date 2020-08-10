@@ -14,6 +14,9 @@ class Question(models.Model):
     # textual description describing question
     description = models.TextField(default=None, null=True, blank=True)
 
+    # boolean to indicate if author has successfull solved problem
+    solved = models.BooleanField(default=False)
+
     # slug for urls
     slug = models.SlugField(default=None, unique=True)
 

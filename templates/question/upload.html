@@ -32,7 +32,7 @@
 <!--                Question title-->
                 <h5>Question name:</h5>
                 <h4 id="questionTitle">{{ upload_form.initial.question_name }}</h4>
-                <a href="#" id="editQName" class="badge badge-light">Edit</a>
+                <a href="#" id="editQName" class="edit badge badge-light">Edit</a>
 
                 <div class="displayNone" id="qNameDiv">
                         <p>Enter question name:</p>
@@ -45,7 +45,7 @@
                 <h5>
                     Question description:</h5>
                 <p id="questionDesc">{{ upload_form.initial.question_description }}</p>
-                <a href="#" id="editQDesc" class="badge badge-light">Edit</a>
+                <a href="#" id="editQDesc" class="edit badge badge-light">Edit</a>
 
                 <div class="displayNone" id="qDescDiv">
                     <p>Enter question description:</p>
@@ -79,7 +79,7 @@
                                                 <p class=noMargin id="tab{{ forloop.counter0 }}text">{{ form.name.value|default_if_none:'' }}</p>
                                                 <p class="noMargin"> &nbsp
                                                     <a href="#" id="tab{{ forloop.counter0 }}Edit"
-                                                   class="tabEdit badge badge-light"
+                                                   class="edit tabEdit badge badge-light"
                                                    data-name="{{ forloop.counter0 }}">
                                                     Edit
                                                     </a>
@@ -90,7 +90,7 @@
                                 {% endfor %}
                             </div>
 
-                            <div class="row">
+                            <div class="row edit">
                                 <div id="addTab" class="col-md-1 p-2 border border-white rounded-lg" >
                                     <p class="noMargin center"> + </p>
                                 </div>
@@ -202,7 +202,7 @@
                 <div class="fill10">
                     <div class="row">
                         <div class="col-md-12">
-                            <button id="solve" type="button" name="button" class="btn btn-primary float-right m-2" disabled="disabled">Solve</button>
+                            <button id="solve" type="button" name="button" class="displayNone btn btn-primary float-right m-2">Solve</button>
 <!--                            <button type="submit" name="submit" class="btn btn-primary float-right m-2">Submit</button>-->
                             <button id="upload" type="button" name="button" class="btn btn-primary float-right m-2">Submit</button>
 
@@ -215,7 +215,7 @@
         </div>
     </div>
 
-    <div id="popup" class="popupdiv displayNone">
+    <div id="popup" class="popupdiv displayNone z100">
         <div class="container-fluid h-100 w-100">
             <div class="row fill100">
                 <div class="col-md-12 bg-secondary text-white rounded-lg">
@@ -280,11 +280,11 @@
     {% endfor %}
 
     testTextArea = document.getElementById("id_test_file")
-    var testCodeMirror = CodeMirror.fromTextArea(testTextArea, {
+    codeMirrorInstances.push(CodeMirror.fromTextArea(testTextArea, {
                         lineNumbers: true,
                         mode: "text/x-java",
                         autoRefresh: true,
-                      });
+                      }));
 
     </script>
 </body>
