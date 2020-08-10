@@ -370,6 +370,37 @@ def ajax_upload(request):
         return HttpResponse(json.dumps(json_return_object))
 
 
+def ajax_solve(request):
+
+    # Post request
+    if request.method == 'POST':
+        # set of forms for files
+        UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
+
+        # testing
+        decoded = request.body.decode('utf-8')
+        print(decoded)
+
+        formset = UploadFileFormSet(request.POST)
+        upload_form = UploadForm(request.POST)
+
+        # make API request, returns object to be returned to client
+        json_return_object = send_to_API(formset, upload_form)
+
+        if upload_form.is_valid():
+            # get form data
+            cleaned_data = upload_form.cleaned_data
+            # if valid for saving (all tests failing)
+            if json_return_object['summaryCode'] == 0:
+
+                # get question and set solved
+                question = Question.objects.get_or_create(name=cleaned_data['question_name'])
+                question[0].solved = True
+                question[0].save()
+
+        return HttpResponse(json.dumps(json_return_object))
+
+
 # Helper method to handle API communication
 def send_to_API(formset, upload_form):
     # dict to send to API
