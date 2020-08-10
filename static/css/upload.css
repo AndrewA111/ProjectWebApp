@@ -76,3 +76,7 @@ max60{
 .center{
     text-align: center;
 }
+
+.CodeMirror {
+    height: 100%;
+}

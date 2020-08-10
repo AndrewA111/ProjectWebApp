@@ -2,6 +2,109 @@ var tabCount;
 
 $(document).ready(function(){
 
+    // function to submit AJAX request for test results
+    $("#submission_form").submit(function(e){
+
+        // prevent page refresh
+        e.preventDefault();
+
+        // save CodeMirror instances
+        // (update associated textbox for submission)
+        for (i = 0; i < codeMirrorInstances.length; i++){
+            codeMirrorInstances[i].save();
+        }
+
+        // get form data as JSON
+        var formData = $("#submission_form").serialize();
+
+        // post to django server
+        $.ajax({
+            type: 'POST',
+            url: "/question/ajax_upload/",
+            data: formData,
+            success: function(response){
+
+                // for testing
+//                alert(response);
+
+
+                // results available, show output
+                $(".testOutput").show();
+
+                // parse results to object
+                var results = JSON.parse(response);
+                console.log(results);
+
+                // get output sub-object
+                var output = results.output;
+                // console.log("Output: " + output)
+
+                // if errors are returned, display then
+                if(results.errors != ''){
+
+                    // hide results area
+                    $(".testOutput").hide();
+
+                    // show errors
+                    $("#errorText").text(results.errors);
+                    $(".testErrors").show();
+                }
+                // else display returned results
+                else{
+
+                    // clear any old errors
+                    $("#errorText").empty();
+                    $(".testErrors").hide();
+
+                    // try to parse output and display
+                    try{
+
+                        // loop through results and add results boxes to the DOM
+                        for(var i = 0; i < output['tests'].length; i++){
+
+                            // get test info
+                            var name = output['tests'][i]['name'];
+                            var description = output['tests'][i]['description'];
+                            var passed = output['tests'][i]['passed'];
+                            var failure = output['tests'][i]['failureText'];
+
+                            // empty any old test results
+                            $("#output").empty();
+
+                            // clone hidden test template
+                            var clone = $("#testTemplate").clone().attr({'id': "test" + name});
+                            clone.appendTo("#output");
+
+                            // fill new test template fields
+                            $($("#test" + name).find("h6")[0]).attr("id", "test" + name + "Name");
+                            $("#test" + name + "Name").text(name);
+
+                            $($("#test" + name).find("p")[0]).attr("id", "test" + name + "Description");
+                            $("#test" + name + "Description").text(description);
+
+                            $($("#test" + name).find("p")[1]).attr("id", "test" + name + "Result");
+                            $("#test" + name + "Result").text(passed);
+
+                            $($("#test" + name).find("p")[2]).attr("id", "test" + name + "Failure");
+                            $("#test" + name + "Failure").text(failure);
+
+                            $($("#test" + name).show());
+
+                            // show output section
+                            $(".testOutput").show();
+
+                        }
+                    } catch(e){
+                        // output could not be parsed and displayed
+                        console.log("Error loading output JSON")
+                    }
+                }
+
+            }
+        });
+
+    })
+
     // set tab count based on number of forms
     // (-1 for hidden form)
     tabCount = $("#id_form-TOTAL_FORMS").val() - 1
@@ -45,9 +148,8 @@ $(document).ready(function(){
 
     // --- Tab functionality ---
 
-//    $(".tabEdit").click(function(){
+    // when edit button clicked
     $(document).on("click", ".tabEdit", function(){
-
 
         // get the target text area
         var tabDiv = $(this).parent();
@@ -103,11 +205,9 @@ $(document).ready(function(){
         tabCount++;
 
         var tabName = "tab" + tabCount
-
         var tabTitle = "File" + tabCount + ".java";
 
         // clone hidden template
-//        var clone = $("#tabTemplateDiv").clone().attr("id", tabName);
         var clone = $("#tabTemplateDiv").clone().attr({
                                                 'id': tabName,
                                                 'data-no': tabCount});
@@ -115,9 +215,8 @@ $(document).ready(function(){
         // remove 'displayNone' to show
         clone.removeClass("displayNone");
 
+        // add to DOM
         clone.appendTo("#tabs");
-
-
 
         // set IDs
         var tabText = $($("#" + tabName).find("p")[0]).attr("id", "tab" + tabCount + "text");
@@ -139,11 +238,11 @@ $(document).ready(function(){
 
         // convert textarea to codemirror display
         myTextArea = document.getElementById("id_form-" + tabCount + "-contents")
-        var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
+        codeMirrorInstances.push(CodeMirror.fromTextArea(myTextArea, {
                         lineNumbers: true,
                         mode: "text/x-java",
                         autoRefresh: true,
-                      });
+                      }));
 
         // add file name hidden input field
         var nameClone = $("#id_form-0-name").clone().attr("id", "id_form-" + tabCount + "-name");
@@ -154,12 +253,16 @@ $(document).ready(function(){
         // update formset data
         $("#id_form-TOTAL_FORMS").val(tabCount + 1);
 
+        for (i = 0; i < codeMirrorInstances.length; i++){
+            codeMirrorInstances[i].refresh();
+        }
+
 
     });
 
     // --- tab switching ---
-        // when a tab is clicked
-//    $(".tab").click(function(){
+
+    // when a tab is clicked
     $(document).on("click", ".tab", function(){
 
         // get the target text area

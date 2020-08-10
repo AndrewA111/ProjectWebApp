@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
     <link rel="stylesheet" type="text/css" href="{% static 'css/upload.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/question.css' %}">
 
     <!--    Codemirror-->
     <link rel="stylesheet" type="text/css" href="{% static 'css/codemirror.css' %}">
@@ -106,7 +107,7 @@
 
 <!--                            File contents-->
                             <div class="row">
-                                <div id="textareaholder" style="width:100%">
+                                <div id="textareaholder" style="width:100%; height:100%">
                                     {% for form in upload_file_formset %}
 <!--                                        ignore first (empty template) form-->
                                         {% if not forloop.first %}
@@ -140,7 +141,25 @@
 
     <!--                    output col -->
                         <div class="col-md-5 scroll bg-secondary text-white border border-white rounded-lg fill100">
-                            <div id="hiddenInputs">
+
+                            <div id="testResults">
+
+                                <h4 class="mt-1">Test Results</h4></br>
+
+                                <h5 class="testErrors displayNone">Errors</h5>
+                                <div id="errorText" class="testErrors displayNone testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1" style="overflow-x: auto;"> - space for errors - </div>
+
+                                <h5 class="testOutput displayNone">Output</h5>
+                                <div id="output" class="testOutput displayNone">
+
+                                </div>
+
+
+
+                            </div>
+
+
+                            <div id="hiddenInputs" class="displayNone">
                                 Q Name: {{ upload_form.question_name }}<br/>
                                 Q Desc: {{ upload_form.question_description }}<br/>
 <!--                                Test file: {{ upload_form.test_file }}<br/>-->
@@ -159,12 +178,19 @@
 
 
 <!--                                hidden field for creating forms-->
-                            <div>
+                            <div id="hiddenTemplates" class="displayNone">
                                 <br/> Hidden fields for creating new tabs/files
 
                                 {{ upload_file_formset.0.name }}
 
                                 {{ upload_file_formset.0.contents }}
+
+                                <div id="testTemplate" class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">
+                                    <h6 id="testTemplateName">Name</h6>
+                                    <p id="testTemplateDescription">Description</p>
+                                    <p id="testTemplateResult">Passed: True/False</p>
+                                    <p id="testTemplateFailure" class="redHighlight">Failure Text</p>
+                                </div>
                             </div>
 
 
@@ -215,7 +241,9 @@
 
 
 <!--    - JQuery - -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+  crossorigin="anonymous">></script>
 
 <!--    JQuery functions for question.html-->
     <script src="{% static 'js/upload-jquery.js' %}" crossorigin="anonymous"></script>
@@ -233,15 +261,16 @@
 
     <script>
 
+    var codeMirrorInstances = [];
 
     {% for form in upload_file_formset %}
         {% if not forloop.first %}
             myTextArea = document.getElementById("id_form-{{ forloop.counter0 }}-contents")
-            var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
+            codeMirrorInstances.push(CodeMirror.fromTextArea(myTextArea, {
                                 lineNumbers: true,
                                 mode: "text/x-java",
                                 autoRefresh: true,
-                              });
+                              }));
         {% endif %}
 
     {% endfor %}

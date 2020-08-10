@@ -36,6 +36,6 @@ class UploadForm(forms.Form):
 
     question_name = forms.CharField(max_length=32);
 
-    question_description = forms.CharField(max_length=128)
+    question_description = forms.CharField()
 
     test_file = forms.CharField(widget=forms.Textarea)
