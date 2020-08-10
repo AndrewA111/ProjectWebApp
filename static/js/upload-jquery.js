@@ -5,6 +5,9 @@ $(document).ready(function(){
     // function to submit AJAX request for test results
     $("#upload").click(function(){
 
+        $("#upload").hide();
+        $("#spinner").show();
+
         // save CodeMirror instances
         // (update associated textbox for submission)
         for (i = 0; i < codeMirrorInstances.length; i++){
@@ -94,16 +97,24 @@ $(document).ready(function(){
                         }
 
                         if(results.summaryCode == 1){
-                                alert("Upload valid. Now solve to verify.");
+//                                alert("Upload valid. Now solve to verify.");
 
                                 // switch UI to allow user to solve question
                                 $(".edit").hide();
                                 $("#upload").hide();
+                                $("#spinner").hide();
                                 $('#solve').show();
 
                                 // show first file
                                 $(".textarea").hide();
                                 $("#textarea1").show();
+
+                                // popup text
+                                $("#messagePopupText").text("Saved. Solve question to verify.");
+                                $("#messagePopup").show();
+                        } else{
+                            $("#upload").show();
+                            $("#spinner").hide();
                         }
                     } catch(e){
                         // output could not be parsed and displayed
@@ -116,7 +127,14 @@ $(document).ready(function(){
 
     })
 
+    $("#closeMessagePopup").click(function(){
+        $("#messagePopup").hide();
+    })
+
     $("#solve").click(function(){
+
+        $("#solve").hide();
+        $("#spinner").show();
 
         // save CodeMirror instances
         // (update associated textbox for submission)
@@ -205,7 +223,10 @@ $(document).ready(function(){
                         }
 
                         if(results.summaryCode == 0){
-                                alert("Upload solved.");
+                            $("#messagePopupText").text("Solved");
+                            $("#messagePopup").show();
+                            $("#spinner").hide();
+//                                alert("Upload solved.");
                         }
                     } catch(e){
                         // output could not be parsed and displayed

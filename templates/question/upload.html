@@ -206,6 +206,10 @@
 <!--                            <button type="submit" name="submit" class="btn btn-primary float-right m-2">Submit</button>-->
                             <button id="upload" type="button" name="button" class="btn btn-primary float-right m-2">Submit</button>
 
+                            <button id="spinner" class="displayNone btn btn-primary float-right m-2" type="button" disabled>
+                              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                              Running...
+                            </button>
 
                         </div>
                     </div>
@@ -222,6 +226,18 @@
                     Enter file name:<br/><br/>
                     <input type="text" id="fileNameInput" name="fileNameInput">
                     <a href="#" id="submitFileName" class="badge badge-light" data-tab="1">Submit</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="messagePopup" class="popupdiv displayNone z100">
+        <div class="container-fluid h-100 w-100">
+            <div class="row fill100">
+                <div class="col-md-12 bg-secondary text-white rounded-lg">
+                    <div id="messagePopupText">Success</div>
+                    <a href="#" id="closeMessagePopup" class="badge badge-light">Close</a>
 
                 </div>
             </div>
