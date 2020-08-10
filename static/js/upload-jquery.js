@@ -58,6 +58,8 @@ $(document).ready(function(){
 
                     // try to parse output and display
                     try{
+                        // empty any old test results
+                        $("#output").empty();
 
                         // loop through results and add results boxes to the DOM
                         for(var i = 0; i < output['tests'].length; i++){
@@ -68,8 +70,7 @@ $(document).ready(function(){
                             var passed = output['tests'][i]['passed'];
                             var failure = output['tests'][i]['failureText'];
 
-                            // empty any old test results
-                            $("#output").empty();
+
 
                             // clone hidden test template
                             var clone = $("#testTemplate").clone().attr({'id': "test" + name});

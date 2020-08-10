@@ -419,9 +419,27 @@ def ajax_upload(request):
 
                 print("Decoded:\n" + str(json_results))
 
+                # code to summarize test results status
+                #   0 - all tests passed
+                #   1 - all tests failed
+                #   2 - mixture of tests failed/passed
+                #   3 - no tests present
+                summary_code = 3
+
                 # separate output and error and decode inner JSON string
                 try:
                     output = json.loads(json_results['output'])
+
+                    if output['numTests'] == 0:
+                        summary_code = 3
+                    elif output['numFailed'] == 0:
+                        summary_code = 0
+                    elif output['numFailed'] == output['numTests']:
+                        summary_code = 1
+                    else:
+                        summary_code = 2
+
+
                 except JSONDecodeError:
                     output = json_results['output'];
 
@@ -438,16 +456,17 @@ def ajax_upload(request):
                 # reconstruct object for return
                 json_return_object = {
                     'output': output,
-                    'errors': errors
+                    'errors': errors,
+                    'summaryCode': summary_code,
                 }
 
                 print("Json return object:\n" + str(json_return_object))
 
-                form_data = {
-                    'question_name': cleaned_data['question_name'],
-                    'question_description': cleaned_data['question_description'],
-                    'test_file': cleaned_data['test_file'],
-                }
+                # form_data = {
+                #     'question_name': cleaned_data['question_name'],
+                #     'question_description': cleaned_data['question_description'],
+                #     'test_file': cleaned_data['test_file'],
+                # }
 
             else:
                 print(upload_form.errors)
