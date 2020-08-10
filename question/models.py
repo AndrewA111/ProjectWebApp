@@ -6,13 +6,13 @@ from django.template.defaultfilters import slugify
 class Question(models.Model):
 
     # question name
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
 
     # test file (contents)
-    testFile = models.TextField(default=None)
+    testFile = models.TextField(default=None, null=True, blank=True)
 
     # textual description describing question
-    description = models.TextField(default=None)
+    description = models.TextField(default=None, null=True, blank=True)
 
     # slug for urls
     slug = models.SlugField(default=None, unique=True)

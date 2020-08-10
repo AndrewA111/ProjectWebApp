@@ -329,9 +329,40 @@ def ajax_upload(request):
         formset = UploadFileFormSet(request.POST)
         upload_form = UploadForm(request.POST)
 
-        # print("Upload form:" + str(upload_form))
-
+        # make API request, returns object to be returned to client
         json_return_object = send_to_API(formset, upload_form)
+
+        # boolean to track whether a new question has been created
+        json_return_object['uploaded'] = False
+
+        if upload_form.is_valid():
+            # get form data
+            cleaned_data = upload_form.cleaned_data
+            # if valid for saving (all tests failing)
+            if json_return_object['summaryCode'] == 1:
+                print("Upload form name:" + str(cleaned_data['question_name']))
+                question = Question.objects.get_or_create(name=cleaned_data['question_name'])
+
+
+                # if question does not already exist
+                if question[1]:
+                    print("new question started")
+
+                    question[0].testFile = cleaned_data['test_file']
+                    question[0].description = cleaned_data['question_description']
+                    question[0].save()
+
+                    if formset.is_valid():
+                        # loop from 2nd form (first is empty)
+                        for f in formset[1:]:
+                            cleaned_data = f.cleaned_data
+                            file = File.objects.create(name=cleaned_data['name'],
+                                                       contents=cleaned_data['contents'],
+                                                       question=question[0])
+                            file.save()
+
+                            json_return_object['uploaded'] = True
+
 
         print("just before responding: \n" + str(json_return_object))
 

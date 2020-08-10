@@ -3,10 +3,10 @@ var tabCount;
 $(document).ready(function(){
 
     // function to submit AJAX request for test results
-    $("#submission_form").submit(function(e){
+    $("#upload").click(function(){
 
         // prevent page refresh
-        e.preventDefault();
+//        e.preventDefault();
 
         // save CodeMirror instances
         // (update associated textbox for submission)
@@ -94,6 +94,10 @@ $(document).ready(function(){
                             // show output section
                             $(".testOutput").show();
 
+                        }
+
+                        if(results.summaryCode == 1){
+                                alert("Upload valid. Now solve to verify.");
                         }
                     } catch(e){
                         // output could not be parsed and displayed
