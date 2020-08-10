@@ -1,3 +1,5 @@
+from json.decoder import JSONDecodeError
+
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from question.models import Question, File, Submission
@@ -316,8 +318,8 @@ def upload(request):
                     'contents': "<write file contents here>",
                 },
                 {
-                'name': "FileName.java",
-                 'contents': "<write file contents here>",
+                    'name': "FileName.java",
+                    'contents': "<write file contents here>",
                  },
             ])
 
@@ -338,19 +340,16 @@ def upload(request):
         return render(request, 'question/upload.html', context_dict)
 
 
-def ajax_test(request):
+def ajax_upload(request):
 
-    # set of forms for files
-    UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
-
-    # Get request
-    if (request.method == 'GET'):
-        print("Get request received.")
-
-        return HttpResponse("http response from GET call")
+    # object to return to client
+    json_return_object = None
 
     # Post request
     if (request.method == 'POST'):
+
+        # set of forms for files
+        UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
 
         # testing
         decoded = request.body.decode('utf-8')
@@ -420,15 +419,23 @@ def ajax_test(request):
 
                 print("Decoded:\n" + str(json_results))
 
-                output = json.loads(json_results['output'])
+                # separate output and error and decode inner JSON string
+                try:
+                    output = json.loads(json_results['output'])
+                except JSONDecodeError:
+                    output = json_results['output'];
+
                 print("Output:\n" + str(output))
 
-                if json_results['errors'] != '':
-                    errors = json.loads(json_results['errors'])
-                else:
-                    errors = ''
+                # if json_results['errors'] != '':
+                #     errors = json.loads(json_results['errors'])
+                # else:
+                #     errors = ''
+
+                errors = json_results['errors']
                 print("Output:\n" + str(errors))
 
+                # reconstruct object for return
                 json_return_object = {
                     'output': output,
                     'errors': errors
@@ -450,19 +457,7 @@ def ajax_test(request):
         else:
             print(formset.errors)
 
-        # upload_form = UploadForm(request.POST)
+        print("just before responding: \n" + str(json_return_object))
 
-        # populate context dict forms with uploaded data
-        formset_context = UploadFileFormSet(initial=formset_data)
-        form_context = UploadForm(initial=form_data)
-        context_dict = {
-            'upload_form': form_context,
-            'upload_file_formset': formset_context,
-        }
-
-        print("just before responding: \n" + str(json_results))
-
-        # return JsonResponse(json_return_object)
-        # return HttpResponse(json.dumps(json_results))
-
+        # resturn results as json
         return HttpResponse(json.dumps(json_return_object))

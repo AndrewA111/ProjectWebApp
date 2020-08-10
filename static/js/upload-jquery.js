@@ -2,92 +2,104 @@ var tabCount;
 
 $(document).ready(function(){
 
-    $("#ajaxGet").click(function(){
-        $.get('/question/ajax_test/', function(data){
-            console.log(data);
-            alert(data);
-            });
-
-    })
-
-    $("#ajaxPost").click(function(){
-
-        var formData = $("#submission_form").serialize();
-
-        $.ajax({
-            type: 'POST',
-            url: "/question/ajax_test/",
-            data: formData,
-            success: function(response){
-                alert(response);
-            }
-        });
-
-    })
-
+    // function to submit AJAX request for test results
     $("#submission_form").submit(function(e){
 
         // prevent page refresh
         e.preventDefault();
 
+        // save CodeMirror instances
+        // (update associated textbox for submission)
         for (i = 0; i < codeMirrorInstances.length; i++){
             codeMirrorInstances[i].save();
         }
 
+        // get form data as JSON
         var formData = $("#submission_form").serialize();
 
+        // post to django server
         $.ajax({
             type: 'POST',
-            url: "/question/ajax_test/",
+            url: "/question/ajax_upload/",
             data: formData,
             success: function(response){
-                alert(response);
+
+                // for testing
+//                alert(response);
+
+
+                // results available, show output
+                $(".testOutput").show();
+
+                // parse results to object
                 var results = JSON.parse(response);
                 console.log(results);
 
+                // get output sub-object
                 var output = results.output;
+                // console.log("Output: " + output)
 
-                console.log("Output: " + output)
+                // if errors are returned, display then
+                if(results.errors != ''){
 
-                // loop through results and add results boxes to the DOM
+                    // hide results area
+                    $(".testOutput").hide();
 
-
-                for(var i = 0; i < output['tests'].length; i++){
-//                    test = key;
-//                    console.log(test);
-//                    console.log(output[test]);
-//                    console.log(output[test]['name']);
-
-                    var name = output['tests'][i]['name'];
-                    var description = output['tests'][i]['description'];
-                    var passed = output['tests'][i]['passed'];
-                    var failure = output['tests'][i]['failureText'];
-
-                    console.log(name);
-                    console.log(description);
-                    console.log(passed);
-
-                    var clone = $("#testTemplate").clone().attr({'id': "test" + name});
-                    clone.appendTo("#testResults");
-
-
-                    $($("#test" + name).find("h6")[0]).attr("id", "test" + name + "Name");
-                    $("#test" + name + "Name").text(name);
-
-                    $($("#test" + name).find("p")[0]).attr("id", "test" + name + "Description");
-                    $("#test" + name + "Description").text(description);
-
-                    $($("#test" + name).find("p")[1]).attr("id", "test" + name + "Result");
-                    $("#test" + name + "Result").text(passed);
-
-                    $($("#test" + name).find("p")[2]).attr("id", "test" + name + "Failure");
-                    $("#test" + name + "Failure").text(failure);
-
-                    $($("#test" + name).show());
-//                    var tabEdit = $($("#" + tabName).find("a")[0]).attr("id", "tab" + tabCount + "Edit");
-//                    var tabEdit = $($("#" + tabName).find("a")[0]).attr("data-name", tabCount);
-
+                    // show errors
+                    $("#errorText").text(results.errors);
+                    $(".testErrors").show();
                 }
+                // else display returned results
+                else{
+
+                    // clear any old errors
+                    $("#errorText").empty();
+                    $(".testErrors").hide();
+
+                    // try to parse output and display
+                    try{
+
+                        // loop through results and add results boxes to the DOM
+                        for(var i = 0; i < output['tests'].length; i++){
+
+                            // get test info
+                            var name = output['tests'][i]['name'];
+                            var description = output['tests'][i]['description'];
+                            var passed = output['tests'][i]['passed'];
+                            var failure = output['tests'][i]['failureText'];
+
+                            // empty any old test results
+                            $("#output").empty();
+
+                            // clone hidden test template
+                            var clone = $("#testTemplate").clone().attr({'id': "test" + name});
+                            clone.appendTo("#output");
+
+                            // fill new test template fields
+                            $($("#test" + name).find("h6")[0]).attr("id", "test" + name + "Name");
+                            $("#test" + name + "Name").text(name);
+
+                            $($("#test" + name).find("p")[0]).attr("id", "test" + name + "Description");
+                            $("#test" + name + "Description").text(description);
+
+                            $($("#test" + name).find("p")[1]).attr("id", "test" + name + "Result");
+                            $("#test" + name + "Result").text(passed);
+
+                            $($("#test" + name).find("p")[2]).attr("id", "test" + name + "Failure");
+                            $("#test" + name + "Failure").text(failure);
+
+                            $($("#test" + name).show());
+
+                            // show output section
+                            $(".testOutput").show();
+
+                        }
+                    } catch(e){
+                        // output could not be parsed and displayed
+                        console.log("Error loading output JSON")
+                    }
+                }
+
             }
         });
 
@@ -136,9 +148,8 @@ $(document).ready(function(){
 
     // --- Tab functionality ---
 
-//    $(".tabEdit").click(function(){
+    // when edit button clicked
     $(document).on("click", ".tabEdit", function(){
-
 
         // get the target text area
         var tabDiv = $(this).parent();
@@ -194,11 +205,9 @@ $(document).ready(function(){
         tabCount++;
 
         var tabName = "tab" + tabCount
-
         var tabTitle = "File" + tabCount + ".java";
 
         // clone hidden template
-//        var clone = $("#tabTemplateDiv").clone().attr("id", tabName);
         var clone = $("#tabTemplateDiv").clone().attr({
                                                 'id': tabName,
                                                 'data-no': tabCount});
@@ -206,9 +215,8 @@ $(document).ready(function(){
         // remove 'displayNone' to show
         clone.removeClass("displayNone");
 
+        // add to DOM
         clone.appendTo("#tabs");
-
-
 
         // set IDs
         var tabText = $($("#" + tabName).find("p")[0]).attr("id", "tab" + tabCount + "text");
@@ -253,8 +261,8 @@ $(document).ready(function(){
     });
 
     // --- tab switching ---
-        // when a tab is clicked
-//    $(".tab").click(function(){
+
+    // when a tab is clicked
     $(document).on("click", ".tab", function(){
 
         // get the target text area
