@@ -1,11 +1,9 @@
 from json.decoder import JSONDecodeError
-
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from question.models import Question, File, Submission
 from question.forms import SubmissionFileForm, UploadFileForm, UploadForm
 from django.forms.models import model_to_dict
-from django.core import serializers
 import json
 import requests
 from django.forms.formsets import formset_factory
@@ -19,26 +17,12 @@ def index(request):
 
     questions = Question.objects.all()
 
-
     context_dict = {
         'questions': questions
     }
 
     return render(request, 'question/index.html', context=context_dict)
 
-
-# def question_list(request):
-#
-#     questions = Question.objects.all()
-#
-#     context_dict = {
-#         'questions': []
-#     }
-#
-#     for question in questions:
-#         context_dict['questions'].append(question)
-#
-#     return render(request, 'question/index.html', context=context_dict)
 
 def question(request, question_slug):
 
@@ -49,13 +33,13 @@ def question(request, question_slug):
     files = File.objects.filter(question=question_obj)
 
     # Post request
-    if(request.method == 'POST'):
+    if request.method == 'POST':
 
         # Test form submission details
         # print(dict(request.POST.lists()))
 
         # list to store submitted forms
-        form_submissions = [];
+        form_submissions = []
 
         # create submission object associated with post
         submission = Submission.objects.get_or_create(question=question_obj)
@@ -193,8 +177,6 @@ def upload(request):
         formset = UploadFileFormSet(request.POST)
         upload_form = UploadForm(request.POST)
 
-        # print("Upload form:" + str(upload_form))
-
         # dict to send to API
         API_dict = {
             'files': []
@@ -226,8 +208,6 @@ def upload(request):
                     'name': cleaned_data['name'],
                     'contents': cleaned_data['contents']
                 })
-
-
 
             if upload_form.is_valid():
 
@@ -262,14 +242,8 @@ def upload(request):
             else:
                 print(upload_form.errors)
 
-
-
-            # make request
-            # results = requests.post(url=API_URL, json=API_dict)
         else:
             print(formset.errors)
-
-
 
         # upload_form = UploadForm(request.POST)
 
@@ -284,7 +258,7 @@ def upload(request):
         return render(request, 'question/upload.html', context_dict)
 
     # Get request
-    if (request.method == 'GET'):
+    if request.method == 'GET':
 
         if pre_load_questions:
 
@@ -342,11 +316,8 @@ def upload(request):
 
 def ajax_upload(request):
 
-    # object to return to client
-    json_return_object = None
-
     # Post request
-    if (request.method == 'POST'):
+    if request.method == 'POST':
 
         # set of forms for files
         UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
@@ -360,123 +331,105 @@ def ajax_upload(request):
 
         # print("Upload form:" + str(upload_form))
 
-        # dict to send to API
-        API_dict = {
-            'files': []
-        }
-
-        # data for context dict
-
-        # populate formset with first empty/hidden entry
-        formset_data = [{
-            'name': "File",
-            'contents': "<write file contents here>",
-        },
-        ]
-        form_data = None
-
-        if formset.is_valid():
-
-            # loop from 2nd form (first is empty)
-            for f in formset[1:]:
-                cleaned_data = f.cleaned_data
-
-                API_dict['files'].append({
-                    'name': cleaned_data['name'],
-                    'content': cleaned_data['contents']
-                })
-
-                formset_data.append({
-                    'name': cleaned_data['name'],
-                    'contents': cleaned_data['contents']
-                })
-
-            if upload_form.is_valid():
-
-                # get form data
-                cleaned_data = upload_form.cleaned_data
-
-                print("Cleaned:\n" + str(cleaned_data))
-
-                # add test to dictionary
-                API_dict['files'].append({
-                    'name': "Tests.java",
-                    'content': cleaned_data['test_file'],
-                })
-
-                # testing
-                print("API_dict:\n" + json.dumps(API_dict))
-
-                # make request
-                results = requests.post(url=API_URL, json=API_dict)
-
-                print("Actual request response:\n" + str(results.content))
-
-                decodedResults = results.content.decode('utf-8')
-
-                # get results
-                json_results = json.loads(decodedResults)
-
-                print("Decoded:\n" + str(json_results))
-
-                # code to summarize test results status
-                #   0 - all tests passed
-                #   1 - all tests failed
-                #   2 - mixture of tests failed/passed
-                #   3 - no tests present
-                summary_code = 3
-
-                # separate output and error and decode inner JSON string
-                try:
-                    output = json.loads(json_results['output'])
-
-                    if output['numTests'] == 0:
-                        summary_code = 3
-                    elif output['numFailed'] == 0:
-                        summary_code = 0
-                    elif output['numFailed'] == output['numTests']:
-                        summary_code = 1
-                    else:
-                        summary_code = 2
-
-
-                except JSONDecodeError:
-                    output = json_results['output'];
-
-                print("Output:\n" + str(output))
-
-                # if json_results['errors'] != '':
-                #     errors = json.loads(json_results['errors'])
-                # else:
-                #     errors = ''
-
-                errors = json_results['errors']
-                print("Output:\n" + str(errors))
-
-                # reconstruct object for return
-                json_return_object = {
-                    'output': output,
-                    'errors': errors,
-                    'summaryCode': summary_code,
-                }
-
-                print("Json return object:\n" + str(json_return_object))
-
-                # form_data = {
-                #     'question_name': cleaned_data['question_name'],
-                #     'question_description': cleaned_data['question_description'],
-                #     'test_file': cleaned_data['test_file'],
-                # }
-
-            else:
-                print(upload_form.errors)
-
-            # make request
-            # results = requests.post(url=API_URL, json=API_dict)
-        else:
-            print(formset.errors)
+        json_return_object = send_to_API(formset, upload_form)
 
         print("just before responding: \n" + str(json_return_object))
 
         # resturn results as json
         return HttpResponse(json.dumps(json_return_object))
+
+
+# Helper method to handle API communication
+def send_to_API(formset, upload_form):
+    # dict to send to API
+    API_dict = {
+        'files': []
+    }
+
+    if formset.is_valid():
+
+        # loop from 2nd form (first is empty)
+        for f in formset[1:]:
+            cleaned_data = f.cleaned_data
+
+            API_dict['files'].append({
+                'name': cleaned_data['name'],
+                'content': cleaned_data['contents']
+            })
+
+        if upload_form.is_valid():
+
+            # get form data
+            cleaned_data = upload_form.cleaned_data
+
+            print("Cleaned:\n" + str(cleaned_data))
+
+            # add test to dictionary
+            API_dict['files'].append({
+                'name': "Tests.java",
+                'content': cleaned_data['test_file'],
+            })
+
+            # testing
+            print("API_dict:\n" + json.dumps(API_dict))
+
+            # make request
+            results = requests.post(url=API_URL, json=API_dict)
+
+            print("Actual request response:\n" + str(results.content))
+
+            decodedResults = results.content.decode('utf-8')
+
+            # get results
+            json_results = json.loads(decodedResults)
+
+            print("Decoded:\n" + str(json_results))
+
+            # code to summarize test results status
+            #   0 - all tests passed
+            #   1 - all tests failed
+            #   2 - mixture of tests failed/passed
+            #   3 - no tests present
+            summary_code = 3
+
+            # separate output and error and decode inner JSON string
+            try:
+                output = json.loads(json_results['output'])
+
+                if output['numTests'] == 0:
+                    summary_code = 3
+                elif output['numFailed'] == 0:
+                    summary_code = 0
+                elif output['numFailed'] == output['numTests']:
+                    summary_code = 1
+                else:
+                    summary_code = 2
+
+            except JSONDecodeError:
+                output = json_results['output']
+
+            print("Output:\n" + str(output))
+
+            errors = json_results["errors"]
+            print("Output:\n" + str(errors))
+
+            # reconstruct object for return
+            json_return_object = {
+                'output': output,
+                'errors': errors,
+                'summaryCode': summary_code,
+            }
+
+            print("Json return object:\n" + str(json_return_object))
+
+            return json_return_object
+
+        else:
+            print(upload_form.errors)
+            return None
+
+        # make request
+        # results = requests.post(url=API_URL, json=API_dict)
+    else:
+        print(formset.errors)
+        return None
