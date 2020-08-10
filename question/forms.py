@@ -29,7 +29,7 @@ class UploadFileForm(forms.Form):
     name = forms.CharField(max_length=32)
 
     # file contents
-    contents = forms.CharField(widget=forms.Textarea())
+    contents = forms.CharField(widget=forms.Textarea(), required=False)
 
 
 class UploadForm(forms.Form):
@@ -38,4 +38,4 @@ class UploadForm(forms.Form):
 
     question_description = forms.CharField()
 
-    test_file = forms.CharField(widget=forms.Textarea)
+    test_file = forms.CharField(widget=forms.Textarea, required=False)
