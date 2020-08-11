@@ -84,3 +84,7 @@ max60{
 .CodeMirror {
     height: 100%;
 }
+
+.vAlignMiddle{
+    vertical-align: middle;
+}

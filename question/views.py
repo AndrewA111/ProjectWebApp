@@ -314,6 +314,16 @@ def upload(request):
         return render(request, 'question/upload.html', context_dict)
 
 
+# Method to handle AJAX request to create new question
+#
+# Summary codes (json_return_object['summaryCode']):
+#
+#        0 - all tests passed
+#        1 - all tests failed
+#        2 - mixture of tests failed/passed
+#        3 - no tests present
+#        4 - question name already taken
+#
 def ajax_upload(request):
 
     # Post request
@@ -362,7 +372,8 @@ def ajax_upload(request):
                             file.save()
 
                             json_return_object['uploaded'] = True
-
+                else:
+                    json_return_object['summaryCode'] = 4
 
         print("just before responding: \n" + str(json_return_object))
 
@@ -380,6 +391,7 @@ def ajax_solve(request):
         # testing
         decoded = request.body.decode('utf-8')
         print(decoded)
+        
 
         formset = UploadFileFormSet(request.POST)
         upload_form = UploadForm(request.POST)
@@ -402,6 +414,8 @@ def ajax_solve(request):
 
 
 # Helper method to handle API communication
+#
+
 def send_to_API(formset, upload_form):
     # dict to send to API
     API_dict = {

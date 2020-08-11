@@ -110,11 +110,28 @@ $(document).ready(function(){
                                 $("#textarea1").show();
 
                                 // popup text
-                                $("#messagePopupText").text("Saved. Solve question to verify.");
+                                $("#messagePopupTitle").text("Draft question uploaded.");
+                                $("#messagePopupText").text("Solve question to verify.");
                                 $("#messagePopup").show();
                         } else{
                             $("#upload").show();
                             $("#spinner").hide();
+
+                            $("#messagePopupTitle").text("Invalid upload");
+
+                            // if some tests are passing
+                            if(results.summaryCode == 0 || results.summaryCode == 2){
+                                $("#messagePopupText").text("All tests must fail by default.");
+                            }
+                            // if no tests provided
+                            else if(results.summaryCode == 3){
+                                $("#messagePopupText").text("No tests provided.");
+                            }
+                            // if question name already taken
+                            else if(results.summaryCode == 4){
+                                $("#messagePopupText").text("Question name unavailable.");
+                            }
+                            $("#messagePopup").show();
                         }
                     } catch(e){
                         // output could not be parsed and displayed
@@ -227,6 +244,10 @@ $(document).ready(function(){
                             $("#messagePopup").show();
                             $("#spinner").hide();
 //                                alert("Upload solved.");
+                        }
+                        else{
+                            $("#spinner").hide();
+                            $('#solve').show();
                         }
                     } catch(e){
                         // output could not be parsed and displayed
