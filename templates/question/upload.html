@@ -59,23 +59,24 @@
                   <!--                        tabs-->
                 <hr/>
 
-                <h5 class="mb-3">Files</h5>
+
                 <div class="row edit">
-                    <div id="addTab" class="col-md-6 p-2 border border-white rounded-lg" >
+                    <div id="addTab" class="col-md-6 p-2 border border-white rounded-lg mb-4" >
                         <p class="noMargin center">Add File</p>
                     </div>
 
-                    <div id="tabTest" class="tab col-md-6 p-2 border border-white rounded-lg ml-auto" data-no="Test">
-                        <div class="sameLine">
-                            <p class=noMargin id="tabTesttext">Tests.java</p>
-                        </div>
+                    <div id="tabTest" class="tab col-md-6 p-2 border border-white rounded-lg ml-auto mb-4" data-no="Test">
+<!--                        <div class="sameLine">-->
+                            <p class="noMargin center" id="tabTesttext">Tests.java</p>
+<!--                        </div>-->
                     </div>
                 </div>
+                <h5 class="mb-3">Files</h5>
 
                 <div id="tabs" class="row">
                     {% for form in upload_file_formset %}
                         {% if not forloop.first %}
-                            <div id="tab{{ forloop.counter0 }}" class="tab col-md-12 p-2 border border-white rounded-lg" data-no="{{ forloop.counter0 }}">
+                            <div id="tab{{ forloop.counter0 }}" class="tab col-md-6 p-2 border border-white rounded-lg" data-no="{{ forloop.counter0 }}">
                                 <div class="sameLine">
                                     <p class=noMargin id="tab{{ forloop.counter0 }}text">{{ form.name.value|default_if_none:'' }}</p>
                                     <p class="noMargin"> &nbsp
@@ -285,7 +286,7 @@
     </div>
 
 
-        <div id="tabTemplateDiv" class="displayNone tab col-md-12 p-2 border border-white rounded-lg" >
+        <div id="tabTemplateDiv" class="displayNone tab col-md-6 p-2 border border-white rounded-lg" >
             <div class="sameLine">
                 <p class=noMargin>Empty</p>
                 <p class="noMargin"> &nbsp
