@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-
+{% extends 'question/base.html' %}
 {% load staticfiles %}
 
 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
+    {% block link_block %}
       <!--- Boostrap --->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
@@ -15,11 +15,14 @@
 
     <!--    Codemirror-->
     <link rel="stylesheet" type="text/css" href="{% static 'css/codemirror.css' %}">
+    {% endblock %}
 
-    <title>Title</title>
+    {% block title_block %}
+        Upload New Question
+    {% endblock %}
 </head>
 <body>
-
+    {% block body_block %}
     <div class="container-fluid h-100">
 
         <div class="row h-100">
@@ -27,7 +30,7 @@
 <!--            Description section-->
             <div class="col-md-3 bg-secondary text-white rounded-lg">
 
-                <h3>Upload New Question</h3><br/>
+                <h3 class="mt-3">Upload New Question</h3><br/>
 
 <!--                Question title-->
                 <h5>Question name:</h5>
@@ -53,6 +56,43 @@
                     <a href="#" id="submitQDesc" class="badge badge-light">Submit</a>
                 </div>
 
+                  <!--                        tabs-->
+                <hr/>
+
+                <h5 class="mb-3">Files</h5>
+                <div class="row edit">
+                    <div id="addTab" class="col-md-6 p-2 border border-white rounded-lg" >
+                        <p class="noMargin center">Add File</p>
+                    </div>
+
+                    <div id="tabTest" class="tab col-md-6 p-2 border border-white rounded-lg ml-auto" data-no="Test">
+                        <div class="sameLine">
+                            <p class=noMargin id="tabTesttext">Tests.java</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tabs" class="row">
+                    {% for form in upload_file_formset %}
+                        {% if not forloop.first %}
+                            <div id="tab{{ forloop.counter0 }}" class="tab col-md-12 p-2 border border-white rounded-lg" data-no="{{ forloop.counter0 }}">
+                                <div class="sameLine">
+                                    <p class=noMargin id="tab{{ forloop.counter0 }}text">{{ form.name.value|default_if_none:'' }}</p>
+                                    <p class="noMargin"> &nbsp
+                                        <a href="#" id="tab{{ forloop.counter0 }}Edit"
+                                       class="edit tabEdit badge badge-light"
+                                       data-name="{{ forloop.counter0 }}">
+                                        Edit
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+
+
             </div>
 
 <!--            Code/results section-->
@@ -70,50 +110,50 @@
                         <!--                    input col-->
                         <div class="col-md-7 bg-secondary text-white border border-white rounded-lg fill100">
 
-                            <!--                        tabs-->
-                            <div id="tabs" class="row">
-                                {% for form in upload_file_formset %}
-                                    {% if not forloop.first %}
-                                        <div id="tab{{ forloop.counter0 }}" class="tab col-md-4 p-2 border border-white rounded-lg" data-no="{{ forloop.counter0 }}">
-                                            <div class="sameLine">
-                                                <p class=noMargin id="tab{{ forloop.counter0 }}text">{{ form.name.value|default_if_none:'' }}</p>
-                                                <p class="noMargin"> &nbsp
-                                                    <a href="#" id="tab{{ forloop.counter0 }}Edit"
-                                                   class="edit tabEdit badge badge-light"
-                                                   data-name="{{ forloop.counter0 }}">
-                                                    Edit
-                                                    </a>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
+<!--                            &lt;!&ndash;                        tabs&ndash;&gt;-->
+<!--                            <div id="tabs" class="row">-->
+<!--                                {% for form in upload_file_formset %}-->
+<!--                                    {% if not forloop.first %}-->
+<!--                                        <div id="tab{{ forloop.counter0 }}" class="tab col-md-4 p-2 border border-white rounded-lg" data-no="{{ forloop.counter0 }}">-->
+<!--                                            <div class="sameLine">-->
+<!--                                                <p class=noMargin id="tab{{ forloop.counter0 }}text">{{ form.name.value|default_if_none:'' }}</p>-->
+<!--                                                <p class="noMargin"> &nbsp-->
+<!--                                                    <a href="#" id="tab{{ forloop.counter0 }}Edit"-->
+<!--                                                   class="edit tabEdit badge badge-light"-->
+<!--                                                   data-name="{{ forloop.counter0 }}">-->
+<!--                                                    Edit-->
+<!--                                                    </a>-->
+<!--                                                </p>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    {% endif %}-->
+<!--                                {% endfor %}-->
+<!--                            </div>-->
 
-                            <div class="row edit">
-                                <div id="addTab" class="col-md-1 p-2 border border-white rounded-lg" >
-                                    <p class="noMargin center"> + </p>
-                                </div>
+<!--                            <div class="row edit">-->
+<!--                                <div id="addTab" class="col-md-1 p-2 border border-white rounded-lg" >-->
+<!--                                    <p class="noMargin center"> + </p>-->
+<!--                                </div>-->
 
-                                <div id="tabTest" class="tab col-md-4 p-2 border border-white rounded-lg ml-auto" data-no="Test">
-                                    <div class="sameLine">
-                                        <p class=noMargin id="tabTesttext">Tests.java</p>
-                                    </div>
-                                </div>
-                            </div>
+<!--                                <div id="tabTest" class="tab col-md-4 p-2 border border-white rounded-lg ml-auto" data-no="Test">-->
+<!--                                    <div class="sameLine">-->
+<!--                                        <p class=noMargin id="tabTesttext">Tests.java</p>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
 
 
 
 
 <!--                            File contents-->
-                            <div class="row">
+                            <div class="row h-100">
                                 <div id="textareaholder" style="width:100%; height:100%">
                                     {% for form in upload_file_formset %}
 <!--                                        ignore first (empty template) form-->
                                         {% if not forloop.first %}
 <!--                                            render first form-->
                                             {% if forloop.counter0 == 1 %}
-                                                <div id="textarea{{ forloop.counter0 }}" class="textarea">
+                                                <div id="textarea{{ forloop.counter0 }}" class="textarea fill100">
                                                     {{ form.contents }}
                                                 </div>
 <!--                                            hide other forms-->
@@ -124,7 +164,7 @@
                                             {% endif %}
                                         {% endif %}
                                     {% endfor %}
-                                        <div id="textareaTest" class="textarea displayNone">
+                                        <div id="textareaTest" class="textarea displayNone fill100">
                                             {{ upload_form.test_file }}
                                         </div>
 
@@ -144,7 +184,7 @@
 
                             <div id="testResults">
 
-                                <h4 class="mt-1">Test Results</h4></br>
+                                <h4 class="mt-3">Test Results</h4></br>
 
                                 <h5 class="testErrors displayNone">Errors</h5>
                                 <div id="errorText" class="testErrors displayNone testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1" style="overflow-x: auto;"> - space for errors - </div>
@@ -245,7 +285,7 @@
     </div>
 
 
-        <div id="tabTemplateDiv" class="displayNone tab col-md-4 p-2 border border-white rounded-lg" >
+        <div id="tabTemplateDiv" class="displayNone tab col-md-12 p-2 border border-white rounded-lg" >
             <div class="sameLine">
                 <p class=noMargin>Empty</p>
                 <p class="noMargin"> &nbsp
@@ -257,6 +297,7 @@
                 </p>
             </div>
         </div>
+    </div>
 
 
 
@@ -273,8 +314,8 @@
         <script src="{% static 'js/clike.js' %}" crossorigin="anonymous"></script>
         <script src="{% static 'js/autorefresh.js' %}" crossorigin="anonymous"></script>
 
-<!--    - Boostrap - -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<!--&lt;!&ndash;    - Boostrap - &ndash;&gt;-->
+<!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>-->
 
 <!--    - Popper.js - -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -285,23 +326,28 @@
 
     {% for form in upload_file_formset %}
         {% if not forloop.first %}
-            myTextArea = document.getElementById("id_form-{{ forloop.counter0 }}-contents")
-            codeMirrorInstances.push(CodeMirror.fromTextArea(myTextArea, {
+            myTextArea = document.getElementById("id_form-{{ forloop.counter0 }}-contents");
+            myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
                                 lineNumbers: true,
                                 mode: "text/x-java",
                                 autoRefresh: true,
-                              }));
+                              })
+            myCodeMirror.setSize("100%", "100%");
+            codeMirrorInstances.push(myCodeMirror);
         {% endif %}
 
     {% endfor %}
 
-    testTextArea = document.getElementById("id_test_file")
-    codeMirrorInstances.push(CodeMirror.fromTextArea(testTextArea, {
+    testTextArea = document.getElementById("id_test_file");
+    myCodeMirror = CodeMirror.fromTextArea(testTextArea, {
                         lineNumbers: true,
                         mode: "text/x-java",
                         autoRefresh: true,
-                      }));
+                      })
+    myCodeMirror.setSize("100%", "100%");
+    codeMirrorInstances.push(myCodeMirror);
 
     </script>
+    {% endblock %}
 </body>
 </html>

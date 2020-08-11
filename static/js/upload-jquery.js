@@ -240,12 +240,17 @@ $(document).ready(function(){
                         }
 
                         if(results.summaryCode == 0){
-                            $("#messagePopupText").text("Solved");
+                        // popup text
+                            $("#messagePopupTitle").text("Solved.");
+                            $("#messagePopupText").text("Question has now been verified.");
                             $("#messagePopup").show();
                             $("#spinner").hide();
 //                                alert("Upload solved.");
                         }
                         else{
+                            $("#messagePopupTitle").text("Unsuccessful.");
+                            $("#messagePopupText").text("Solution must pass all tests to verify question.");
+                            $("#messagePopup").show();
                             $("#spinner").hide();
                             $('#solve').show();
                         }
@@ -390,15 +395,17 @@ $(document).ready(function(){
         var codeClone = $("#id_form-0-contents").clone().attr("id", "id_form-" + tabCount + "-contents");
         codeClone.appendTo("#textareaholder")
         $("#id_form-" + tabCount + "-contents").attr("name", "form-" + tabCount + "-contents");
-        $("#id_form-" + tabCount + "-contents").wrap("<div id='textarea" + tabCount + "' class='textarea'></div>");
+        $("#id_form-" + tabCount + "-contents").wrap("<div id='textarea" + tabCount + "' class='textarea fill100'></div>");
 
         // convert textarea to codemirror display
-        myTextArea = document.getElementById("id_form-" + tabCount + "-contents")
-        codeMirrorInstances.push(CodeMirror.fromTextArea(myTextArea, {
+        myTextArea = document.getElementById("id_form-" + tabCount + "-contents");
+        myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
                         lineNumbers: true,
                         mode: "text/x-java",
                         autoRefresh: true,
-                      }));
+                      });
+        myCodeMirror.setSize("100%", "100%");
+        codeMirrorInstances.push(myCodeMirror);
 
         // add file name hidden input field
         var nameClone = $("#id_form-0-name").clone().attr("id", "id_form-" + tabCount + "-name");

@@ -1,0 +1,23 @@
+html {
+  font-size: 12px;
+}
+
+.fill100{
+
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+.displayFlex{
+    display: flex;
+    flex-flow: column;
+}
+
+.flexGrow{
+  flex-grow: 1;
+}
+
+body{
+
+}

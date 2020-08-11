@@ -1,4 +1,3 @@
-
 public class Calculator {
 
 	// should return a + b
