@@ -438,6 +438,10 @@ $(document).ready(function(){
         // show the selected area
         $("#textarea" + targetTab).show();
 
+        // refresh codemirror instances
+        for (i = 0; i < codeMirrorInstances.length; i++){
+            codeMirrorInstances[i].refresh();
+        }
     });
 
 });
