@@ -1,16 +1,60 @@
 <!DOCTYPE html>
+{% extends 'question/base.html' %}
+{% load staticfiles %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    {% block link_block %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/upload.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+    {% endblock %}
+
+    {% block title_block %}
+        Solv
+    {% endblock %}
 </head>
 <body>
-    <h3>Home Page</h3>
-    <h4>Questions</h4>
-    {% for question in questions %}
-        <p><a href="/question/submit/{{ question.slug }}">{{ question.name }}</a></p>
-    {% endfor %}
+    {% block body_block %}
+        <div class="container-fluid h-100">
+            <div class="row h-100">
+                <div class="col-md-1 h-100 gutterColor">
+                </div>
+                <div class="col-md-10 bg-secondary text-white h-100">
+                    <div class="mt-3 mb-3">
+                        <h3>Solv</h3>
+                        <h6>Coding tutorial platform</h6>
+                        <hr/>
+                    </div>
 
-    <p><a href="/question/upload/">Upload new question</a></p>
+
+                    <div class="row">
+                        <div class="col-md-4 border-right border-white">
+                            <h4 class="mb-3">Questions:</h4>
+                            {% for question in questions %}
+                                <p class="ml-2"><a href="/question/submit/{{ question.slug }}">{{ question.name }}</a></p>
+                            {% endfor %}
+
+                            <p class="mt-5 ml-2"><a href="/question/upload/">Upload new question</a></p>
+
+                        </div>
+                        <div class="col-md-4 border-right border-white">
+                            <h4 class="mb-3">Your courses:</h4>
+                        </div>
+                        <div class="col-md-4">
+                            <h4 class="mb-3">Following:</h4>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+                <div class="col-md-1 h-100 gutterColor">
+                </div>
+            </div>
+
+        </div>
+    {% endblock %}
 </body>
 </html>

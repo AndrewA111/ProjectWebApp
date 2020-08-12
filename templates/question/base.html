@@ -5,8 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+     <!--- Boostrap --->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
     {% block link_block %}
-            Title
+
     {% endblock %}
 
     <title>
@@ -18,10 +21,10 @@
 <body>
     <div class="fill100 displayFlex">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-          <a class="navbar-brand ml-1" href="#">
+          <a class="navbar-brand ml-1" href="/">
             <img src="/static/images/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
           </a>
-          <a class="navbar-brand" href="#">
+          <a class="navbar-brand" href="/">
             <img src="/static/images/logo_text_white.png" width="40" height="20" class="d-inline-block align-top" alt="">
           </a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,7 +34,7 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto ml-1">
               <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
