@@ -22,4 +22,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('question/', include('question.urls')),
     path('admin/', admin.site.urls),
+    path('accounts/', include('registration.backends.simple.urls')),
 ]

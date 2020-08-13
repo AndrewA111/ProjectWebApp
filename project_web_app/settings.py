@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'question',
+    'registration',
 ]
 
 MIDDLEWARE = [
@@ -124,3 +125,14 @@ USE_TZ = True
 STATICFILES_DIRS = [STATIC_DIR, ]
 
 STATIC_URL = '/static/'
+
+# LOGIN_URL = 'question:login'
+
+# Registration
+REGISTRATION_OPEN = True
+
+REGISTRATION_AUTO_LOGIN = True
+
+LOGIN_REDIRECT_URL = 'index'
+
+LOGIN_URL = 'auth_login'
