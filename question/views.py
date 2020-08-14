@@ -12,6 +12,8 @@ import requests
 from django.forms.formsets import formset_factory
 from django.forms.formsets import BaseFormSet
 from django.urls import reverse
+from django.contrib.auth.models import User
+
 
 # URL to submit questions
 API_URL = "http://localhost:8080/java/submit"
@@ -522,6 +524,22 @@ def create_profile(request):
     user_profile = UserProfile.objects.get_or_create(user=request.user)
     user_profile[0].save()
     return redirect(index)
+
+
+def view_profile(request, username):
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return redirect(reverse('index'))
+
+    user_profile = UserProfile.objects.get_or_create(user=user)[0]
+
+    context_dict = {
+        'user_profile': user_profile,
+        'selected_user': user,
+    }
+
+    return render(request, 'question/profile.html', context_dict)
 
 
 # def register(request):

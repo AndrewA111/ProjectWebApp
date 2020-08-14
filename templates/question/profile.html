@@ -1,0 +1,22 @@
+{% extends 'question/base.html' %}
+
+{% block title_block %}
+    Login
+{% endblock %}
+
+{% block body_block %}
+
+<div>
+    <h1>{{ selected_user.username }}'s Profile</h1>
+</div>
+
+<div>
+    <h3>Bio</h3>
+    <p>{{ user_profile.bio }}</p>
+
+    {% if selected_user == user %}
+        <br/><p>Placeholder for profile edit button/features</p>
+    {% endif %}
+</div>
+
+{% endblock %}
