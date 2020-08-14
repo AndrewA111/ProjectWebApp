@@ -55,6 +55,7 @@ class Submission(models.Model):
     def __str__(self):
         return self.question.name
 
+
 # Model to represent a file submitted as part of a submission
 class SubmissionFile(models.Model):
 

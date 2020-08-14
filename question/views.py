@@ -1,10 +1,10 @@
 from json.decoder import JSONDecodeError
 
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from question.models import Question, File, Submission
+from question.models import Question, File, Submission, UserProfile
 from question.forms import SubmissionFileForm, UploadFileForm, UploadForm, UserForm, UserProfileForm
 from django.forms.models import model_to_dict
 import json
@@ -158,6 +158,7 @@ def question(request, question_slug):
 
 
 @login_required
+@user_passes_test(lambda u: u.has_perm('question.can_create'), login_url="/")
 def upload(request):
 
     # set of forms for files
@@ -329,6 +330,8 @@ def upload(request):
 #        3 - no tests present
 #        4 - question name already taken
 #
+@login_required
+@user_passes_test(lambda u: u.has_perm('question.can_create'), login_url="/")
 def ajax_upload(request):
 
     # Post request
@@ -419,8 +422,6 @@ def ajax_solve(request):
 
 
 # Helper method to handle API communication
-#
-
 def send_to_API(formset, upload_form):
     # dict to send to API
     API_dict = {
@@ -516,6 +517,11 @@ def send_to_API(formset, upload_form):
         return None
 
 
+@login_required
+def create_profile(request):
+    user_profile = UserProfile.objects.get_or_create(user=request.user)
+    user_profile[0].save()
+    return redirect(index)
 
 
 # def register(request):
