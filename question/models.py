@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.template.defaultfilters import slugify
 
@@ -54,6 +55,7 @@ class Submission(models.Model):
     def __str__(self):
         return self.question.name
 
+
 # Model to represent a file submitted as part of a submission
 class SubmissionFile(models.Model):
 
@@ -68,3 +70,15 @@ class SubmissionFile(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class UserProfile(models.Model):
+
+    # link this profile to a User model
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    # user bio
+    bio = models.CharField(max_length=256, blank=True)
+
+    def __str__(self):
+        return self.user.username

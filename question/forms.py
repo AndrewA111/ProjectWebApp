@@ -1,8 +1,9 @@
+from django.contrib.auth.models import User
 from django.forms import Textarea
 from django.db import models
 from django import forms
 from django.forms import formset_factory
-from question.models import SubmissionFile, Submission
+from question.models import SubmissionFile, Submission, UserProfile
 
 
 # Form for submitting a file
@@ -39,3 +40,17 @@ class UploadForm(forms.Form):
     question_description = forms.CharField()
 
     test_file = forms.CharField(widget=forms.Textarea, required=False)
+
+
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password',)
+
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('bio',)

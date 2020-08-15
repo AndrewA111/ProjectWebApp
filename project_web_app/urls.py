@@ -17,9 +17,17 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import include
 from question import views
+from registration.backends.simple.views import RegistrationView
+from django.urls import reverse
+
+class MyRegistrationView(RegistrationView):
+    def get_success_url(self, user):
+        return reverse('question:create_profile')
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('question/', include('question.urls')),
     path('admin/', admin.site.urls),
+    path('accounts/register/', MyRegistrationView.as_view(), name='registration_register'),
+    path('accounts/', include('registration.backends.simple.urls')),
 ]

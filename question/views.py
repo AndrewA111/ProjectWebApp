@@ -1,13 +1,19 @@
 from json.decoder import JSONDecodeError
-from django.shortcuts import render
+
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from question.models import Question, File, Submission
-from question.forms import SubmissionFileForm, UploadFileForm, UploadForm
+from question.models import Question, File, Submission, UserProfile
+from question.forms import SubmissionFileForm, UploadFileForm, UploadForm, UserForm, UserProfileForm
 from django.forms.models import model_to_dict
 import json
 import requests
 from django.forms.formsets import formset_factory
 from django.forms.formsets import BaseFormSet
+from django.urls import reverse
+from django.contrib.auth.models import User
+
 
 # URL to submit questions
 API_URL = "http://localhost:8080/java/submit"
@@ -153,6 +159,8 @@ def question(request, question_slug):
         return render(request, 'question/question.html', context=context_dict)
 
 
+@login_required
+@user_passes_test(lambda u: u.has_perm('question.can_create'), login_url="/")
 def upload(request):
 
     # set of forms for files
@@ -324,6 +332,8 @@ def upload(request):
 #        3 - no tests present
 #        4 - question name already taken
 #
+@login_required
+@user_passes_test(lambda u: u.has_perm('question.can_create'), login_url="/")
 def ajax_upload(request):
 
     # Post request
@@ -414,8 +424,6 @@ def ajax_solve(request):
 
 
 # Helper method to handle API communication
-#
-
 def send_to_API(formset, upload_form):
     # dict to send to API
     API_dict = {
@@ -509,3 +517,26 @@ def send_to_API(formset, upload_form):
     else:
         print(formset.errors)
         return None
+
+
+@login_required
+def create_profile(request):
+    user_profile = UserProfile.objects.get_or_create(user=request.user)
+    user_profile[0].save()
+    return redirect(index)
+
+
+def view_profile(request, username):
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return redirect(reverse('index'))
+
+    user_profile = UserProfile.objects.get_or_create(user=user)[0]
+
+    context_dict = {
+        'user_profile': user_profile,
+        'selected_user': user,
+    }
+
+    return render(request, 'question/profile.html', context_dict)

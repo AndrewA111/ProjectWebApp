@@ -1,4 +1,7 @@
 import os
+
+from django.contrib.auth import get_user_model
+
 import project_web_app.settings
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project_web_app.settings')
 
@@ -6,11 +9,37 @@ import django
 django.setup()
 
 import pprint
+from django.contrib.auth.models import User, Group, Permission
+from django.contrib.contenttypes.models import ContentType
 from question.models import File, Question
 from django.db import models
 
 
+
 def populate():
+
+    # Permissions
+
+    # Group
+    content_type = ContentType.objects.get(app_label="question", model="question")
+    permission = Permission.objects.create(codename='can_create',
+                                           name="Can create content",
+                                           content_type=content_type)
+
+    create_group = Group.objects.create(name="creator_group")
+    create_group.permissions.add(permission)
+
+    # Admin
+    admin = User.objects.create_user('admin', 'noreply@apple.com', 'HelloWorld123')
+    admin.is_staff = True
+    admin.is_admin = True
+    admin.is_superuser = True
+    admin.save()
+
+    student_user = User.objects.create_user(username='andrew', email="a@a.com", password="HelloWorld123")
+
+    tutor_user = User.objects.create_user(username='john', email="j@a.com", password="HelloWorld123")
+    tutor_user.groups.add(create_group)
 
     root = project_web_app.settings.BASE_DIR
     questions = os.path.join(root, 'questionFiles')
