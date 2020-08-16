@@ -11,7 +11,7 @@ django.setup()
 import pprint
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.contenttypes.models import ContentType
-from question.models import File, Question
+from question.models import File, Question, Course, Lesson
 from django.db import models
 
 
@@ -42,33 +42,66 @@ def populate():
     tutor_user.groups.add(create_group)
 
     root = project_web_app.settings.BASE_DIR
-    questions = os.path.join(root, 'questionFiles')
+    courses = os.path.join(root, 'questionFiles')
 
-    # loop through directories containing questions
-    for questionDir in getQuestions(questions):
+    # iterate through courses, lessons and questions
+    for course in getFolderNames(courses):
 
-        # get question dir path
-        questionPath = os.path.join(questions, questionDir)
+        # create course
+        course_obj = add_course(course, admin)
 
-        # read relevant files from dir
-        questionDetails = readQuestionFiles(questionPath)
+        # get lessons in course
+        lessons = os.path.join(courses, course)
 
-        # pretty print data for debugging
-        # pprint.pprint(questionDetails)
+        for lesson in getFolderNames(lessons):
 
-        # get description
-        description = readFile("Description.txt", questionPath)
+            # create lesson
+            lesson_obj = add_lesson(lesson, admin, course_obj)
 
-        # make question
-        question = add_question(questionDir, questionDetails['testFile']['contents'], description)
+            # get questions
+            questions = os.path.join(lessons, lesson)
 
-        # loop through files and create file objects
-        for file in questionDetails['questionFiles']:
-            add_file(question, file['name'], file['contents'])
+            for questionDir in getFolderNames(questions):
+
+                # get question dir path
+                questionPath = os.path.join(questions, questionDir)
+
+                # read relevant files from dir
+                questionDetails = readQuestionFiles(questionPath)
+
+                # pretty print data for debugging
+                # pprint.pprint(questionDetails)
+
+                # get description
+                description = readFile("Description.txt", questionPath)
+
+                # make question
+                question = add_question(questionDir, admin, lesson_obj, questionDetails['testFile']['contents'], description)
+
+                # loop through files and create file objects
+                for file in questionDetails['questionFiles']:
+                    add_file(question, file['name'], file['contents'])
 
 
-def add_question(name, testFile, description):
+def add_course(name, owner):
+    c, created = Course.objects.get_or_create(name=name,
+                                              owner=owner)
+    c.save()
+    return c
+
+
+def add_lesson(name, owner, course):
+    l, created = Lesson.objects.get_or_create(name=name,
+                                              owner=owner,
+                                              course=course)
+    l.save()
+    return l
+
+
+def add_question(name, owner, lesson, testFile, description):
     q, created = Question.objects.get_or_create(name=name,
+                                                owner=owner,
+                                                lesson=lesson,
                                                 testFile=testFile,
                                                 description=description,
                                                 solved=True)
@@ -113,13 +146,13 @@ def readQuestionFiles(questionDir):
     return fileDetails
 
 
-# method to get list of question folders given the containing dir
-def getQuestions(questionsDir):
+# method to get list of dir names in a parent dir
+def getFolderNames(parentDir):
 
     dirList = []
 
     # loop through dir
-    for file in os.listdir(questionsDir):
+    for file in os.listdir(parentDir):
         dirList.append(file)
 
     return dirList

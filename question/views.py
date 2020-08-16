@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from question.models import Question, File, Submission, UserProfile
+from question.models import Question, File, Submission, UserProfile, Course, Lesson
 from question.forms import SubmissionFileForm, UploadFileForm, UploadForm, UserForm, UserProfileForm
 from django.forms.models import model_to_dict
 import json
@@ -30,10 +30,54 @@ def index(request):
     return render(request, 'question/index.html', context=context_dict)
 
 
-def question(request, question_slug):
+def course_list(request):
+
+    courses = Course.objects.all()
+
+    context_dict = {
+        'courses': courses
+    }
+
+    return render(request, 'question/courses.html', context=context_dict)
+
+
+def lesson_list(request, course_slug):
+
+    course = Course.objects.get(slug=course_slug)
+    lessons = Lesson.objects.filter(course=course)
+
+    context_dict = {
+        'lessons': lessons,
+        'course': course,
+    }
+
+    return render(request, 'question/lessons.html', context=context_dict)
+
+
+def question_list(request, course_slug, lesson_slug):
+    course = Course.objects.get(slug=course_slug)
+    lesson = Lesson.objects.get(slug=lesson_slug)
+    questions = Question.objects.filter(lesson=lesson)
+
+    context_dict = {
+        'questions': questions,
+        'lesson': lesson,
+        'course': course,
+    }
+
+    return render(request, 'question/questions.html', context=context_dict)
+
+
+def question(request, question_slug, lesson_slug, course_slug):
+
+    # get course
+    course_obj = Course.objects.get(slug=course_slug)
+
+    # get lesson
+    lesson_obj = Lesson.objects.get(slug=lesson_slug)
 
     # get question
-    question_obj = Question.objects.get(slug=question_slug)
+    question_obj = Question.objects.get(slug=question_slug, lesson=lesson_obj)
 
     # get files
     files = File.objects.filter(question=question_obj)
