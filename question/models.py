@@ -28,7 +28,7 @@ class Course(models.Model):
 class Lesson(models.Model):
 
     # question name
-    name = models.CharField(max_length=128, unique=True)
+    name = models.CharField(max_length=128)
 
     # Lesson owner/creator
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, unique=False)
@@ -37,11 +37,11 @@ class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True)
 
     # slug for urls
-    slug = models.SlugField(default=None, unique=True)
+    slug = models.SlugField(default=None)
 
     class Meta:
         # make lesson name unique for this course
-        unique_together = ('name', 'course')
+        unique_together = [['slug', 'course'], ['name', 'course']]
 
     # update the slug whenever Lesson is created/changed
     def save(self, *args, **kwargs):
@@ -56,7 +56,7 @@ class Lesson(models.Model):
 class Question(models.Model):
 
     # question name
-    name = models.CharField(max_length=128, unique=True)
+    name = models.CharField(max_length=128)
 
     # Question owner/creator
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -74,11 +74,11 @@ class Question(models.Model):
     solved = models.BooleanField(default=False)
 
     # slug for urls
-    slug = models.SlugField(default=None, unique=True)
+    slug = models.SlugField(default=None)
 
     class Meta:
         # make question name unique for this lesson
-        unique_together = ('name', 'lesson')
+        unique_together = [['slug', 'lesson'], ['name', 'lesson']]
 
     # update the slug whenever Quesiton is created/changed
     def save(self, *args, **kwargs):
