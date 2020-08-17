@@ -1,0 +1,28 @@
+{% extends 'question/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    Create Lesson
+{% endblock %}
+
+{% block body_block %}
+    <br/>
+    <h3>Course: {{ course.name }}</h3>
+    <br/>
+    <h3>Create a New Lesson:</h3>
+    <br/>
+    <form id="course_form" method="post" action="/question/courses/{{ course.slug }}/create_lesson/">
+        {% csrf_token %}
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+
+        {% for field in form.visible_fields %}
+            {{ field.errors }}
+            {{ field.help_text }}
+            {{ field }}
+            <br/><br/>
+        {% endfor %}
+        <input type="submit" name="submit" value="Create Lesson" />
+    </form>
+{% endblock %}

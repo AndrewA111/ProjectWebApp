@@ -5,7 +5,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from question.models import Question, File, Submission, UserProfile, Course, Lesson
-from question.forms import SubmissionFileForm, UploadFileForm, UploadForm, UserForm, UserProfileForm
+from question.forms import SubmissionFileForm, UploadFileForm, UploadForm, UserForm, UserProfileForm, CreateCourseForm, \
+    CreateLessonForm
 from django.forms.models import model_to_dict
 import json
 import requests
@@ -41,6 +42,35 @@ def course_list(request):
     return render(request, 'question/courses.html', context=context_dict)
 
 
+def create_course(request):
+
+    if request.method == 'POST':
+
+        form = CreateCourseForm(request.POST)
+
+        if form.is_valid():
+            course = form.save(commit=False)
+            course.owner = request.user
+            course.save()
+
+        context_dict = {
+            'course': course
+        }
+
+        return redirect(reverse('question:lesson_list',
+                                kwargs={'course_slug': course.slug}))
+
+    if request.method == 'GET':
+
+        form = CreateCourseForm()
+
+        context_dict = {
+            'form': form,
+        }
+
+        return render(request, 'question/createCourse.html', context=context_dict)
+
+
 def lesson_list(request, course_slug):
 
     course = Course.objects.get(slug=course_slug)
@@ -52,6 +82,43 @@ def lesson_list(request, course_slug):
     }
 
     return render(request, 'question/lessons.html', context=context_dict)
+
+
+def create_lesson(request, course_slug):
+
+    course = Course.objects.get(slug=course_slug)
+
+    if request.method == 'POST':
+
+        form = CreateLessonForm(request.POST)
+
+        if form.is_valid():
+            lesson = form.save(commit=False)
+            lesson.owner = request.user
+            lesson.course = course
+            lesson.save()
+
+
+
+        context_dict = {
+            'course': course,
+            'lesson': lesson
+        }
+
+        return redirect(reverse('question:question_list',
+                                kwargs={'course_slug': course.slug,
+                                        'lesson_slug': lesson.slug}))
+
+    if request.method == 'GET':
+
+        form = CreateLessonForm()
+
+        context_dict = {
+            'form': form,
+            'course': course
+        }
+
+        return render(request, 'question/createLesson.html', context_dict)
 
 
 def question_list(request, course_slug, lesson_slug):
@@ -205,17 +272,26 @@ def question(request, question_slug, lesson_slug, course_slug):
 
 @login_required
 @user_passes_test(lambda u: u.has_perm('question.can_create'), login_url="/")
-def upload(request):
+def upload(request, course_slug, lesson_slug):
+
+    course = Course.objects.get(slug=course_slug)
+    lesson = Lesson.objects.get(slug=lesson_slug, course=course)
 
     # set of forms for files
     UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
 
     pre_load_questions = True
 
+
+
     if(pre_load_questions):
 
+        pre_load_course = Course.objects.get(name="Java Basics")
+        pre_load_lesson = Lesson.objects.get(name="Methods", course=pre_load_course)
+
         # get question
-        question_obj = Question.objects.get(slug="calculator")
+        question_obj = Question.objects.get(slug="calculator",
+                                            lesson=pre_load_lesson)
 
         # get files
         files = File.objects.filter(question=question_obj)
@@ -361,6 +437,8 @@ def upload(request):
         context_dict = {
             'upload_form': form_context,
             'upload_file_formset': formset_context,
+            'course': course,
+            'lesson': lesson,
         }
 
         return render(request, 'question/upload.html', context_dict)
@@ -378,7 +456,12 @@ def upload(request):
 #
 @login_required
 @user_passes_test(lambda u: u.has_perm('question.can_create'), login_url="/")
-def ajax_upload(request):
+def ajax_upload(request, course_slug, lesson_slug):
+
+    course = Course.objects.get(slug=course_slug)
+    lesson = Lesson.objects.get(slug=lesson_slug, course=course)
+
+    owner = request.user
 
     # Post request
     if request.method == 'POST':
@@ -405,7 +488,9 @@ def ajax_upload(request):
             # if valid for saving (all tests failing)
             if json_return_object['summaryCode'] == 1:
                 print("Upload form name:" + str(cleaned_data['question_name']))
-                question = Question.objects.get_or_create(name=cleaned_data['question_name'])
+                question = Question.objects.get_or_create(name=cleaned_data['question_name'],
+                                                          lesson=lesson,
+                                                          owner=owner)
 
 
                 # if question does not already exist
@@ -435,7 +520,10 @@ def ajax_upload(request):
         return HttpResponse(json.dumps(json_return_object))
 
 
-def ajax_solve(request):
+def ajax_solve(request, course_slug, lesson_slug):
+
+    course = Course.objects.get(slug=course_slug)
+    lesson = Lesson.objects.get(slug=lesson_slug, course=course)
 
     # Post request
     if request.method == 'POST':
@@ -460,7 +548,8 @@ def ajax_solve(request):
             if json_return_object['summaryCode'] == 0:
 
                 # get question and set solved
-                question = Question.objects.get_or_create(name=cleaned_data['question_name'])
+                question = Question.objects.get_or_create(name=cleaned_data['question_name'],
+                                                          lesson=lesson)
                 question[0].solved = True
                 question[0].save()
 

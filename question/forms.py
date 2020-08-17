@@ -3,7 +3,32 @@ from django.forms import Textarea
 from django.db import models
 from django import forms
 from django.forms import formset_factory
-from question.models import SubmissionFile, Submission, UserProfile
+from question.models import SubmissionFile, Submission, UserProfile, Course, Lesson
+
+
+# Form for creating a new course
+class CreateCourseForm(forms.ModelForm):
+
+    #  course name
+    name = forms.CharField(max_length=128, help_text="Enter category name: ")
+
+    class Meta:
+
+        model = Course
+
+        exclude = ('owner', 'slug')
+
+
+class CreateLessonForm(forms.ModelForm):
+
+    # lesson name
+    name = forms.CharField(max_length=128, help_text="Enter lesson name: ")
+
+    class Meta:
+
+        model = Lesson
+
+        exclude = ('owner', 'slug', 'course')
 
 
 # Form for submitting a file
