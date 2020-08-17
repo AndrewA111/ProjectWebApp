@@ -3,11 +3,66 @@ from django.db import models
 from django.template.defaultfilters import slugify
 
 
+# Model to represent course (set of lessons)
+class Course(models.Model):
+
+    # course name (unique)
+    name = models.CharField(max_length=128, unique=True)
+
+    # Course owner/creator
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    # slug for urls
+    slug = models.SlugField(default=None, unique=True)
+
+    # update the slug whenever Course is created/changed
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Course, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
+# Model to represent a lesson (set of questions)
+class Lesson(models.Model):
+
+    # question name
+    name = models.CharField(max_length=128)
+
+    # Lesson owner/creator
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, unique=False)
+
+    # course this lesson is a member of
+    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True)
+
+    # slug for urls
+    slug = models.SlugField(default=None)
+
+    class Meta:
+        # make lesson name unique for this course
+        unique_together = [['slug', 'course'], ['name', 'course']]
+
+    # update the slug whenever Lesson is created/changed
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Lesson, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
 # Model to store question data
 class Question(models.Model):
 
     # question name
-    name = models.CharField(max_length=128, unique=True)
+    name = models.CharField(max_length=128)
+
+    # Question owner/creator
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    # lesson this question is a member of
+    lesson = models.ForeignKey(Lesson, on_delete=models.SET_NULL, null=True)
 
     # test file (contents)
     testFile = models.TextField(default=None, null=True, blank=True)
@@ -19,7 +74,11 @@ class Question(models.Model):
     solved = models.BooleanField(default=False)
 
     # slug for urls
-    slug = models.SlugField(default=None, unique=True)
+    slug = models.SlugField(default=None)
+
+    class Meta:
+        # make question name unique for this lesson
+        unique_together = [['slug', 'lesson'], ['name', 'lesson']]
 
     # update the slug whenever Quesiton is created/changed
     def save(self, *args, **kwargs):

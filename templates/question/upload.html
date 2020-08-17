@@ -30,7 +30,11 @@
 <!--            Description section-->
             <div class="col-md-3 bg-secondary text-white border-right border-white rounded-lg">
 
-                <h3 class="mt-3">Upload New Question</h3><br/>
+                <h3 class="mt-3"> {{ course.name }}</h3>
+                <h4> {{ lesson.name }}</h4>
+                <br/>
+
+                <h4 class="mt-3">Upload New Question</h4><br/>
 
 <!--                Question title-->
                 <h5>Question name:</h5>
@@ -285,6 +289,10 @@
 
 <!--    - Popper.js - -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+<!--    convert course and lesson objects to json for js to read-->
+    {{ course.slug|json_script:"course" }}
+    {{ lesson.slug|json_script:"lesson" }}
 
     <script>
 

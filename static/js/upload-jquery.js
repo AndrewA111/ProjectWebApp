@@ -8,6 +8,12 @@ $(document).ready(function(){
         $("#upload").hide();
         $("#spinner").show();
 
+        // get slug data from template variables
+        const course = JSON.parse(document.getElementById("course").textContent);
+        const lesson = JSON.parse(document.getElementById("lesson").textContent);
+        console.log(course);
+        console.log(lesson);
+
         // save CodeMirror instances
         // (update associated textbox for submission)
         for (i = 0; i < codeMirrorInstances.length; i++){
@@ -20,7 +26,7 @@ $(document).ready(function(){
         // post to django server
         $.ajax({
             type: 'POST',
-            url: "/question/ajax_upload/",
+            url: "/question/courses/" + course + "/" + lesson + "/" +"create_question/ajax_upload/",
             data: formData,
             success: function(response){
 
@@ -48,6 +54,14 @@ $(document).ready(function(){
                     // show errors
                     $("#errorText").text(results.errors);
                     $(".testErrors").show();
+
+                    $("#upload").show();
+                    $("#spinner").hide();
+
+                    // error message
+                    $("#messagePopupTitle").text("Invalid upload");
+                    $("#messagePopupText").text("All files including tests must compile without errors.");
+                    $("#messagePopup").show();
                 }
                 // else display returned results
                 else{
@@ -153,6 +167,12 @@ $(document).ready(function(){
         $("#solve").hide();
         $("#spinner").show();
 
+        // get slug data from template variables
+        const course = JSON.parse(document.getElementById("course").textContent);
+        const lesson = JSON.parse(document.getElementById("lesson").textContent);
+        console.log(course);
+        console.log(lesson);
+
         // save CodeMirror instances
         // (update associated textbox for submission)
         for (i = 0; i < codeMirrorInstances.length; i++){
@@ -165,7 +185,7 @@ $(document).ready(function(){
         // post to django server
         $.ajax({
             type: 'POST',
-            url: "/question/ajax_solve/",
+            url: "/question/courses/" + course + "/" + lesson + "/" +"create_question/ajax_solve/",
             data: formData,
             success: function(response){
                  // results available, show output
