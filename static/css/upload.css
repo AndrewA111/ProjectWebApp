@@ -29,6 +29,10 @@ body {
   margin: 0;
 }
 
+.50pxHeight{
+    height: 50px;
+}
+
 max60{
     max-width: 60%;
 }

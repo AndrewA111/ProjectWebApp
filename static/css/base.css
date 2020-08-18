@@ -18,6 +18,7 @@ html {
   flex-grow: 1;
 }
 
-body{
-
+html, body {
+    margin: 0;
+    height: 100%;
 }

@@ -660,16 +660,21 @@ def create_profile(request):
 
 
 def view_profile(request, username):
-    try:
-        user = User.objects.get(username=username)
-    except User.DoesNotExist:
-        return redirect(reverse('index'))
 
-    user_profile = UserProfile.objects.get_or_create(user=user)[0]
+    if request.method == 'GET':
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return redirect(reverse('index'))
 
-    context_dict = {
-        'user_profile': user_profile,
-        'selected_user': user,
-    }
+        user_profile = UserProfile.objects.get_or_create(user=user)[0]
 
-    return render(request, 'question/profile.html', context_dict)
+        user_courses = Course.objects.filter(owner=request.user)
+
+        context_dict = {
+            'user_profile': user_profile,
+            'selected_user': user,
+            'user_courses': user_courses,
+        }
+
+        return render(request, 'question/profile.html', context_dict)
