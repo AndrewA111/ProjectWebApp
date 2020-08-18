@@ -137,92 +137,58 @@ def question_list(request, course_slug, lesson_slug):
 
 def question(request, question_slug, lesson_slug, course_slug):
 
-    # get course
+    # get model objects
     course_obj = Course.objects.get(slug=course_slug)
-
-    # get lesson
     lesson_obj = Lesson.objects.get(slug=lesson_slug)
-
-    # get question
     question_obj = Question.objects.get(slug=question_slug, lesson=lesson_obj)
-
-    # get files
     files = File.objects.filter(question=question_obj)
+
+    # set of forms for files
+    SubmissionFileFormSet = formset_factory(SubmissionFileForm, formset=BaseFormSet, extra=0)
 
     # Post request
     if request.method == 'POST':
 
-        # Test form submission details
-        # print(dict(request.POST.lists()))
+        formset = SubmissionFileFormSet(request.POST)
 
-        # list to store submitted forms
-        form_submissions = []
-
-        # create submission object associated with post
-        submission = Submission.objects.get_or_create(question=question_obj)
-        submission[0].save()
-
-        # list to store updated forms containing submitted files
-        file_forms = []
-
-        # dict to send to API
         API_dict = {
             'files': []
         }
 
-        # build a form for each submitted file
-        for i in range(files.count()):
-            form_submissions.append(SubmissionFileForm(request.POST, prefix="file" + str(i)))
+        # file data for send back to client for page refresh
+        formset_data = []
 
-        # for each form, create a submission file and associate with current submission
-        for i in range(files.count()):
-            if form_submissions[i].is_valid():
+        if formset.is_valid():
 
-                # create submission file
-                submission_file = form_submissions[i].save(commit=False)
+            for f in formset:
 
-                # associate with current submission
-                submission_file.submission = submission[0]
+                cleaned_data = f.cleaned_data
 
-                # save
-                submission_file.save()
-
-                file_forms.append({'file': submission_file,
-                                   'form': SubmissionFileForm(initial={'name': submission_file.name,
-                                                                       'contents': submission_file.contents},
-                                                              prefix="file" + str(i))})
-
-                # add submitted files to submission dict
                 API_dict['files'].append({
-                    'name': submission_file.name,
-                    'content': submission_file.contents
+                    'name': cleaned_data['name'],
+                    'content': cleaned_data['contents']
                 })
 
-                # add the test file
-                API_dict['files'].append({
-                    'name': "Tests.java",
-                    'content': question_obj.testFile
+                formset_data.append({
+                    'name': cleaned_data['name'],
+                    'contents': cleaned_data['contents']
                 })
 
-        # print("To send to API: " + json.dumps(API_dict))
+            # add test file to API submission
+            API_dict['files'].append({
+                'name': 'Tests.java',
+                'content': question_obj.testFile
+            })
+        else:
+            print(formset.errors)
 
-        # make request
-        results = requests.post(url=API_URL, json=API_dict)
+        # make API request, returns object to be returned to client
+        json_return_object = submit_to_API(API_dict)
 
-        print(results.content)
+        json_output = json_return_object['output']
+        json_errors = json_return_object['errors']
 
-        # get results
-        json_results = json.loads(results.content)
-
-        print(json_results)
-
-        # deserialize sub-object
-        try:
-            json_output = json.loads(json_results['output'])
-        except ValueError:
-            json_output = json_results['output']
-
-        json_errors = json_results['errors']
+        formset_context = SubmissionFileFormSet(initial=formset_data)
 
         # create context dict to pass to template
         context_dict = {
@@ -230,44 +196,102 @@ def question(request, question_slug, lesson_slug, course_slug):
             'question': question_obj,
 
             # actual forms
-            'file_forms': file_forms,
+            'file_formset': formset_context,
 
             # json results
             'output': json_output,
 
             # json errors
-            'errors': json_errors
+            'errors': json_errors,
+
+            # forms for re-rendering
+            'file_formset': formset_context
         }
 
         # render page showing submitted files
         return render(request, 'question/question.html', context=context_dict)
 
     # Get request
-    if (request.method == 'GET'):
+    if request.method == 'GET':
 
-        file_forms = []
+        formset_data = []
 
-        # loop through files, enumerate to give index to use for prefix
-        for counter, file in enumerate(files):
-            #  store each file, along with a form, pre-populated with that file's name and contents
-            # set prefix to differentiate forms on frontend
-            file_forms.append({'file': file, 'form': SubmissionFileForm(initial={'name': file.name, 'contents': file.contents}, prefix="file" + str(counter))})
-            # print('test', file.name, file.contents)
-
-        # testing
         for file in files:
-            file_dict = model_to_dict(file)
-            # print(file_dict)
+            formset_data.append({
+                'name': file.name,
+                'contents': file.contents,
+            })
+
+        formset_context = SubmissionFileFormSet(initial=formset_data)
 
         # create context dict to pass to template
         context_dict = {
             'question': question_obj,
             # actual forms
-            'file_forms': file_forms
+            # 'file_forms': file_forms
+            'file_formset': formset_context
         }
 
         # render question with default/original files
         return render(request, 'question/question.html', context=context_dict)
+
+
+# Helper method to handle API communication
+def submit_to_API(API_dict):
+
+            # testing
+            # print("API_dict:\n" + json.dumps(API_dict))
+
+            # make request
+            results = requests.post(url=API_URL, json=API_dict)
+
+            # print("Actual request response:\n" + str(results.content))
+
+            decodedResults = results.content.decode('utf-8')
+
+            # get results
+            json_results = json.loads(decodedResults)
+
+            # print("Decoded:\n" + str(json_results))
+
+            # code to summarize test results status
+            #   0 - all tests passed
+            #   1 - all tests failed
+            #   2 - mixture of tests failed/passed
+            #   3 - no tests present
+            summary_code = 3
+
+            # separate output and error and decode inner JSON string
+            try:
+                output = json.loads(json_results['output'])
+
+                if output['numTests'] == 0:
+                    summary_code = 3
+                elif output['numFailed'] == 0:
+                    summary_code = 0
+                elif output['numFailed'] == output['numTests']:
+                    summary_code = 1
+                else:
+                    summary_code = 2
+
+            except JSONDecodeError:
+                output = json_results['output']
+
+            # print("Output:\n" + str(output))
+
+            errors = json_results["errors"]
+            # print("Output:\n" + str(errors))
+
+            # reconstruct object for return
+            json_return_object = {
+                'output': output,
+                'errors': errors,
+                'summaryCode': summary_code,
+            }
+
+            print("Json return object:\n" + str(json_return_object))
+
+            return json_return_object
 
 
 @login_required

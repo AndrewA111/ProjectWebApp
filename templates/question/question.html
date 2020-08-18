@@ -34,8 +34,8 @@
                 <h5 class="mb-3">Files</h5>
                 <!--                        tabs-->
                 <div class="row">
-                    {% for file_form in file_forms %}
-                    <div class="tab col-md-6 p-2 border border-white rounded-lg" data-file="textarea{{ forloop.counter }}">{{ file_form.file.name }}</div>
+                    {% for file_form in file_formset %}
+                    <div class="tab col-md-6 p-2 border border-white rounded-lg" data-file="textarea{{ forloop.counter }}">{{ file_form.name.value }}</div>
                     {% endfor %}
                 </div>
 
@@ -44,7 +44,9 @@
 
             <div class="col-md-9 bg-secondary text-white border border-white rounded-lg">
                 <form id="submission_form" method="post" action="/question/courses/{{ question.lesson.course.slug}}/{{ question.lesson.slug }}/{{ question.slug }}/">
-<!--                Input and output row-->
+                    {% csrf_token %}
+                    {{ file_formset.management_form }}
+                    <!--                Input and output row-->
                 <div class="row">
 
 <!--                    input col-->
@@ -55,22 +57,30 @@
                         <div class="row">
                             <div style="width:100%;">
 
-                                    {% for file_form in file_forms %}
-
+                                    {% for file_form in file_formset %}
+<!--                                        render first form-->
                                         {% if forloop.counter == 1 %}
                                         <div class="textarea" style="width=100%;" id="textarea{{ forloop.counter }}">
+                                            {{ file_form.contents }}
+                                            <div class="displayNone">{{ file_form.name }}</div>
+                                        </div>
+<!--                                        hide other forms-->
                                         {% else %}
                                         <div class="textarea" style="display:none; width=100%;" id="textarea{{ forloop.counter }}">
-                                        {% endif %}
-                                        {% csrf_token %}
-                                        {% for hidden in file_form.form.hidden_fields %}
-                                            {{ hidden }}
-                                        {% endfor %}
-
-                                        {{ file_form.form.contents.errors }}
-                                        {{ file_form.form.contents.help_text }}
-                                        {{ file_form.form.contents }}
+                                            {{ file_form.contents }}
+                                            <div class="displayNone">{{ file_form.name }}</div>
                                         </div>
+                                        {% endif %}
+
+
+<!--                                        {% for hidden in file_form.form.hidden_fields %}-->
+<!--                                            {{ hidden }}-->
+<!--                                        {% endfor %}-->
+
+<!--                                        {{ file_form.form.contents.errors }}-->
+<!--                                        {{ file_form.form.contents.help_text }}-->
+<!--                                        {{ file_form.form.contents }}-->
+<!--                                        </div>-->
 
                                     {% endfor %}
                                     </div>
@@ -166,8 +176,8 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 
     <script>
-        {% for file_form in file_forms %}
-            myTextArea = document.getElementById("id_file{{ forloop.counter0 }}-contents")
+        {% for file_form in file_formset %}
+            myTextArea = document.getElementById("id_form-{{ forloop.counter0 }}-contents")
             var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
                                 lineNumbers: true,
                                 mode: "text/x-java",
