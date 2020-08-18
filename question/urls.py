@@ -26,4 +26,6 @@ urlpatterns = [
     path('courses/<slug:course_slug>/<slug:lesson_slug>/create_question/', views.upload, name="create_question"),
     path('courses/<slug:course_slug>/<slug:lesson_slug>/<slug:question_slug>/',
          views.question, name='question'),
+    path('courses/<slug:course_slug>/<slug:lesson_slug>/<slug:question_slug>/ajax/',
+         views.question_ajax, name='question_ajax'),
 ]

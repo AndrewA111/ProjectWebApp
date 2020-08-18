@@ -99,34 +99,51 @@
                     <div class="col-md-5 bg-secondary text-white border border-white rounded-lg">
                         <h4 class="mt-1">Test Results</h4></br>
 
-                        {% if errors %}
-                            <h5>Errors</h5>
-                            <div class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1" style="overflow-x: auto;">{{ errors }}</div>
-                        {% endif %}
+                        <h5 class="testErrors displayNone">Errors</h5>
+                        <div id="errorText" class="testErrors displayNone testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1" style="overflow-x: auto;"> - space for errors - </div>
 
-                        {% if output %}
-                            <h5>Output</h5>
-                            {% if output.tests %}
-                                {% for values in output.tests %}
-                                <div class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">
-                                    <h6>{{ values.name }}</h6>
-                                    <p>{{ values.description }}</p>
-                                    <p>Passed:
-                                        {% if values.passed == True %}
-                                            <p class="greenHighlight"> {{ values.passed }}</p>
-                                        {% else %}
-                                            <p class="redHighlight"> {{ values.passed }}</p>
-                                        {% endif %}
+                        <h5 class="testOutput displayNone">Output</h5>
+                        <div id="output" class="testOutput displayNone"></div>
+
+<!--                        hidden elements for displaying test results -->
+                        <div id="hiddenTemplates" class="displayNone">
+
+                            <div id="testTemplate" class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">
+                                <h6 id="testTemplateName">Name</h6>
+                                <p id="testTemplateDescription">Description</p>
+                                <p id="testTemplateResult">Passed: True/False</p>
+                                <p id="testTemplateFailure" class="redHighlight">Failure Text</p>
+                            </div>
+                        </div>
+
+<!--                        {% if errors %}-->
+<!--                            <h5>Errors</h5>-->
+<!--                            <div class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1" style="overflow-x: auto;">{{ errors }}</div>-->
+<!--                        {% endif %}-->
+
+<!--                        {% if output %}-->
+<!--                            <h5>Output</h5>-->
+<!--                            {% if output.tests %}-->
+<!--                                {% for values in output.tests %}-->
+<!--                                <div class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">-->
+<!--                                    <h6>{{ values.name }}</h6>-->
+<!--                                    <p>{{ values.description }}</p>-->
+<!--                                    <p>Passed:-->
+<!--                                        {% if values.passed == True %}-->
+<!--                                            <p class="greenHighlight"> {{ values.passed }}</p>-->
+<!--                                        {% else %}-->
+<!--                                            <p class="redHighlight"> {{ values.passed }}</p>-->
+<!--                                        {% endif %}-->
 
 
-                                    </p>
-                                    <p class="redHighlight">{{ values.failureText }}</p>
-                                </div>
-                                {% endfor %}
-                            {% else %}
-                                <p>{{ output }}</p>
-                            {% endif %}
-                        {% endif %}
+<!--                                    </p>-->
+<!--                                    <p class="redHighlight">{{ values.failureText }}</p>-->
+<!--                                </div>-->
+<!--                                {% endfor %}-->
+<!--                            {% else %}-->
+<!--                                <p>{{ output }}</p>-->
+<!--                            {% endif %}-->
+<!--                        {% endif %}-->
                     </div>
                 </div>
 
@@ -135,6 +152,12 @@
                 <div class="row">
                     <div class="col-md-8">
                         <button type="submit" name="submit" class="btn btn-primary float-right m-2">Submit</button>
+                        <button id="ajaxSubmit" type="button" name="button" class="btn btn-primary float-right m-2">Submit (Ajax)</button>
+
+                        <button id="spinner" class="displayNone btn btn-primary float-right m-2" type="button" disabled>
+                          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                          Running...
+                        </button>
                     </div>
 
                 </div>
@@ -155,8 +178,9 @@
 <!--    - js CDNs- -->
 
 <!--    - JQuery - -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+      crossorigin="anonymous">></script>
 <!--    JQuery functions for question.html-->
     <script src="{% static 'js/question-jquery.js' %}" crossorigin="anonymous"></script>
 
@@ -175,7 +199,14 @@
 <!--    - Popper.js - -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 
+    <!--    convert slugs to json for js to read-->
+    {{ question.lesson.course.slug|json_script:"course" }}
+    {{ question.lesson.slug|json_script:"lesson" }}
+    {{ question.slug|json_script:"question_slug" }}
+
     <script>
+        var codeMirrorInstances = [];
+
         {% for file_form in file_formset %}
             myTextArea = document.getElementById("id_form-{{ forloop.counter0 }}-contents")
             var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
@@ -183,6 +214,8 @@
                                 mode: "text/x-java",
                                 autoRefresh: true,
                               });
+<!--            myCodeMirror.setSize("100%", "100%");-->
+            codeMirrorInstances.push(myCodeMirror);
         {% endfor %}
     </script>
 {% endblock %}
