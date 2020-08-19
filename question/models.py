@@ -111,6 +111,9 @@ class Submission(models.Model):
     # associated question
     question = models.ForeignKey(Question, on_delete=models.CASCADE, default=None)
 
+    # Course owner/creator
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
     def __str__(self):
         return self.question.name
 

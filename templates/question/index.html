@@ -34,9 +34,6 @@
                             {% for question in questions %}
                                 <p class="ml-2"><a href="/question/courses/{{ question.lesson.course.slug}}/{{ question.lesson.slug }}/{{ question.slug }}">{{ question.name }}</a></p>
                             {% endfor %}
-
-                            <p class="mt-5 ml-2"><a href="/question/upload/">Upload new question</a></p>
-
                         </div>
                         <div class="col-md-4 border-right border-white">
                             <h4 class="mb-3">Courses:</h4>

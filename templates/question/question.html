@@ -34,8 +34,8 @@
                 <h5 class="mb-3">Files</h5>
                 <!--                        tabs-->
                 <div class="row">
-                    {% for file_form in file_forms %}
-                    <div class="tab col-md-6 p-2 border border-white rounded-lg" data-file="textarea{{ forloop.counter }}">{{ file_form.file.name }}</div>
+                    {% for file_form in file_formset %}
+                    <div class="tab col-md-6 p-2 border border-white rounded-lg" data-file="textarea{{ forloop.counter }}">{{ file_form.name.value }}</div>
                     {% endfor %}
                 </div>
 
@@ -44,7 +44,9 @@
 
             <div class="col-md-9 bg-secondary text-white border border-white rounded-lg">
                 <form id="submission_form" method="post" action="/question/courses/{{ question.lesson.course.slug}}/{{ question.lesson.slug }}/{{ question.slug }}/">
-<!--                Input and output row-->
+                    {% csrf_token %}
+                    {{ file_formset.management_form }}
+                    <!--                Input and output row-->
                 <div class="row">
 
 <!--                    input col-->
@@ -55,68 +57,44 @@
                         <div class="row">
                             <div style="width:100%;">
 
-                                    {% for file_form in file_forms %}
-
-                                        {% if forloop.counter == 1 %}
-                                        <div class="textarea" style="width=100%;" id="textarea{{ forloop.counter }}">
-                                        {% else %}
-                                        <div class="textarea" style="display:none; width=100%;" id="textarea{{ forloop.counter }}">
-                                        {% endif %}
-                                        {% csrf_token %}
-                                        {% for hidden in file_form.form.hidden_fields %}
-                                            {{ hidden }}
-                                        {% endfor %}
-
-                                        {{ file_form.form.contents.errors }}
-                                        {{ file_form.form.contents.help_text }}
-                                        {{ file_form.form.contents }}
-                                        </div>
-
-                                    {% endfor %}
+                                {% for file_form in file_formset %}
+<!--                                        render first form-->
+                                    {% if forloop.counter == 1 %}
+                                    <div class="textarea" style="width=100%;" id="textarea{{ forloop.counter }}">
+                                        {{ file_form.contents }}
+                                        <div class="displayNone">{{ file_form.name }}</div>
                                     </div>
-
-
-
-
-
+<!--                                        hide other forms-->
+                                    {% else %}
+                                    <div class="textarea" style="display:none; width=100%;" id="textarea{{ forloop.counter }}">
+                                        {{ file_form.contents }}
+                                        <div class="displayNone">{{ file_form.name }}</div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
-
-<!--                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="20">Test1</textarea>-->
-<!--                        </div>-->
-
                     </div>
 <!--                    output col -->
                     <div class="col-md-5 bg-secondary text-white border border-white rounded-lg">
                         <h4 class="mt-1">Test Results</h4></br>
 
-                        {% if errors %}
-                            <h5>Errors</h5>
-                            <div class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1" style="overflow-x: auto;">{{ errors }}</div>
-                        {% endif %}
+                        <h5 class="testErrors displayNone">Errors</h5>
+                        <div id="errorText" class="testErrors displayNone testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1" style="overflow-x: auto;"> - space for errors - </div>
 
-                        {% if output %}
-                            <h5>Output</h5>
-                            {% if output.tests %}
-                                {% for values in output.tests %}
-                                <div class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">
-                                    <h6>{{ values.name }}</h6>
-                                    <p>{{ values.description }}</p>
-                                    <p>Passed:
-                                        {% if values.passed == True %}
-                                            <p class="greenHighlight"> {{ values.passed }}</p>
-                                        {% else %}
-                                            <p class="redHighlight"> {{ values.passed }}</p>
-                                        {% endif %}
+                        <h5 class="testOutput displayNone">Output</h5>
+                        <div id="output" class="testOutput displayNone"></div>
 
+<!--                        hidden elements for displaying test results -->
+                        <div id="hiddenTemplates" class="displayNone">
 
-                                    </p>
-                                    <p class="redHighlight">{{ values.failureText }}</p>
-                                </div>
-                                {% endfor %}
-                            {% else %}
-                                <p>{{ output }}</p>
-                            {% endif %}
-                        {% endif %}
+                            <div id="testTemplate" class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">
+                                <h6 id="testTemplateName">Name</h6>
+                                <p id="testTemplateDescription">Description</p>
+                                <p id="testTemplateResult">Passed: True/False</p>
+                                <p id="testTemplateFailure" class="redHighlight">Failure Text</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -124,7 +102,12 @@
             <div class="fill10">
                 <div class="row">
                     <div class="col-md-8">
-                        <button type="submit" name="submit" class="btn btn-primary float-right m-2">Submit</button>
+                        <button id="ajaxSubmit" type="button" name="button" class="btn btn-primary float-right m-2">Submit</button>
+
+                        <button id="spinner" class="displayNone btn btn-primary float-right m-2" type="button" disabled>
+                          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                          Running...
+                        </button>
                     </div>
 
                 </div>
@@ -145,8 +128,9 @@
 <!--    - js CDNs- -->
 
 <!--    - JQuery - -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+      crossorigin="anonymous">></script>
 <!--    JQuery functions for question.html-->
     <script src="{% static 'js/question-jquery.js' %}" crossorigin="anonymous"></script>
 
@@ -165,14 +149,23 @@
 <!--    - Popper.js - -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 
+    <!--    convert slugs to json for js to read-->
+    {{ question.lesson.course.slug|json_script:"course" }}
+    {{ question.lesson.slug|json_script:"lesson" }}
+    {{ question.slug|json_script:"question_slug" }}
+
     <script>
-        {% for file_form in file_forms %}
-            myTextArea = document.getElementById("id_file{{ forloop.counter0 }}-contents")
+        var codeMirrorInstances = [];
+
+        {% for file_form in file_formset %}
+            myTextArea = document.getElementById("id_form-{{ forloop.counter0 }}-contents")
             var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
                                 lineNumbers: true,
                                 mode: "text/x-java",
                                 autoRefresh: true,
                               });
+<!--            myCodeMirror.setSize("100%", "100%");-->
+            codeMirrorInstances.push(myCodeMirror);
         {% endfor %}
     </script>
 {% endblock %}
