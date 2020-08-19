@@ -24,9 +24,25 @@ def index(request):
 
     questions = Question.objects.all()
 
+    # get most recently modified courses
+    courses = Course.objects.order_by('created')[:5]
+
     context_dict = {
-        'questions': questions
+        'questions': questions,
+        'courses': courses
     }
+
+    lessons = []
+
+    if request.user.is_authenticated:
+        # get user's submissions
+        submissions = Submission.objects.filter(owner=request.user)
+
+        for submission in submissions:
+            lessons.append(submission.question.lesson)
+
+    context_dict['lessons'] = lessons
+
 
     return render(request, 'question/index.html', context=context_dict)
 
@@ -223,7 +239,8 @@ def question_ajax(request, course_slug, lesson_slug, question_slug):
         if json_return_object['summaryCode'] == 0:
 
             # remove any existing submissions
-            existing_submissions = Submission.objects.filter(owner=request.user)
+            existing_submissions = Submission.objects.filter(owner=request.user,
+                                                             question=question_obj)
 
             # remove any files associated with existing submissions
             for sub in existing_submissions:
@@ -235,7 +252,7 @@ def question_ajax(request, course_slug, lesson_slug, question_slug):
 
             # create submission associated with question
             submission = Submission.objects.create(question=question_obj,
-                                           owner=request.user)
+                                                   owner=request.user)
             submission.save()
 
             # create files and associate with submission

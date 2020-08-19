@@ -15,6 +15,9 @@ class Course(models.Model):
     # slug for urls
     slug = models.SlugField(default=None, unique=True)
 
+    # creation timestamp
+    created = models.DateTimeField(auto_now_add=True)
+
     # update the slug whenever Course is created/changed
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -38,6 +41,9 @@ class Lesson(models.Model):
 
     # slug for urls
     slug = models.SlugField(default=None)
+
+    # creation timestamp
+    created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         # make lesson name unique for this course
@@ -76,6 +82,9 @@ class Question(models.Model):
     # slug for urls
     slug = models.SlugField(default=None)
 
+    # creation timestamp
+    created = models.DateTimeField(auto_now_add=True)
+
     class Meta:
         # make question name unique for this lesson
         unique_together = [['slug', 'lesson'], ['name', 'lesson']]
@@ -101,6 +110,9 @@ class File(models.Model):
     # files contents as string
     contents = models.TextField()
 
+    # creation timestamp
+    created = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return self.name
 
@@ -113,6 +125,9 @@ class Submission(models.Model):
 
     # Course owner/creator
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    # creation timestamp
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.question.name
@@ -130,6 +145,9 @@ class SubmissionFile(models.Model):
     # files contents as string
     contents = models.TextField()
 
+    # creation timestamp
+    created = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return self.name
 
@@ -141,6 +159,9 @@ class UserProfile(models.Model):
 
     # user bio
     bio = models.CharField(max_length=256, blank=True)
+
+    # creation timestamp
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.user.username
