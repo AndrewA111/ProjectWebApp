@@ -57,43 +57,23 @@
                         <div class="row">
                             <div style="width:100%;">
 
-                                    {% for file_form in file_formset %}
+                                {% for file_form in file_formset %}
 <!--                                        render first form-->
-                                        {% if forloop.counter == 1 %}
-                                        <div class="textarea" style="width=100%;" id="textarea{{ forloop.counter }}">
-                                            {{ file_form.contents }}
-                                            <div class="displayNone">{{ file_form.name }}</div>
-                                        </div>
-<!--                                        hide other forms-->
-                                        {% else %}
-                                        <div class="textarea" style="display:none; width=100%;" id="textarea{{ forloop.counter }}">
-                                            {{ file_form.contents }}
-                                            <div class="displayNone">{{ file_form.name }}</div>
-                                        </div>
-                                        {% endif %}
-
-
-<!--                                        {% for hidden in file_form.form.hidden_fields %}-->
-<!--                                            {{ hidden }}-->
-<!--                                        {% endfor %}-->
-
-<!--                                        {{ file_form.form.contents.errors }}-->
-<!--                                        {{ file_form.form.contents.help_text }}-->
-<!--                                        {{ file_form.form.contents }}-->
-<!--                                        </div>-->
-
-                                    {% endfor %}
+                                    {% if forloop.counter == 1 %}
+                                    <div class="textarea" style="width=100%;" id="textarea{{ forloop.counter }}">
+                                        {{ file_form.contents }}
+                                        <div class="displayNone">{{ file_form.name }}</div>
                                     </div>
-
-
-
-
-
+<!--                                        hide other forms-->
+                                    {% else %}
+                                    <div class="textarea" style="display:none; width=100%;" id="textarea{{ forloop.counter }}">
+                                        {{ file_form.contents }}
+                                        <div class="displayNone">{{ file_form.name }}</div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
-
-<!--                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="20">Test1</textarea>-->
-<!--                        </div>-->
-
                     </div>
 <!--                    output col -->
                     <div class="col-md-5 bg-secondary text-white border border-white rounded-lg">
@@ -115,35 +95,6 @@
                                 <p id="testTemplateFailure" class="redHighlight">Failure Text</p>
                             </div>
                         </div>
-
-<!--                        {% if errors %}-->
-<!--                            <h5>Errors</h5>-->
-<!--                            <div class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1" style="overflow-x: auto;">{{ errors }}</div>-->
-<!--                        {% endif %}-->
-
-<!--                        {% if output %}-->
-<!--                            <h5>Output</h5>-->
-<!--                            {% if output.tests %}-->
-<!--                                {% for values in output.tests %}-->
-<!--                                <div class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">-->
-<!--                                    <h6>{{ values.name }}</h6>-->
-<!--                                    <p>{{ values.description }}</p>-->
-<!--                                    <p>Passed:-->
-<!--                                        {% if values.passed == True %}-->
-<!--                                            <p class="greenHighlight"> {{ values.passed }}</p>-->
-<!--                                        {% else %}-->
-<!--                                            <p class="redHighlight"> {{ values.passed }}</p>-->
-<!--                                        {% endif %}-->
-
-
-<!--                                    </p>-->
-<!--                                    <p class="redHighlight">{{ values.failureText }}</p>-->
-<!--                                </div>-->
-<!--                                {% endfor %}-->
-<!--                            {% else %}-->
-<!--                                <p>{{ output }}</p>-->
-<!--                            {% endif %}-->
-<!--                        {% endif %}-->
                     </div>
                 </div>
 
@@ -151,8 +102,7 @@
             <div class="fill10">
                 <div class="row">
                     <div class="col-md-8">
-                        <button type="submit" name="submit" class="btn btn-primary float-right m-2">Submit</button>
-                        <button id="ajaxSubmit" type="button" name="button" class="btn btn-primary float-right m-2">Submit (Ajax)</button>
+                        <button id="ajaxSubmit" type="button" name="button" class="btn btn-primary float-right m-2">Submit</button>
 
                         <button id="spinner" class="displayNone btn btn-primary float-right m-2" type="button" disabled>
                           <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
