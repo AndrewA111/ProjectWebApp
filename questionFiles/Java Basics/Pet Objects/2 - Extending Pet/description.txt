@@ -1,0 +1,5 @@
+We can use inheritance to represent divergent pet objects.
+
+Take a look at the class 'Cat', it extends 'Pet', gaining all of it's properties. We can then include behaviour specific to the 'Cat' class (e.g. meow() method).
+
+Considering the 'Cat', implement the 'Dog' class to extend 'Pet' and add another method names 'bark()' which returns the String "Woof!".

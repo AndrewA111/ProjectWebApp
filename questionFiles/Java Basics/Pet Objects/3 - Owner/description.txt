@@ -1,0 +1,11 @@
+Look at the class Owner that has now been added.
+
+We have added included an instance variable of ArrayList<Pet> names petList.
+
+ArrayList is an example of a Java Collection object (data structure provided by Java for storing and managing objects)
+
+This is not included by default and must be imported using the import statement 'import java.util.ArrayList;' which we have also included.
+
+Complete the constructor for Owner by creating a new ArrayList of generic type pet and assigning this to the petList isntance variable.
+
+Next, complete the method 'addPet(Pet p)' in the Owner class. This class should take the passed pet, p, and add it to the Owner's petList.

@@ -1,0 +1,5 @@
+When a Pet is created, we want to assign it an owner. We also want the owner to add the Pet to its list of Pets.
+
+In the Pet class, see that we have added a new parameter 'owner' to the constructor. Take the passed variable and assign it to this Pet's 'owner' variable.
+
+Still within the Pet constructor, access this Pet's 'owner' object, and call the addPet method to add this Pet to the owner's petList (Note, to pass the Pet to the method, you can pass 'this' as an argument)
