@@ -15,6 +15,8 @@ from django.forms.formsets import BaseFormSet
 from django.urls import reverse
 from django.contrib.auth.models import User
 
+import markdown as md
+
 
 # URL to submit questions
 # API_URL = "http://192.168.56.103:8080/java/submit"
@@ -620,6 +622,25 @@ def send_to_API(formset, upload_form):
     else:
         print(formset.errors)
         return None
+
+
+def markdown_ajax(request):
+
+    if request.method == 'POST':
+
+        text = request.POST.get('description', None)
+
+        # print(text)
+
+        converted = md.markdown(text, extensions=['markdown.extensions.fenced_code'])
+
+        # print(converted)
+
+        return HttpResponse(converted)
+
+
+
+
 
 
 @login_required

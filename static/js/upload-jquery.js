@@ -322,10 +322,22 @@ $(document).ready(function(){
         $("#qDescDiv").hide();
         $("#editQDesc").show();
 
-        var title = $("#qDescInput").val();
-        $("#questionDesc").text(title);
-        $("#id_question_description").val(title);
-    })
+        var desc = $("#qDescInput").val();
+
+        // post to django server to convert to markdown
+        $.ajax({
+            type: 'POST',
+            url: "/question/markdown_convert/",
+            data: {csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                    description: desc},
+//            dataType: "application/json; charset=utf-8",
+            success: function(response){
+                console.log(response);
+                $("#questionDesc").html(response);
+                $("#id_question_description").val(desc);
+            }
+        })
+    });
 
     // --- Tab functionality ---
 
