@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="{% static 'css/question.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/upload.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/sharedStyles.css' %}">
+
 
 <!--    Codemirror-->
 <link rel="stylesheet" type="text/css" href="{% static 'css/codemirror.css' %}">
@@ -109,6 +111,15 @@
                           <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                           Running...
                         </button>
+
+                        {% if next_question %}
+                            <a href="/question/courses/{{ course.slug}}/{{ lesson.slug }}/{{ next_question.slug }}" class="btn btn-primary float-right m-2">Next</a>
+                        {% else %}
+                            <a href="/question/courses/{{ course.slug}}" class="btn btn-primary float-right m-2">Next</a>
+                        {% endif %}
+
+
+
                     </div>
 
                 </div>

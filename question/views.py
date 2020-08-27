@@ -144,7 +144,7 @@ def create_lesson(request, course_slug):
 def question_list(request, course_slug, lesson_slug):
     course = Course.objects.get(slug=course_slug)
     lesson = Lesson.objects.get(slug=lesson_slug, course=course)
-    questions = Question.objects.filter(lesson=lesson)
+    questions = Question.objects.filter(lesson=lesson).order_by('position')
 
     context_dict = {
         'questions': questions,
@@ -162,6 +162,17 @@ def question(request, question_slug, lesson_slug, course_slug):
     lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
     question_obj = Question.objects.get(slug=question_slug, lesson=lesson_obj)
     files = File.objects.filter(question=question_obj)
+
+    # get questions in lesson
+    lesson_questions_qset = Question.objects.filter(lesson=lesson_obj).order_by('position')
+    lesson_questions = list(lesson_questions_qset)
+    index = lesson_questions.index(question_obj)
+
+    # get next question for 'next' button if there is one
+    if index < (len(lesson_questions) - 1):
+        next_question = lesson_questions[index + 1]
+    else:
+        next_question = None
 
     # set of forms for files
     SubmissionFileFormSet = formset_factory(SubmissionFileForm, formset=BaseFormSet, extra=0)
@@ -182,8 +193,11 @@ def question(request, question_slug, lesson_slug, course_slug):
         # create context dict to pass to template
         context_dict = {
             'question': question_obj,
+            'next_question': next_question,
             # actual forms
             # 'file_forms': file_forms
+            'lesson': lesson_obj,
+            'course': course_obj,
             'file_formset': formset_context
         }
 
@@ -460,10 +474,20 @@ def ajax_upload(request, course_slug, lesson_slug):
             # if valid for saving (all tests failing)
             if json_return_object['summaryCode'] == 1:
                 print("Upload form name:" + str(cleaned_data['question_name']))
+
+                # get other questions in this lesson
+                lesson_questions = Question.objects.filter(lesson=lesson).order_by('position')
+
+                # work out next position available
+                if len(lesson_questions) > 0:
+                    position = lesson_questions[len(lesson_questions) - 1].position + 1
+                else:
+                    position = 1
+
                 question = Question.objects.get_or_create(name=cleaned_data['question_name'],
                                                           lesson=lesson,
-                                                          owner=owner)
-
+                                                          owner=owner,
+                                                          position=position)
 
                 # if question does not already exist
                 if question[1]:
@@ -624,6 +648,8 @@ def send_to_API(formset, upload_form):
         return None
 
 
+# function which takes request containing
+# markdown text and returns it as html
 def markdown_ajax(request):
 
     if request.method == 'POST':

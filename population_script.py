@@ -99,11 +99,22 @@ def add_lesson(name, owner, course):
 
 
 def add_question(name, owner, lesson, testFile, description):
+
+    # get other questions in this lesson
+    lesson_questions = Question.objects.filter(lesson=lesson).order_by('position')
+
+    # work out next position available
+    if len(lesson_questions) > 0:
+        position = lesson_questions[len(lesson_questions) - 1].position + 1
+    else:
+        position = 1
+
     q, created = Question.objects.get_or_create(name=name,
                                                 owner=owner,
                                                 lesson=lesson,
                                                 testFile=testFile,
                                                 description=description,
+                                                position=position,
                                                 solved=True)
     q.save()
     return q

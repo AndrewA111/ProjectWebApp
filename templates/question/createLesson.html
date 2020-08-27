@@ -5,6 +5,10 @@
     Create Lesson
 {% endblock %}
 
+{% block link_block %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/sharedStyles.css' %}">
+{% endblock %}
+
 {% block body_block %}
     <br/>
     <h3>Course: {{ course.name }}</h3>

@@ -12,6 +12,8 @@
 
     <link rel="stylesheet" type="text/css" href="{% static 'css/upload.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/question.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/sharedStyles.css' %}">
+
 
     <!--    Codemirror-->
     <link rel="stylesheet" type="text/css" href="{% static 'css/codemirror.css' %}">
@@ -169,7 +171,7 @@
                             </div>
 
 
-                            <div id="hiddenInputs" class="">
+                            <div id="hiddenInputs" class="displayNone">
                                 Q Name: {{ upload_form.question_name }}<br/>
                                 Q Desc: {{ upload_form.question_description }}<br/>
 <!--                                Test file: {{ upload_form.test_file }}<br/>-->

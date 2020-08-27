@@ -70,6 +70,9 @@ class Question(models.Model):
     # lesson this question is a member of
     lesson = models.ForeignKey(Lesson, on_delete=models.SET_NULL, null=True)
 
+    # position within parent lesson
+    position = models.IntegerField(default=1)
+
     # test file (contents)
     testFile = models.TextField(default=None, null=True, blank=True)
 
