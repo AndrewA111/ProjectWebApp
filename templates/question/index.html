@@ -32,12 +32,14 @@
 
                     <div class="row pt-3">
                         <div class="col-md-4 border-right border-white">
-                            <h4 class="mb-3">Courses</h4>
+                            <h4 class="mb-3">Recently Added Courses</h4>
 
-
-                            <h6 class="mb-3">Recently added courses:</h6>
                             {% for course in courses %}
-                                <p class="ml-3"><a href="/question/courses/{{ course.slug }}/">{{ course.name }}</a></p>
+                                <div class="col-md-12 bg-dark mb-3 align-middle rounded">
+                                    <div class="row">
+                                        <p class="ml-2 mt-2 mb-2"><a href="/question/courses/{{ course.slug }}/">{{ course.name }}</a></p>
+                                    </div>
+                                </div>
                             {% endfor %}
 
                             <br/>
@@ -49,7 +51,12 @@
                                  <h4 class="mb-3">Your Recent Lessons</h4>
                                 {% for lesson in lessons %}
 <!--                                    <p class="ml-2"><a href="/question/courses/{{ question.lesson.course.slug}}/{{ question.lesson.slug }}/{{ question.slug }}">{{ question.name }}</a></p>-->
-                                <p class="ml-2"><a href="/question/courses/{{ lesson.course.slug }}/{{ lesson.slug }}">{{ lesson.name }}</a></p>
+
+                                <div class="col-md-12 bg-dark mb-3 align-middle rounded">
+                                    <div class="row">
+                                        <p class="ml-2 mt-2 mb-2"><a href="/question/courses/{{ lesson.course.slug }}/{{ lesson.slug }}">{{ lesson.name }}</a></p>
+                                    </div>
+                                </div>
                                 {% endfor %}
 
                             </div>
