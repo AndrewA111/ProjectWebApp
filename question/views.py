@@ -2,8 +2,9 @@ from json.decoder import JSONDecodeError
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db import transaction
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from question.models import Question, File, Submission, UserProfile, Course, Lesson, SubmissionFile
 from question.forms import SubmissionFileForm, UploadFileForm, UploadForm, UserForm, UserProfileForm, CreateCourseForm, \
     CreateLessonForm
@@ -14,7 +15,7 @@ from django.forms.formsets import formset_factory
 from django.forms.formsets import BaseFormSet
 from django.urls import reverse
 from django.contrib.auth.models import User
-
+from django.core import serializers
 import markdown as md
 
 
@@ -665,8 +666,61 @@ def markdown_ajax(request):
         return HttpResponse(converted)
 
 
+# function to move question up one place in the
+@transaction.atomic
+def move_question_ajax(request, course_slug, lesson_slug, question_slug, direction):
 
+    if(request.method == 'GET'):
 
+        # get question and associated course & lesson
+        course_obj = Course.objects.get(slug=course_slug)
+        lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
+        question_obj = Question.objects.get(slug=question_slug, lesson=lesson_obj)
+
+        # get pos of this question
+        this_pos = question_obj.position
+
+        # get other questions in this lesson
+        lesson_questions_qset = Question.objects.filter(lesson=lesson_obj).order_by('position')
+        lesson_questions = list(lesson_questions_qset)
+        index = lesson_questions.index(question_obj)
+
+        # if moving selected question up
+        if direction == 'up':
+            print("up")
+            # get question above this question and position
+            prev_question_obj = lesson_questions[index - 1]
+            prev_pos = prev_question_obj.position
+
+            question_obj.position = prev_pos
+            prev_question_obj.position = this_pos
+
+            question_obj.save()
+            prev_question_obj.save()
+
+        # if moving selected question down
+        elif direction == 'down':
+            # get question below this question and position
+            if index < len(lesson_questions) - 1:
+                next_question_obj = lesson_questions[index + 1]
+                next_pos = next_question_obj.position
+            # if at end of list, set next question to first position
+            else:
+                next_question_obj = lesson_questions[0]
+                next_pos = next_question_obj.position
+
+            question_obj.position = next_pos
+            next_question_obj.position = this_pos
+
+            question_obj.save()
+            next_question_obj.save()
+
+        # get other questions in this lesson
+        lesson_questions_updated = Question.objects.filter(lesson=lesson_obj).order_by('position')
+
+        lesson_json = serializers.serialize('json', lesson_questions_updated)
+
+        return HttpResponse(lesson_json, content_type="application/json")
 
 
 @login_required

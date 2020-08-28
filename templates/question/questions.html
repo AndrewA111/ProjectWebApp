@@ -37,14 +37,18 @@
                                     <div class="col-md-4 bg-dark ml-3 align-middle rounded">
                                         <div class="row">
 <!--                                            <div class="col-md-10">-->
-                                                <p class="ml-2 mt-2 mb-2 align-middle"><a href="/question/courses/{{ course.slug}}/{{ lesson.slug }}/{{ question.slug }}">{{ question.name }}</a></p>
+                                                <p id="question-{{ forloop.counter0 }}" data-slug="{{ question.slug }}" class="ml-2 mt-2 mb-2 align-middle">
+                                                    <a id="questionLink-{{ forloop.counter0 }}" href="/question/courses/{{ course.slug}}/{{ lesson.slug }}/{{ question.slug }}">
+                                                        {{ question.name }}
+                                                    </a>
+                                                </p>
 <!--                                            </div>-->
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="btn-group mr-2" role="group" aria-label="First group">
-                                            <button type="button" class="btn btn-dark">Up</button>
-                                            <button type="button" class="btn btn-dark">Down</button>
+                                            <button type="button" class="arrow upArrow btn btn-dark"><h4 class="p-0 m-0">&uarr;</h4></button>
+                                            <button type="button" class="arrow downArrow btn btn-dark"><h4 class="p-0 m-0">&darr;</h4></button>
                                         </div>
                                     </div>
 
@@ -63,4 +67,17 @@
             </div>
 
         </div>
+
+    <!--    - JQuery - -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+      crossorigin="anonymous">></script>
+
+<!--    JQuery functions for questions.html-->
+    <script src="{% static 'js/question-list-jquery.js' %}" crossorigin="anonymous"></script>
+
+<!--    provide slugs so javascript can pick up for sending via ajax-->
+    {{ course.slug|json_script:"course" }}
+    {{ lesson.slug|json_script:"lesson" }}
+
 {% endblock %}
