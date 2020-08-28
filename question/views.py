@@ -386,7 +386,7 @@ def upload(request, course_slug, lesson_slug):
     lesson = Lesson.objects.get(slug=lesson_slug, course=course)
 
     # set of forms for files
-    UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
+    UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0, can_delete=True)
 
     pre_load_questions = True
 
@@ -562,7 +562,7 @@ def ajax_solve(request, course_slug, lesson_slug):
         # testing
         decoded = request.body.decode('utf-8')
         print(decoded)
-        
+
 
         formset = UploadFileFormSet(request.POST)
         upload_form = UploadForm(request.POST)
