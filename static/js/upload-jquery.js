@@ -419,6 +419,9 @@ $(document).ready(function(){
         var tabEdit = $($("#" + tabName).find("a")[0]).attr("id", "tab" + tabCount + "Edit");
         var tabEdit = $($("#" + tabName).find("a")[0]).attr("data-name", tabCount);
 
+        var tabDelete = $($("#" + tabName).find("a")[1]).attr("id", "tab" + tabCount + "Delete");
+        var tabDelete = $($("#" + tabName).find("a")[1]).attr("data-name", tabCount);
+
         // update tab text
         $("#tab" + tabCount + "text").text(tabTitle);
 
@@ -477,5 +480,9 @@ $(document).ready(function(){
             codeMirrorInstances[i].refresh();
         }
     });
+
+    // --- tab deleting ---
+    
+
 
 });
