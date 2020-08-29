@@ -450,6 +450,12 @@ $(document).ready(function(){
         $("#id_form-" + tabCount + "-name").val(tabTitle);
         $("#id_form-" + tabCount + "-name").attr("name", "form-" + tabCount + "-name");
 
+        // add delete checkbox hidden input field
+        var boxClone = $("#id_form-0-DELETE").clone().attr("id", "id_form-" + tabCount + "-DELETE");
+        console.log(boxClone);
+        boxClone.appendTo("#hiddenInputs");
+        $("#id_form-" + tabCount + "-DELETE").attr("name", "form-" + tabCount + "-DELETE");
+
         // update formset data
         $("#id_form-TOTAL_FORMS").val(tabCount + 1);
 
@@ -482,7 +488,17 @@ $(document).ready(function(){
     });
 
     // --- tab deleting ---
-    
+
+    // when delete button clicked
+    $(document).on("click", ".tabDelete", function(){
+
+        var tabNo = $(this).attr('data-name');
+
+        $("#id_form-" + tabNo + "-DELETE").prop("checked", true);
+
+
+
+    });
 
 
 });

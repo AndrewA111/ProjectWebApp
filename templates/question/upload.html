@@ -203,12 +203,14 @@
 
 
 <!--                                hidden field for creating forms-->
-                            <div id="hiddenTemplates" class="displayNone">
+                            <div id="hiddenTemplates" class="">
                                 <br/> Hidden fields for creating new tabs/files
 
                                 {{ upload_file_formset.0.name }}
 
                                 {{ upload_file_formset.0.contents }}
+
+                                {{ upload_file_formset.0.DELETE }}
 
                                 <div id="testTemplate" class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">
                                     <h6 id="testTemplateName">Name</h6>

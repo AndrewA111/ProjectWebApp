@@ -486,7 +486,7 @@ def ajax_upload(request, course_slug, lesson_slug):
     if request.method == 'POST':
 
         # set of forms for files
-        UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
+        UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0, can_delete=True)
 
         # testing
         decoded = request.body.decode('utf-8')
@@ -533,12 +533,14 @@ def ajax_upload(request, course_slug, lesson_slug):
                         # loop from 2nd form (first is empty)
                         for f in formset[1:]:
                             cleaned_data = f.cleaned_data
-                            file = File.objects.create(name=cleaned_data['name'],
-                                                       contents=cleaned_data['contents'],
-                                                       question=question[0])
-                            file.save()
 
-                            json_return_object['uploaded'] = True
+                            if not cleaned_data['DELETE']:
+                                file = File.objects.create(name=cleaned_data['name'],
+                                                           contents=cleaned_data['contents'],
+                                                           question=question[0])
+                                file.save()
+
+                                json_return_object['uploaded'] = True
                 else:
                     json_return_object['summaryCode'] = 4
 
@@ -593,14 +595,26 @@ def send_to_API(formset, upload_form):
 
     if formset.is_valid():
 
+        print("about to loop over deleted items")
+        for obj in formset.deleted_forms:
+            print(obj)
+            # formset.remove(obj)
+
         # loop from 2nd form (first is empty)
         for f in formset[1:]:
+
+            # if f not in formset.deleted_forms:
             cleaned_data = f.cleaned_data
 
-            API_dict['files'].append({
-                'name': cleaned_data['name'],
-                'content': cleaned_data['contents']
-            })
+            if not cleaned_data['DELETE']:
+                API_dict['files'].append({
+                    'name': cleaned_data['name'],
+                    'content': cleaned_data['contents']
+                })
+            else:
+                print("-- Deleted form: --")
+                print(cleaned_data)
+
 
         if upload_form.is_valid():
 
