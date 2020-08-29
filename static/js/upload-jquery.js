@@ -411,11 +411,16 @@ $(document).ready(function(){
         // add to DOM
         clone.appendTo("#tabs");
 
+        $($("#" + tabName).find(".tabBox")[0]).attr("data-no", tabCount);
+
         // set IDs
         var tabText = $($("#" + tabName).find("p")[0]).attr("id", "tab" + tabCount + "text");
 
         var tabEdit = $($("#" + tabName).find("a")[0]).attr("id", "tab" + tabCount + "Edit");
         var tabEdit = $($("#" + tabName).find("a")[0]).attr("data-name", tabCount);
+
+        var tabDelete = $($("#" + tabName).find("a")[1]).attr("id", "tab" + tabCount + "Delete");
+        var tabDelete = $($("#" + tabName).find("a")[1]).attr("data-name", tabCount);
 
         // update tab text
         $("#tab" + tabCount + "text").text(tabTitle);
@@ -444,6 +449,12 @@ $(document).ready(function(){
         nameClone.appendTo("#hiddenInputs");
         $("#id_form-" + tabCount + "-name").val(tabTitle);
         $("#id_form-" + tabCount + "-name").attr("name", "form-" + tabCount + "-name");
+
+        // add delete checkbox hidden input field
+        var boxClone = $("#id_form-0-DELETE").clone().attr("id", "id_form-" + tabCount + "-DELETE");
+        console.log(boxClone);
+        boxClone.appendTo("#hiddenInputs");
+        $("#id_form-" + tabCount + "-DELETE").attr("name", "form-" + tabCount + "-DELETE");
 
         // update formset data
         $("#id_form-TOTAL_FORMS").val(tabCount + 1);
@@ -475,5 +486,33 @@ $(document).ready(function(){
             codeMirrorInstances[i].refresh();
         }
     });
+
+    // --- tab deleting ---
+
+    // when delete button clicked
+    $(document).on("click", ".tabDelete", function(){
+
+        // get tab number
+        var tabNo = $(this).attr('data-name');
+
+        // mark hidden field to inform backend not to process the file
+        $("#id_form-" + tabNo + "-DELETE").prop("checked", true);
+
+        // hide all text areas
+        $("#tab" + tabNo).hide();
+
+        // hide all text areas
+        $(".textarea").hide();
+
+        // show the Test file textarea
+        $("#textareaTest").show();
+
+        // refresh codemirror instances
+        for (i = 0; i < codeMirrorInstances.length; i++){
+            codeMirrorInstances[i].refresh();
+        }
+
+    });
+
 
 });

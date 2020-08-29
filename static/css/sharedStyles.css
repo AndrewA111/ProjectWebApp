@@ -9,3 +9,7 @@ a:hover {
 a {
     color: #FFFFFF;
 }
+
+.yScroll {
+  overflow-y: scroll;
+}

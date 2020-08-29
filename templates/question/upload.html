@@ -79,21 +79,33 @@
                 </div>
                 <h5 class="mb-3">Files</h5>
 
-                <div id="tabs" class="row">
+                <div id="tabs">
                     {% for form in upload_file_formset %}
                         {% if not forloop.first %}
-                            <div id="tab{{ forloop.counter0 }}" class="tab col-md-6 p-2 border border-white rounded-lg" data-no="{{ forloop.counter0 }}">
-                                <div class="sameLine">
-                                    <p class=noMargin id="tab{{ forloop.counter0 }}text">{{ form.name.value|default_if_none:'' }}</p>
+                            <div id="tab{{ forloop.counter0 }}" class="row">
+                                <div class="tab tabBox col-md-6 p-2 border border-white rounded-lg" data-no="{{ forloop.counter0 }}">
+                                    <div class="sameLine">
+                                        <p class=noMargin id="tab{{ forloop.counter0 }}text">{{ form.name.value|default_if_none:'' }}</p>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                     <p class="noMargin"> &nbsp
-                                        <a href="#" id="tab{{ forloop.counter0 }}Edit"
-                                       class="edit tabEdit badge badge-light"
-                                       data-name="{{ forloop.counter0 }}">
-                                        Edit
-                                        </a>
-                                    </p>
+                                            <a href="#" id="tab{{ forloop.counter0 }}Edit"
+                                           class="edit tabEdit btn btn-light"
+                                           data-name="{{ forloop.counter0 }}">
+                                            Edit
+                                            </a>
+
+                                            <a href="#" id="tab{{ forloop.counter0 }}Delete"
+                                           class="delete tabDelete btn btn-danger"
+                                           data-name="{{ forloop.counter0 }}">
+                                            Delete
+                                            </a>
+                                        </p>
                                 </div>
                             </div>
+
                         {% endif %}
                     {% endfor %}
                 </div>
@@ -183,6 +195,7 @@
                                 {% for form in upload_file_formset %}
                                     {% if not forloop.first %}
                                         {{ form.name }}
+                                        {{ form.DELETE }}
                                     {% endif %}
                                 {% endfor %}
 
@@ -196,6 +209,8 @@
                                 {{ upload_file_formset.0.name }}
 
                                 {{ upload_file_formset.0.contents }}
+
+                                {{ upload_file_formset.0.DELETE }}
 
                                 <div id="testTemplate" class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">
                                     <h6 id="testTemplateName">Name</h6>
@@ -257,18 +272,29 @@
     </div>
 
 
-        <div id="tabTemplateDiv" class="displayNone tab col-md-6 p-2 border border-white rounded-lg" >
-            <div class="sameLine">
-                <p class=noMargin>Empty</p>
+        <div id="tabTemplateDiv" class="row displayNone">
+            <div class="tab tabBox col-md-6 p-2 border border-white rounded-lg" >
+                <div class="sameLine">
+                    <p class=noMargin>Empty</p>
+
+                </div>
+            </div>
+            <div class="col-md-6">
                 <p class="noMargin"> &nbsp
                     <a href="#"
-                   class="tabEdit badge badge-light"
+                   class="edit tabEdit btn btn-light"
                    data-name="1">
                     Edit
+                    </a>
+                    <a href="#"
+                   class="delete tabDelete btn btn-danger"
+                   data-name="1">
+                    Delete
                     </a>
                 </p>
             </div>
         </div>
+
     </div>
 
 
