@@ -92,17 +92,19 @@ def create_course(request):
         return render(request, 'question/createCourse.html', context=context_dict)
 
 
-def lesson_list(request, course_slug):
+def course(request, course_slug):
 
-    course = Course.objects.get(slug=course_slug)
-    lessons = Lesson.objects.filter(course=course).order_by('position')
+    if request.method == 'GET':
 
-    context_dict = {
-        'lessons': lessons,
-        'course': course,
-    }
+        course = Course.objects.get(slug=course_slug)
+        lessons = Lesson.objects.filter(course=course).order_by('position')
 
-    return render(request, 'question/lessons.html', context=context_dict)
+        context_dict = {
+            'lessons': lessons,
+            'course': course,
+        }
+
+        return render(request, 'question/lessons.html', context=context_dict)
 
 
 def create_lesson(request, course_slug):
@@ -153,20 +155,48 @@ def create_lesson(request, course_slug):
         return render(request, 'question/createLesson.html', context_dict)
 
 
-def question_list(request, course_slug, lesson_slug):
+def lesson(request, course_slug, lesson_slug):
+
+    course_obj = Course.objects.get(slug=course_slug)
+    lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
+    questions = Question.objects.filter(lesson=lesson_obj).order_by('position')
 
     if request.method == 'GET':
-        course = Course.objects.get(slug=course_slug)
-        lesson = Lesson.objects.get(slug=lesson_slug, course=course)
-        questions = Question.objects.filter(lesson=lesson).order_by('position')
 
         context_dict = {
             'questions': questions,
-            'lesson': lesson,
-            'course': course,
+            'lesson': lesson_obj,
+            'course': course_obj,
         }
 
         return render(request, 'question/questions.html', context=context_dict)
+
+    if request.method == 'DELETE':
+
+        # get pos of this lesson
+        # this_pos = lesson_obj.position
+
+        # get other lessons in this course
+        course_lessons_qset = Lesson.objects.filter(course=course_obj).order_by('position')
+        course_lessons = list(course_lessons_qset)
+        index = course_lessons.index(lesson_obj)
+
+        # for every question after current position,
+        # set position to position on previous element
+        sub_list = course_lessons[index:]
+
+        for prev, curr in zip(reversed(sub_list[:-1]), reversed(sub_list)):
+            curr.position = prev.position
+            curr.save()
+
+        lesson_obj.delete()
+
+        # get updated list of lessons in this course
+        course_lessons_updated = Lesson.objects.filter(course=course_obj).order_by('position')
+
+        course_json = serializers.serialize('json', course_lessons_updated)
+
+        return HttpResponse(course_json, content_type='application/json')
 
 
 def question(request, question_slug, lesson_slug, course_slug):
@@ -222,7 +252,7 @@ def question(request, question_slug, lesson_slug, course_slug):
     if (request.method == 'DELETE'):
 
         # get pos of this question
-        this_pos = question_obj.position
+        # this_pos = question_obj.position
 
         # get other questions in this lesson
         lesson_questions_qset = Question.objects.filter(lesson=lesson_obj).order_by('position')
@@ -233,12 +263,21 @@ def question(request, question_slug, lesson_slug, course_slug):
         # set position to position on previous element
         sub_list = lesson_questions[index:]
 
-        for pos, question in enumerate(sub_list):
+        for prev, curr in zip(reversed(sub_list[:-1]), reversed(sub_list)):
+            curr.position = prev.position
+            curr.save()
 
-            # avoid out-of-bounds error
-            if pos < len(sub_list) - 1:
-                sub_list[pos + 1].position = sub_list[pos].position
-                sub_list[pos + 1].save()
+        # for pos, question in enumerate(sub_list):
+        #
+        #     last = sub_list[0].position
+        #
+        #     # avoid out-of-bounds error
+        #     if pos < len(sub_list) - 1:
+        #         temp = sub_list[pos + 1].position
+        #         sub_list[pos + 1].position = last
+        #         sub_list[pos + 1].save()
+        #         last = temp
+
 
         # delete question
         question_obj.delete()
@@ -778,15 +817,15 @@ def move_question_ajax(request, course_slug, lesson_slug, question_slug, directi
         return HttpResponse(lesson_json, content_type="application/json")
 
 
-# function to delete a question
-@transaction.atomic
-def delete_question_ajax(request, course_slug, lesson_slug, question_slug):
-
-    if request.method == 'GET':
-        # get question and associated course & lesson
-        course_obj = Course.objects.get(slug=course_slug)
-        lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
-        question_obj = Question.objects.get(slug=question_slug, lesson=lesson_obj)
+# # function to delete a question
+# @transaction.atomic
+# def delete_question_ajax(request, course_slug, lesson_slug, question_slug):
+#
+#     if request.method == 'GET':
+#         # get question and associated course & lesson
+#         course_obj = Course.objects.get(slug=course_slug)
+#         lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
+#         question_obj = Question.objects.get(slug=question_slug, lesson=lesson_obj)
 
 
 def move_lesson_ajax(request, course_slug, lesson_slug, direction):

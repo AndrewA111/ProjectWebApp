@@ -81,4 +81,6 @@
         <!--    provide slug so javascript can pick up for sending via ajax-->
         {{ course.slug|json_script:"course" }}
 
+        {% csrf_token %}
+
 {% endblock %}
