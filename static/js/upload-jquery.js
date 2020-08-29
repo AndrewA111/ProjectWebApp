@@ -492,11 +492,25 @@ $(document).ready(function(){
     // when delete button clicked
     $(document).on("click", ".tabDelete", function(){
 
+        // get tab number
         var tabNo = $(this).attr('data-name');
 
+        // mark hidden field to inform backend not to process the file
         $("#id_form-" + tabNo + "-DELETE").prop("checked", true);
 
+        // hide all text areas
+        $("#tab" + tabNo).hide();
 
+        // hide all text areas
+        $(".textarea").hide();
+
+        // show the Test file textarea
+        $("#textareaTest").show();
+
+        // refresh codemirror instances
+        for (i = 0; i < codeMirrorInstances.length; i++){
+            codeMirrorInstances[i].refresh();
+        }
 
     });
 

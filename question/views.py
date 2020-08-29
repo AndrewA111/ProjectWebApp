@@ -558,12 +558,11 @@ def ajax_solve(request, course_slug, lesson_slug):
     # Post request
     if request.method == 'POST':
         # set of forms for files
-        UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
+        UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0, can_delete=True)
 
         # testing
         decoded = request.body.decode('utf-8')
         print(decoded)
-        
 
         formset = UploadFileFormSet(request.POST)
         upload_form = UploadForm(request.POST)
