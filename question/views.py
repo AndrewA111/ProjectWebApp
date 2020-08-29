@@ -386,7 +386,7 @@ def upload(request, course_slug, lesson_slug):
     lesson = Lesson.objects.get(slug=lesson_slug, course=course)
 
     # set of forms for files
-    UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0)
+    UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0, can_delete=True)
 
     pre_load_questions = True
 

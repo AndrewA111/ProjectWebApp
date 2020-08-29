@@ -79,21 +79,27 @@
                 </div>
                 <h5 class="mb-3">Files</h5>
 
-                <div id="tabs" class="row">
+                <div id="tabs">
                     {% for form in upload_file_formset %}
                         {% if not forloop.first %}
-                            <div id="tab{{ forloop.counter0 }}" class="tab col-md-6 p-2 border border-white rounded-lg" data-no="{{ forloop.counter0 }}">
-                                <div class="sameLine">
-                                    <p class=noMargin id="tab{{ forloop.counter0 }}text">{{ form.name.value|default_if_none:'' }}</p>
+                            <div id="tab{{ forloop.counter0 }}" class="row">
+                                <div class="tab tabBox col-md-6 p-2 border border-white rounded-lg" data-no="{{ forloop.counter0 }}">
+                                    <div class="sameLine">
+                                        <p class=noMargin id="tab{{ forloop.counter0 }}text">{{ form.name.value|default_if_none:'' }}</p>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                     <p class="noMargin"> &nbsp
-                                        <a href="#" id="tab{{ forloop.counter0 }}Edit"
-                                       class="edit tabEdit badge badge-light"
-                                       data-name="{{ forloop.counter0 }}">
-                                        Edit
-                                        </a>
-                                    </p>
+                                            <a href="#" id="tab{{ forloop.counter0 }}Edit"
+                                           class="edit tabEdit badge badge-light"
+                                           data-name="{{ forloop.counter0 }}">
+                                            Edit
+                                            </a>
+                                        </p>
                                 </div>
                             </div>
+
                         {% endif %}
                     {% endfor %}
                 </div>
@@ -171,7 +177,7 @@
                             </div>
 
 
-                            <div id="hiddenInputs" class="displayNone">
+                            <div id="hiddenInputs" class="">
                                 Q Name: {{ upload_form.question_name }}<br/>
                                 Q Desc: {{ upload_form.question_description }}<br/>
 <!--                                Test file: {{ upload_form.test_file }}<br/>-->
@@ -183,6 +189,7 @@
                                 {% for form in upload_file_formset %}
                                     {% if not forloop.first %}
                                         {{ form.name }}
+                                        {{ form.DELETE }}
                                     {% endif %}
                                 {% endfor %}
 
@@ -257,9 +264,14 @@
     </div>
 
 
-        <div id="tabTemplateDiv" class="displayNone tab col-md-6 p-2 border border-white rounded-lg" >
-            <div class="sameLine">
-                <p class=noMargin>Empty</p>
+        <div id="tabTemplateDiv" class="row displayNone">
+            <div class="tab tabBox col-md-6 p-2 border border-white rounded-lg" >
+                <div class="sameLine">
+                    <p class=noMargin>Empty</p>
+
+                </div>
+            </div>
+            <div class="col-md-6">
                 <p class="noMargin"> &nbsp
                     <a href="#"
                    class="tabEdit badge badge-light"
@@ -269,6 +281,7 @@
                 </p>
             </div>
         </div>
+
     </div>
 
 

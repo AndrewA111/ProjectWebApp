@@ -411,6 +411,8 @@ $(document).ready(function(){
         // add to DOM
         clone.appendTo("#tabs");
 
+        $($("#" + tabName).find(".tabBox")[0]).attr("data-no", tabCount);
+
         // set IDs
         var tabText = $($("#" + tabName).find("p")[0]).attr("id", "tab" + tabCount + "text");
 
