@@ -21,6 +21,8 @@ urlpatterns = [
     path('courses/', views.course_list, name="course_list"),
     path('courses/create_course/', views.create_course, name='create_course'),
     path('courses/<slug:course_slug>/', views.lesson_list, name="lesson_list"),
+    path('courses/<slug:course_slug>/<slug:lesson_slug>/move/<str:direction>/',
+         views.move_lesson_ajax, name="move_lesson"),
     path('courses/<slug:course_slug>/create_lesson/', views.create_lesson, name='create_lesson'),
     path('courses/<slug:course_slug>/<slug:lesson_slug>/', views.question_list, name="question_list"),
     path('courses/<slug:course_slug>/<slug:lesson_slug>/<slug:question_slug>/move/<str:direction>/',

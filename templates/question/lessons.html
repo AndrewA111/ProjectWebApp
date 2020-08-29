@@ -36,11 +36,26 @@
                             <h5 class="mt-3 mb-3">All Lessons:</h5>
 
                             {% for lesson in lessons %}
-                            <div class="col-md-4 bg-dark ml-3 mb-3 align-middle rounded">
-                                <div class="row">
-                                    <p class="ml-2 mt-2 mb-2"><a href="/question/courses/{{ course.slug}}/{{ lesson.slug }}">{{ lesson.name }}</a></p>
+                            <div class="row">
+                                <div class="col-md-4 bg-dark ml-3 mb-3 align-middle rounded">
+                                    <div class="row">
+                                       <p id="lesson-{{ forloop.counter0 }}" data-slug="{{ lesson.slug }}" class="ml-2 mt-2 mb-2 align-middle">
+                                           <a id="lessonLink-{{ forloop.counter0 }}" href="/question/courses/{{ course.slug}}/{{ lesson.slug }}">
+                                               {{ lesson.name }}
+                                           </a>
+                                       </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                                        <button type="button" class="arrow upArrow btn btn-dark"><h4 class="p-0 m-0">&uarr;</h4></button>
+                                        <button type="button" class="arrow downArrow btn btn-dark"><h4 class="p-0 m-0">&darr;</h4></button>
+
+                                    </div>
+                                    <button type="button" class="deleteButton btn btn-danger" data-token="{{ csrf_token }}">Delete</button>
                                 </div>
                             </div>
+
                             {% endfor %}
                         </div>
 
@@ -54,4 +69,16 @@
             </div>
 
         </div>
+
+<!--    - JQuery - -->
+        <script src="https://code.jquery.com/jquery-3.5.1.js"
+          integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+          crossorigin="anonymous">></script>
+
+<!--    JQuery functions for questions.html-->
+        <script src="{% static 'js/lesson-list-jquery.js' %}" crossorigin="anonymous"></script>
+
+        <!--    provide slug so javascript can pick up for sending via ajax-->
+        {{ course.slug|json_script:"course" }}
+
 {% endblock %}

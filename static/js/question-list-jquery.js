@@ -3,6 +3,8 @@ $(document).ready(function(){
     $(document).on("click", ".arrow", function(){
 //    $(".upArrow").click(function(){
 
+        // set direction
+
         var direction = "up";
 
         if($(this).hasClass("downArrow")){
@@ -24,9 +26,8 @@ $(document).ready(function(){
 
                 console.log(response);
 
+                // get updated question list from response
                 var questions = response;
-
-
 
                 for(i=0; i<questions.length; i++){
 

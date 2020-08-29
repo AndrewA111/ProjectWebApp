@@ -770,7 +770,7 @@ def move_question_ajax(request, course_slug, lesson_slug, question_slug, directi
             question_obj.save()
             next_question_obj.save()
 
-        # get other questions in this lesson
+        # get updated list of questions in this lesson
         lesson_questions_updated = Question.objects.filter(lesson=lesson_obj).order_by('position')
 
         lesson_json = serializers.serialize('json', lesson_questions_updated)
@@ -787,6 +787,60 @@ def delete_question_ajax(request, course_slug, lesson_slug, question_slug):
         course_obj = Course.objects.get(slug=course_slug)
         lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
         question_obj = Question.objects.get(slug=question_slug, lesson=lesson_obj)
+
+
+def move_lesson_ajax(request, course_slug, lesson_slug, direction):
+
+    if request.method == 'GET':
+
+        # get lesson and associated course
+        course_obj = Course.objects.get(slug=course_slug)
+        lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
+
+        # get pos of this question
+        this_pos = lesson_obj.position
+
+        # get other lessons in this course
+        course_lessons_qset = Lesson.objects.filter(course=course_obj).order_by('position')
+        course_lessons = list(course_lessons_qset)
+        index = course_lessons.index(lesson_obj)
+
+        # if moving selected lesson up
+        if direction == 'up':
+
+            # get lesson above this lesson and position
+            prev_lesson_obj = course_lessons[index - 1]
+            prev_pos = prev_lesson_obj.position
+
+            lesson_obj.position = prev_pos
+            prev_lesson_obj.position = this_pos
+
+            lesson_obj.save()
+            prev_lesson_obj.save()
+
+        elif direction == 'down':
+
+            # get lesson below this position and position
+            if index < len(course_lessons) - 1:
+                next_lesson_obj = course_lessons[index + 1]
+                next_pos = next_lesson_obj.position
+            # if at end of list, set next lesson to first position
+            else:
+                next_lesson_obj = course_lessons[0]
+                next_pos = next_lesson_obj.position
+
+            lesson_obj.position = next_pos
+            next_lesson_obj.position = this_pos
+
+            lesson_obj.save()
+            next_lesson_obj.save()
+
+        # get updated list of lessons in this course
+        course_lessons_updated = Lesson.objects.filter(course=course_obj).order_by('position')
+
+        course_json = serializers.serialize('json', course_lessons_updated)
+
+        return HttpResponse(course_json, content_type='application/json')
 
 
 @login_required
