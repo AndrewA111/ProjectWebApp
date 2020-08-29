@@ -95,7 +95,7 @@ def create_course(request):
 def lesson_list(request, course_slug):
 
     course = Course.objects.get(slug=course_slug)
-    lessons = Lesson.objects.filter(course=course)
+    lessons = Lesson.objects.filter(course=course).order_by('position')
 
     context_dict = {
         'lessons': lessons,
@@ -114,9 +114,20 @@ def create_lesson(request, course_slug):
         form = CreateLessonForm(request.POST)
 
         if form.is_valid():
+
+            # get other lessons in this course
+            course_lessons = Lesson.objects.filter(course=course).order_by('position')
+
+            # work out next position available
+            if len(course_lessons) > 0:
+                position = course_lessons[len(course_lessons) - 1].position + 1
+            else:
+                position = 1
+
             lesson = form.save(commit=False)
             lesson.owner = request.user
             lesson.course = course
+            lesson.position = position
             lesson.save()
 
 
@@ -771,12 +782,12 @@ def move_question_ajax(request, course_slug, lesson_slug, question_slug, directi
 @transaction.atomic
 def delete_question_ajax(request, course_slug, lesson_slug, question_slug):
 
-
-    if (request.method == 'GET'):
+    if request.method == 'GET':
         # get question and associated course & lesson
         course_obj = Course.objects.get(slug=course_slug)
         lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
         question_obj = Question.objects.get(slug=question_slug, lesson=lesson_obj)
+
 
 @login_required
 def create_profile(request):

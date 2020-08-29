@@ -39,6 +39,9 @@ class Lesson(models.Model):
     # course this lesson is a member of
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True)
 
+    # position within parent lesson
+    position = models.IntegerField(default=1)
+
     # slug for urls
     slug = models.SlugField(default=None)
 

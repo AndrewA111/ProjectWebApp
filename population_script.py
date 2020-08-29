@@ -91,9 +91,20 @@ def add_course(name, owner):
 
 
 def add_lesson(name, owner, course):
+
+    # get other lessons in this course
+    course_lessons = Lesson.objects.filter(course=course).order_by('position')
+
+    # work out next position available
+    if len(course_lessons) > 0:
+        position = course_lessons[len(course_lessons) -1].position + 1
+    else:
+        position = 1
+
     l, created = Lesson.objects.get_or_create(name=name,
                                               owner=owner,
-                                              course=course)
+                                              course=course,
+                                              position=position)
     l.save()
     return l
 
@@ -105,7 +116,7 @@ def add_question(name, owner, lesson, testFile, description):
 
     # work out next position available
     if len(lesson_questions) > 0:
-        position = lesson_questions[len(lesson_questions) - 1].position + 1
+        position = lesson_questions[len(lesson_questions) -1].position + 1
     else:
         position = 1
 
