@@ -92,9 +92,15 @@
                                 <div class="col-md-6">
                                     <p class="noMargin"> &nbsp
                                             <a href="#" id="tab{{ forloop.counter0 }}Edit"
-                                           class="edit tabEdit badge badge-light"
+                                           class="edit tabEdit btn btn-light"
                                            data-name="{{ forloop.counter0 }}">
                                             Edit
+                                            </a>
+
+                                            <a href="#" id="tab{{ forloop.counter0 }}Delete"
+                                           class="delete tabDelete btn btn-danger"
+                                           data-name="{{ forloop.counter0 }}">
+                                            Delete
                                             </a>
                                         </p>
                                 </div>
@@ -274,9 +280,14 @@
             <div class="col-md-6">
                 <p class="noMargin"> &nbsp
                     <a href="#"
-                   class="tabEdit badge badge-light"
+                   class="edit tabEdit btn btn-light"
                    data-name="1">
                     Edit
+                    </a>
+                    <a href="#"
+                   class="edit tabEdit btn btn-danger"
+                   data-name="1">
+                    Delete
                     </a>
                 </p>
             </div>

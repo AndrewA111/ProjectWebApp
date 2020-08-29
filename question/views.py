@@ -519,13 +519,12 @@ def ajax_upload(request, course_slug, lesson_slug):
 
                 question = Question.objects.get_or_create(name=cleaned_data['question_name'],
                                                           lesson=lesson,
-                                                          owner=owner,
-                                                          position=position)
+                                                          owner=owner)
 
                 # if question does not already exist
                 if question[1]:
                     print("new question started")
-
+                    question[0].position = position
                     question[0].testFile = cleaned_data['test_file']
                     question[0].description = cleaned_data['question_description']
                     question[0].save()
