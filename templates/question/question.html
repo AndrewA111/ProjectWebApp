@@ -92,10 +92,30 @@
                         <div id="hiddenTemplates" class="displayNone">
 
                             <div id="testTemplate" class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">
-                                <h6 id="testTemplateName">Name</h6>
-                                <p id="testTemplateDescription">Description</p>
-                                <p id="testTemplateResult">Passed: True/False</p>
-                                <p id="testTemplateFailure" class="redHighlight">Failure Text</p>
+                                <div class="results">
+                                    <div class="row pt-2">
+
+                                        <div class="col-md-8"><h6 id="testTemplateName">Name</h6></div>
+
+                                        <div class="hintButtonContainer col-md-4 displayNone">
+                                            <h5 class="float-right mr-2">
+                                                <a href="#" class="hintButton badge badge-dark">
+                                                    Hint</a>
+                                            </h5>
+                                        </div>
+                                    </div>
+
+                                    <p id="testTemplateDescription">Description</p>
+                                    <p id="testTemplateResult">Passed: True/False</p>
+                                    <p id="testTemplateFailure" class="redHighlight">Failure Text</p>
+
+                                </div>
+                                <div class="hint displayNone border-top">
+                                    <div style="height: 10px;"></div>
+                                    <h6 id="testHintName">Hint:</h6>
+                                    <p id="testHint"></p>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -105,17 +125,17 @@
             <div class="fill10">
                 <div class="row">
                     <div class="col-md-8">
-                        <button id="ajaxSubmit" type="button" name="button" class="btn btn-primary float-right m-2">Submit</button>
+                        <button id="ajaxSubmit" type="button" name="button" class="btn btn-dark float-right m-2">Submit</button>
 
-                        <button id="spinner" class="displayNone btn btn-primary float-right m-2" type="button" disabled>
+                        <button id="spinner" class="displayNone btn btn-dark float-right m-2" type="button" disabled>
                           <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                           Running...
                         </button>
 
                         {% if next_question %}
-                            <a href="/question/courses/{{ course.slug }}/{{ lesson.slug }}/{{ next_question.slug }}" class="btn btn-primary float-right m-2">Next</a>
+                            <a href="/question/courses/{{ course.slug }}/{{ lesson.slug }}/{{ next_question.slug }}" class="btn btn-dark float-right m-2">Next</a>
                         {% else %}
-                            <a href="/question/courses/{{ course.slug }}" class="btn btn-primary float-right m-2">Next</a>
+                            <a href="/question/courses/{{ course.slug }}" class="btn btn-dark float-right m-2">Next</a>
                         {% endif %}
 
 

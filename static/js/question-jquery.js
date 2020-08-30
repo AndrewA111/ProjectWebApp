@@ -72,6 +72,7 @@ $(document).ready(function(){
                             // get test info
                             var name = output['tests'][i]['name'];
                             var description = output['tests'][i]['description'];
+                            var hint = output['tests'][i]['hint'];
                             var passed = output['tests'][i]['passed'];
                             var failure = output['tests'][i]['failureText'];
 
@@ -95,6 +96,17 @@ $(document).ready(function(){
 
                             $($("#test" + name).find("p")[2]).attr("id", "test" + name + "Failure");
                             $("#test" + name + "Failure").text(failure);
+
+                            // check if hint given
+                            if(hint != null){
+
+                                // populate hint text
+                                $($("#test" + name).find("p")[3]).attr("id", "test" + name + "Hint");
+                                $("#test" + name + "Hint").text(hint);
+
+                                // show hint toggle button
+                                $($("#test" + name).find(".hintButtonContainer")[0]).show();
+                            }
 
                             $($("#test" + name).show());
 
@@ -157,6 +169,15 @@ $(document).ready(function(){
 
         // focus on codemirror to force refresh
         $("#" + targetTab + " .CodeMirror").focus();
+
+    });
+
+    // when a 'hint' button is clicked
+    $(document).on("click", ".hintButton", function(){
+
+        console.log("ping");
+
+        $($(this).parent().parent().parent().parent().parent().find(".hint")[0]).toggle(500);
 
     });
 
