@@ -213,10 +213,34 @@
                                 {{ upload_file_formset.0.DELETE }}
 
                                 <div id="testTemplate" class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">
-                                    <h6 id="testTemplateName">Name</h6>
-                                    <p id="testTemplateDescription">Description</p>
-                                    <p id="testTemplateResult">Passed: True/False</p>
-                                    <p id="testTemplateFailure" class="redHighlight">Failure Text</p>
+
+                                    <div class="results">
+                                        <div class="row pt-2">
+                                            <div class="col-md-8"><h6 id="testTemplateName">Name</h6></div>
+
+                                            <div class="hintButtonContainer col-md-4 displayNone">
+                                                <h5 class="float-right mr-2">
+                                                    <a href="#" class="hintButton badge badge-dark">
+                                                        Hint</a>
+                                                </h5>
+                                            </div>
+                                        </div>
+
+                                        <p id="testTemplateDescription">Description</p>
+                                        <p id="testTemplateResult">Passed: True/False</p>
+                                        <p id="testTemplateFailure" class="redHighlight">Failure Text</p>
+                                    </div>
+
+                                    <div class="hint displayNone border-top">
+                                        <div style="height: 10px;"></div>
+                                        <h6 id="testHintName">Hint:</h6>
+                                        <p id="testHint"></p>
+                                    </div>
+
+
+
+
+
                                 </div>
                             </div>
 

@@ -175,8 +175,6 @@ $(document).ready(function(){
     // when a 'hint' button is clicked
     $(document).on("click", ".hintButton", function(){
 
-        console.log("ping");
-
         $($(this).parent().parent().parent().parent().parent().find(".hint")[0]).toggle(500);
 
     });
