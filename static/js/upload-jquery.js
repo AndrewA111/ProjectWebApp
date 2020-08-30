@@ -137,6 +137,10 @@ $(document).ready(function(){
                                 $(".textarea").hide();
                                 $("#textarea1").show();
 
+                                // show the Test file textarea
+                                $(".tab").css('background-color', '#6C757D');
+                                $($("#tab1").find(".tabBox")[0]).css('background-color', '#424242');
+
                                 // popup text
                                 $("#messagePopupTitle").text("Draft question uploaded.");
                                 $("#messagePopupText").text("Solve question to verify.");
@@ -456,6 +460,10 @@ $(document).ready(function(){
         // update tab text
         $("#tab" + tabCount + "text").text(tabTitle);
 
+        // udpate highlighting
+        $(".tab").css('background-color', '#6C757D');
+        $($("#" + tabName).find(".tabBox")[0]).css('background-color', '#424242');
+
         // hide all text areas
         $(".textarea").hide();
 
@@ -499,6 +507,20 @@ $(document).ready(function(){
 
     // --- tab switching ---
 
+    // when hovering over a tab
+    $(".tab").hover(function(){
+        $(this).addClass('highlightGray');
+     }, function(){
+        $(this).removeClass('highlightGray');
+     });
+
+     // when hovering over 'add test'
+    $("#addTab").hover(function(){
+        $(this).addClass('highlightGray');
+     }, function(){
+        $(this).removeClass('highlightGray');
+     });
+
     // when a tab is clicked
     $(document).on("click", ".tab", function(){
 
@@ -511,6 +533,10 @@ $(document).ready(function(){
 
         // show the selected area
         $("#textarea" + targetTab).show();
+
+        // highlighting
+        $(".tab").css('background-color', '#6C757D');
+        this.style.setProperty('background-color', '#424242');
 
         // refresh codemirror instances
         for (i = 0; i < codeMirrorInstances.length; i++){
@@ -535,7 +561,10 @@ $(document).ready(function(){
         // hide all text areas
         $(".textarea").hide();
 
+
         // show the Test file textarea
+        $(".tab").css('background-color', '#6C757D');
+        $("#tabTest").css('background-color', '#424242');
         $("#textareaTest").show();
 
         // refresh codemirror instances

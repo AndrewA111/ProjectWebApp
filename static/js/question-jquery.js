@@ -159,17 +159,15 @@ $(document).ready(function(){
         var targetTab;
         targetTab = $(this).attr('data-file');
 
-        $(".tab").css('background-color', '#424242');
-
-
         // hide all text areas
         $(".textarea").hide();
 
-
-
         // show the selected area
         $("#" + targetTab).show();
-        this.style.setProperty('background-color', '#828282');
+
+        // highlighting
+        $(".tab").css('background-color', '#6C757D');
+        this.style.setProperty('background-color', '#424242');
 
         // focus on codemirror to force refresh
         $("#" + targetTab + " .CodeMirror").focus();
