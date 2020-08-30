@@ -51,6 +51,10 @@ $(document).ready(function(){
                     // show errors
                     $("#errorText").text(results.errors);
                     $(".testErrors").show();
+
+                    // reset buttons
+                    $("#spinner").hide();
+                    $('#ajaxSubmit').show();
                 }
                 // else display returned results
                 else{

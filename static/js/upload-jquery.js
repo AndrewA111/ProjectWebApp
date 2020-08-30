@@ -55,6 +55,7 @@ $(document).ready(function(){
                     $("#errorText").text(results.errors);
                     $(".testErrors").show();
 
+                    // reset buttons
                     $("#upload").show();
                     $("#spinner").hide();
 
@@ -220,6 +221,10 @@ $(document).ready(function(){
 
                     // hide results area
                     $(".testOutput").hide();
+
+                    // reset buttons
+                    $('#solve').show();
+                    $("#spinner").hide();
 
                     // show errors
                     $("#errorText").text(results.errors);
