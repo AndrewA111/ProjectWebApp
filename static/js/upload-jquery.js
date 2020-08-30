@@ -128,6 +128,7 @@ $(document).ready(function(){
 
                                 // switch UI to allow user to solve question
                                 $(".edit").hide();
+                                $(".delete").hide();
                                 $("#upload").hide();
                                 $("#spinner").hide();
                                 $('#solve').show();
