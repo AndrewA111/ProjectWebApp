@@ -34,30 +34,35 @@
                     <div class="col-md-3">
                         {% if is_bookmarked %}
                             <button type="button" title="Bookmark this question" class="displayNone bookmark btn btn-dark float-right mt-3 p-0">
-                                <h3 class="p-0 ml-1 mr-1 mb-0 mt-0">
+                                <h3 class="p-0 ml-1 mr-1 mb-1 mt-0">
                                     &#9734
                                 </h3>
                             </button>
                             <button type="button" title="Remove bookmark" class="unbookmark btn btn-primary float-right mt-3 p-0">
-                                <h3 class="p-0 ml-1 mr-1 mb-0 mt-0">
+                                <h3 class="p-0 ml-1 mr-1 mb-1 mt-0">
                                     &#9733
                                 </h3>
                             </button>
                         {% elif user.is_authenticated %}
                             <button type="button" title="Bookmark this question" class="bookmark btn btn-dark float-right mt-3 p-0">
-                                <h3 class="p-0 ml-1 mr-1 mb-0 mt-0">
+                                <h3 class="p-0 ml-1 mr-1 mb-1 mt-0">
                                     &#9734
                                 </h3>
                             </button>
                             <button type="button" title="Remove bookmark" class="displayNone unbookmark btn btn-primary float-right mt-3 p-0">
-                                <h3 class="p-0 ml-1 mr-1 mb-0 mt-0">
+                                <h3 class="p-0 ml-1 mr-1 mb-1 mt-0">
                                     &#9733
                                 </h3>
                             </button>
                         {% endif %}
                           </div>
                 </div>
-                 <a href="/question/courses/{{ course.slug}}/{{ lesson.slug }}"><h4> {{ question.lesson.name }}</h4></a>
+                <div>
+                     <a href="/question/courses/{{ course.slug}}/{{ lesson.slug }}"><h4> {{ question.lesson.name }}</h4></a>
+                </div>
+                <div>
+                    <h6 class="mt-1">Author: <a href="/question/profile/{{ question.owner.username }}">{{ question.owner }}</a></h6>
+                </div>
                 <br/>
                 <h4>{{ question.name }}</h4>
                 {{ question.description | markdown | safe }}
