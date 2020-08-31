@@ -31,6 +31,8 @@ urlpatterns = [
     path('courses/<slug:course_slug>/<slug:lesson_slug>/create_question/', views.upload, name="create_question"),
     path('courses/<slug:course_slug>/<slug:lesson_slug>/<slug:question_slug>/',
          views.question, name='question'),
+    path('courses/<slug:course_slug>/<slug:lesson_slug>/<slug:question_slug>/bookmark/',
+         views.bookmark_ajax, name='bookmark'),
     path('courses/<slug:course_slug>/<slug:lesson_slug>/<slug:question_slug>/ajax/',
          views.question_ajax, name='question_ajax'),
     path('markdown_convert/', views.markdown_ajax, name="markdown_convert"),

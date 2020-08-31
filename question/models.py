@@ -158,6 +158,22 @@ class SubmissionFile(models.Model):
         return self.name
 
 
+# Model to allow users to bookmark favourite questions
+class Bookmark(models.Model):
+
+    # associated question
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, default=None)
+
+    # Course owner/creator
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    # creation timestamp
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.owner.username) + "-" + str(self.question.name)
+
+
 class UserProfile(models.Model):
 
     # link this profile to a User model

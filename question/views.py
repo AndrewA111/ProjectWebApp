@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from question.models import Question, File, Submission, UserProfile, Course, Lesson, SubmissionFile
+from question.models import Question, File, Submission, UserProfile, Course, Lesson, SubmissionFile, Bookmark
 from question.forms import SubmissionFileForm, UploadFileForm, UploadForm, UserForm, UserProfileForm, CreateCourseForm, \
     CreateLessonForm
 from django.forms.models import model_to_dict
@@ -207,6 +207,12 @@ def question(request, question_slug, lesson_slug, course_slug):
     question_obj = Question.objects.get(slug=question_slug, lesson=lesson_obj)
     files = File.objects.filter(question=question_obj)
 
+    # check if bookmarked
+    if request.user.is_authenticated:
+        is_bookmarked = Bookmark.objects.filter(question=question_obj, owner=request.user)
+    else:
+        is_bookmarked = None
+
     # get questions in lesson
     lesson_questions_qset = Question.objects.filter(lesson=lesson_obj).order_by('position')
     lesson_questions = list(lesson_questions_qset)
@@ -242,7 +248,8 @@ def question(request, question_slug, lesson_slug, course_slug):
             # 'file_forms': file_forms
             'lesson': lesson_obj,
             'course': course_obj,
-            'file_formset': formset_context
+            'file_formset': formset_context,
+            'is_bookmarked': is_bookmarked,
         }
 
         # render question with default/original files
@@ -908,3 +915,33 @@ def view_profile(request, username):
         }
 
         return render(request, 'question/profile.html', context_dict)
+
+
+# bookmark a question for current user
+def bookmark_ajax(request, question_slug, lesson_slug, course_slug):
+
+    # get question
+    course_obj = Course.objects.get(slug=course_slug)
+    lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
+    question_obj = Question.objects.get(slug=question_slug, lesson=lesson_obj)
+
+    # create bookmark
+    if request.method == 'POST':
+
+        # create bookmark
+        bookmark = Bookmark.objects.get_or_create(question=question_obj, owner=request.user)
+        bookmark[0].save()
+
+        return HttpResponse("added")
+
+    # delete bookmark
+    if request.method == 'DELETE':
+
+        # get and delete bookmark
+        try:
+            bookmark = Bookmark.objects.get(question=question_obj, owner=request.user)
+            bookmark.delete()
+        except Bookmark.DoesNotExist:
+            bookmark = None
+
+        return HttpResponse("deleted")

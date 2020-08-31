@@ -9,9 +9,9 @@ $(document).ready(function(){
         const course = JSON.parse(document.getElementById("course").textContent);
         const lesson = JSON.parse(document.getElementById("lesson").textContent);
         const question_slug = JSON.parse(document.getElementById("question_slug").textContent);
-        console.log(course);
-        console.log(lesson);
-        console.log(question_slug);
+//        console.log(course);
+//        console.log(lesson);
+//        console.log(question_slug);
 
         // save CodeMirror instances
         // (update associated textbox for submission)
@@ -179,6 +179,56 @@ $(document).ready(function(){
 
         $($(this).parent().parent().parent().parent().parent().find(".hint")[0]).toggle(500);
 
+    });
+
+    // -- bookmark functionality --
+
+    $(".bookmark").click(function(){
+
+         // get slug data from template variables
+        const course = JSON.parse(document.getElementById("course").textContent);
+        const lesson = JSON.parse(document.getElementById("lesson").textContent);
+        const question_slug = JSON.parse(document.getElementById("question_slug").textContent);
+
+        var token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+        // post to django server
+        $.ajax({
+            type: 'POST',
+            url: "/question/courses/" + course + "/" + lesson + "/" + question_slug + "/bookmark/",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-CSRFToken", token);
+            },
+            success: function(response){
+                $(".bookmark").hide();
+                $(".unbookmark").show();
+            }
+
+        });
+    });
+
+    $(".unbookmark").click(function(){
+
+         // get slug data from template variables
+        const course = JSON.parse(document.getElementById("course").textContent);
+        const lesson = JSON.parse(document.getElementById("lesson").textContent);
+        const question_slug = JSON.parse(document.getElementById("question_slug").textContent);
+
+        var token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+        // post to django server
+        $.ajax({
+            type: 'DELETE',
+            url: "/question/courses/" + course + "/" + lesson + "/" + question_slug + "/bookmark/",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-CSRFToken", token);
+            },
+            success: function(response){
+                $(".unbookmark").hide();
+                $(".bookmark").show();
+            }
+
+        });
     });
 
 });
