@@ -38,6 +38,7 @@ def index(request):
     }
 
     lessons = []
+    # bookmark_list = None
 
     if request.user.is_authenticated:
         # get user's submissions
@@ -45,6 +46,11 @@ def index(request):
 
         for submission in submissions:
             lessons.append(submission.question.lesson)
+
+        # get bookmarks
+        bookmark_list = Bookmark.objects.filter(owner=request.user)
+
+        context_dict["bookmark_list"] = bookmark_list
 
     context_dict['lessons'] = lessons
 
@@ -945,3 +951,14 @@ def bookmark_ajax(request, question_slug, lesson_slug, course_slug):
             bookmark = None
 
         return HttpResponse("deleted")
+
+@login_required
+def bookmarks(request):
+
+    bookmark_list = Bookmark.objects.filter(owner=request.user)
+
+    context_dict = {
+        "bookmark_list": bookmark_list
+    }
+
+    return render(request, "question/bookmarks.html", context_dict)

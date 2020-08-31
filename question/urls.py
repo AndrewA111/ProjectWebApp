@@ -36,4 +36,5 @@ urlpatterns = [
     path('courses/<slug:course_slug>/<slug:lesson_slug>/<slug:question_slug>/ajax/',
          views.question_ajax, name='question_ajax'),
     path('markdown_convert/', views.markdown_ajax, name="markdown_convert"),
+    path('bookmarks/', views.bookmarks, name="bookmarks"),
 ]

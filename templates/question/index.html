@@ -61,12 +61,26 @@
 
                             </div>
                             <div class="col-md-4">
-                                <h4 class="mb-3">Following</h4>
+                                <h4 class="mb-3">Bookmarked Questions</h4>
+                                {% if bookmark_list %}
+                                    {% for bookmark in bookmark_list %}
+                                        <div class="col-md-12 bg-dark mb-3 align-middle rounded">
+                                            <div class="row">
+                                                <p class="ml-2 mt-2 mb-2">
+                                                    <a href="/question/courses/{{ bookmark.question.lesson.course.slug }}/{{ bookmark.question.lesson.slug }}/{{ bookmark.question.slug }}">{{ bookmark.question.name }}</a>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                    {% endfor %}
+                                {% else %}
+                                    <p>Bookmark pages to come back to them later.</p>
+                                {% endif %}
                             </div>
                         {% else %}
                             <div class="col-md-8 border-right border-white">
                                 <h4 class="mb-3">Sign in to track your progress</h4>
-                                <p>Sign up for an account record your solutions and keep up to date with your favourite creators</p>
+                                <p>Sign up for an account record your solutions and bookmark questions</p>
                             </div>
                         {% endif %}
 
