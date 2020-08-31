@@ -42,13 +42,28 @@ def index(request):
 
     if request.user.is_authenticated:
         # get user's submissions
-        submissions = Submission.objects.filter(owner=request.user)
+        submissions = Submission.objects.filter(owner=request.user).order_by('created')
+
+        # list to store lessons (may include duplicates)
+        dup_lessons = []
 
         for submission in submissions:
-            lessons.append(submission.question.lesson)
+            dup_lessons.append(submission.question.lesson)
+
+        # set to store lessons
+        lesson_set = set()
+
+        # list for unique lessons
+        lessons = []
+
+        # remove duplicated from list
+        for l in dup_lessons:
+            if l not in lesson_set:
+                lessons.append(l)
+                lesson_set.add(l)
 
         # get bookmarks
-        bookmark_list = Bookmark.objects.filter(owner=request.user)
+        bookmark_list = Bookmark.objects.filter(owner=request.user).order_by('created')[:5]
 
         context_dict["bookmark_list"] = bookmark_list
 
