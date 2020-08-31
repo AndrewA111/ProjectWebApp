@@ -37,4 +37,5 @@ urlpatterns = [
          views.question_ajax, name='question_ajax'),
     path('markdown_convert/', views.markdown_ajax, name="markdown_convert"),
     path('bookmarks/', views.bookmarks, name="bookmarks"),
+    path('update_profile/', views.update_profile, name="update_profile"),
 ]

@@ -44,7 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'question',
     'registration',
+    'markdownify',
 ]
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -137,3 +140,10 @@ REGISTRATION_AUTO_LOGIN = True
 LOGIN_REDIRECT_URL = 'index'
 
 LOGIN_URL = 'auth_login'
+
+MARKDOWNIFY_STRIP = False
+MARKDOWNIFY_WHITELIST_TAGS = {
+ 'a', 'p',
+ 'h1', 'h2', 'h3','h4', 'h5', 'h6', 'h7',
+ 'ul', 'li', 'span', 'em',
+}

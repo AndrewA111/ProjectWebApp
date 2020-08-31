@@ -2,3 +2,5 @@ Django==2.1.5
 requests==2.24.0
 django-registration-redux==2.2
 markdown==3.2.2
+django-markdownify==0.8.1
+markdownify == 0.5.2

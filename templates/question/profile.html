@@ -1,5 +1,7 @@
 {% extends 'question/base.html' %}
 {% load staticfiles %}
+{% load markdown_tag %}
+{% load markdownify %}
 
 {% block link_block %}
   <!--- Boostrap --->
@@ -25,15 +27,29 @@
                     <div class="border-bottom">
                         <h1>{{ selected_user.username }}'s Profile</h1>
                     </div>
-<!--                    <br/>-->
-<!--                    <div>-->
-<!--                        <h3>Bio</h3>-->
-<!--                        <p>{{ user_profile.bio }}</p>-->
+                    <br/>
+                    <div>
+                        <h3>Bio</h3>
+                        <div id="#bioText" class="hideOnSubmit">
+                            {{ user_profile.bio|markdownify }}
+                        </div>
 
-<!--                        {% if selected_user == user %}-->
-<!--                            <br/><p>Placeholder for profile edit button/features</p>-->
-<!--                        {% endif %}-->
-<!--                    </div>-->
+                        <div id="updatedBio" class="displayNone"></div>
+
+
+                        {% if selected_user == user %}
+                            <div class="pb-2">
+                                <a href="#" id="editBioButton" class="badge badge-light">Edit</a>
+                            </div>
+                            <div id="bioEditDiv" class="displayNone pb-3">
+                                <textarea class="fill90" id="bioTextarea" name="bioTextarea" rows="10" cols="60"></textarea>
+                                <div class="pb-2">
+                                    <a href="#" id="submitBio" class="btn btn-dark">Submit</a>
+                                </div>
+                            </div>
+
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             <br/>
@@ -55,8 +71,15 @@
         <div class="col-md-1 h-100 gutterColor">
         </div>
 
+        <!--    - JQuery - -->
+        <script src="https://code.jquery.com/jquery-3.5.1.js"
+          integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+          crossorigin="anonymous">></script>
 
+<!--    JQuery functions for questions.html-->
+    <script src="{% static 'js/profile-jquery.js' %}" crossorigin="anonymous"></script>
 
+    {% csrf_token %}
 
 
 {% endblock %}

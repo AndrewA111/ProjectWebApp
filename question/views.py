@@ -19,6 +19,7 @@ from django.core import serializers
 import markdown as md
 
 
+
 # URL to submit questions
 # API_URL = "http://192.168.56.103:8080/java/submit"
 API_URL = "http://192.168.0.17:8080/java/submit"
@@ -929,6 +930,9 @@ def view_profile(request, username):
 
         user_courses = Course.objects.filter(owner=request.user)
 
+        # convert markdown to html
+        # converted = md.markdown(user_profile.bio, extensions=['markdown.extensions.fenced_code'])
+
         context_dict = {
             'user_profile': user_profile,
             'selected_user': user,
@@ -937,6 +941,25 @@ def view_profile(request, username):
 
         return render(request, 'question/profile.html', context_dict)
 
+
+@login_required
+def update_profile(request):
+
+    if request.method == 'POST':
+
+        # get text
+        text = request.POST.get('description', None)
+
+        # update signed in user's profile
+        profile = UserProfile.objects.get(user=request.user)
+        profile.bio = text
+        profile.save()
+
+        # convert markdown to html
+        converted = md.markdown(text, extensions=['markdown.extensions.fenced_code'])
+
+        # return markdown converted to html
+        return HttpResponse(converted)
 
 # bookmark a question for current user
 def bookmark_ajax(request, question_slug, lesson_slug, course_slug):

@@ -1,6 +1,7 @@
 {% extends 'question/base.html' %}
 {% load staticfiles %}
 {% load markdown_tag %}
+{% load markdownify %}
 
 {% block link_block %}
 <!--- Boostrap --->
@@ -65,7 +66,7 @@
                 </div>
                 <br/>
                 <h4>{{ question.name }}</h4>
-                {{ question.description | markdown | safe }}
+                {{ question.description | markdownify }}
 
                 <hr/>
                 <h5 class="mb-3">Files</h5>
