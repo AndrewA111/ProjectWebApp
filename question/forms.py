@@ -28,7 +28,7 @@ class CreateLessonForm(forms.ModelForm):
 
         model = Lesson
 
-        exclude = ('owner', 'slug', 'course')
+        exclude = ('owner', 'slug', 'course', 'position')
 
 
 # Form for submitting a file
