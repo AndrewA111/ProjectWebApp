@@ -479,6 +479,7 @@ $(document).ready(function(){
                         lineNumbers: true,
                         mode: "text/x-java",
                         autoRefresh: true,
+                        indentUnit: 4,
                       });
         myCodeMirror.setSize("100%", "100%");
         codeMirrorInstances.push(myCodeMirror);
