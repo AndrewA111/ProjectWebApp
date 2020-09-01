@@ -13,3 +13,11 @@ a {
 .yScroll {
   overflow-y: scroll;
 }
+
+.autoOverflow {
+  overflow: auto;
+}
+
+.heightMinusNav{
+    height: calc(100% - 49.5px);
+}
