@@ -38,7 +38,7 @@ def populate():
 
     student_user = User.objects.create_user(username='andrew', email="a@a.com", password="HelloWorld123")
 
-    tutor_user = User.objects.create_user(username='john', email="j@a.com", password="HelloWorld123")
+    tutor_user = User.objects.create_user(username='Tutor123', email="j@a.com", password="SurveyPass123")
     tutor_user.groups.add(create_group)
 
     root = project_web_app.settings.BASE_DIR
@@ -48,7 +48,7 @@ def populate():
     for course in getFolderNames(courses):
 
         # create course
-        course_obj = add_course(course, admin)
+        course_obj = add_course(course, tutor_user)
 
         # get lessons in course
         lessons = os.path.join(courses, course)
@@ -56,7 +56,7 @@ def populate():
         for lesson in getFolderNames(lessons):
 
             # create lesson
-            lesson_obj = add_lesson(lesson, admin, course_obj)
+            lesson_obj = add_lesson(lesson, tutor_user, course_obj)
 
             # get questions
             questions = os.path.join(lessons, lesson)
@@ -76,7 +76,7 @@ def populate():
                 description = readFile("Description.txt", questionPath)
 
                 # make question
-                question = add_question(questionDir, admin, lesson_obj, questionDetails['testFile']['contents'], description)
+                question = add_question(questionDir, tutor_user, lesson_obj, questionDetails['testFile']['contents'], description)
 
                 # loop through files and create file objects
                 for file in questionDetails['questionFiles']:
