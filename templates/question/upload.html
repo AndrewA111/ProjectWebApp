@@ -30,7 +30,7 @@
         <div class="row h-100">
 
 <!--            Description section-->
-            <div class="col-md-3 bg-secondary text-white border-right border-white rounded-lg">
+            <div class="col-md-3 bg-secondary text-white border-right border-white rounded-lg h-100 overflow-auto">
 
                 <h3 class="mt-3"> {{ course.name }}</h3>
                 <h4> {{ lesson.name }}</h4>
@@ -79,7 +79,7 @@
                 </div>
                 <h5 class="mb-3">Files</h5>
 
-                <div id="tabs">
+                <div id="tabs"class="mb-2">
                     {% for form in upload_file_formset %}
                         {% if not forloop.first %}
                             <div id="tab{{ forloop.counter0 }}" class="row">
@@ -118,13 +118,11 @@
             <div class="col-md-9 h-100 noPadNoMargin bg-secondary text-white rounded-lg">
 
 <!--                Input and output row-->
-                <form class="fill90" id="submission_form" method="post" action="/question/upload/">
+                <form class="h-100" id="submission_form" method="post" action="/question/upload/">
 
                     {% csrf_token %}
                     {{ upload_file_formset.management_form }}
-                    <div class="row fill100">
-
-
+                    <div class="row inputAreaHeight m-0">
 
                         <!--                    input col-->
                         <div class="col-md-7 bg-secondary text-white rounded-lg fill100">
@@ -142,7 +140,7 @@
                                                 </div>
 <!--                                            hide other forms-->
                                             {% else %}
-                                                <div style="display:none;" id="textarea{{ forloop.counter0 }}" class="textarea">
+                                                <div style="display:none;" id="textarea{{ forloop.counter0 }}" class="textarea fill100">
                                                     {{ form.contents }}
                                                 </div>
                                             {% endif %}
@@ -164,7 +162,7 @@
                         </div>
 
     <!--                    output col -->
-                        <div class="col-md-5 scroll bg-secondary text-white rounded-lg border-left border-bottom border-white fill100">
+                        <div class="col-md-5 scroll bg-secondary text-white rounded-lg border-left border-bottom border-white h-100 overflow-auto">
 
                             <div id="testResults">
 
@@ -250,9 +248,9 @@
                 </div>
 
 <!--                Submission button row-->
-                <div class="fill10">
+                <div class="submitHeight">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-7">
                             <button id="solve" type="button" name="button" class="displayNone btn btn-dark float-right m-2">Solve</button>
 <!--                            <button type="submit" name="submit" class="btn btn-primary float-right m-2">Submit</button>-->
                             <button id="upload" type="button" name="button" class="btn btn-dark float-right m-2">Submit</button>

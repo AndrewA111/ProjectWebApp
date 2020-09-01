@@ -92,3 +92,15 @@ max60{
 .vAlignMiddle{
     vertical-align: middle;
 }
+
+.submitHeight {
+    height: 50px;
+}
+
+.inputAreaHeight {
+    height: calc(100% - 50px);
+}
+
+.CodeMirror {
+    height: 100%;
+}
