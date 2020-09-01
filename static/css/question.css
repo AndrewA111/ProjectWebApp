@@ -48,3 +48,15 @@
     overflow: auto;
 
 }
+
+.submitHeight {
+    height: 50px;
+}
+
+.inputAreaHeight {
+    height: calc(100% - 50px);
+}
+
+.CodeMirror {
+    height: 100%;
+}
