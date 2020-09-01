@@ -45,7 +45,4 @@ public class Owner {
 	public ArrayList<Pet> getPetList() {
 		return petList;
 	}
-	
-	
-
 }

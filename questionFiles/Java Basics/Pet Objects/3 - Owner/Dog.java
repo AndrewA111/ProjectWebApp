@@ -8,8 +8,11 @@ public class Dog extends Pet{
 		super(name);
 	}
 	
-	// Make the dog bark
-	public String bark() {
-		return "Woof!";
+	/*
+	 * Method to describe a dog
+	 */
+	public String describe() {
+		return "Name: " + this.name +
+				"\nAnimal: Dog";
 	}
 }

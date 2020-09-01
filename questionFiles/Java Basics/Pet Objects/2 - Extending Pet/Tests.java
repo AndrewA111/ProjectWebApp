@@ -1,34 +1,28 @@
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
 public class Tests {
-	
-	@TestDescription (value = "Name should be assigned when Dog is constucted")
+
+	@TestDescription (value = "Dog's describe method should be overwritten to produce different output than Pet's describe class")
+	@TestHint (value = "You should define a method 'describe()' in the Dog class.")
 	@Test
-	public void checkPetNameSet() {
+	public void checkMethodOverWritten() {
 
 		Dog dog = new Dog("Buddy");
-		
-		assertEquals("\'new Pet(\"Buddy\") should set name to \"Buddy\"", dog.getName(), "Buddy");
+
+		assertFalse("Describe method should be overwirrten in Dog class.",
+				dog.describe().equals("Name: "+ dog.getName()));
+
 	}
-	
-	@TestDescription (value = "Dog should be a subclass of Pet")
+
+	@TestDescription (value = "Output of calling a Dog's describe() method should match spec.")
+	@TestHint (value = "Have a look at the formatting in Cat.java")
 	@Test
 	public void checkDogExtendsPet() {
 
 		Dog dog = new Dog("Buddy");
-		
-		assertTrue("Dog is not a subclass of Pet.", dog instanceof Pet);
-	}
-	
-	@TestDescription (value = "'bark' method should return 'Woof!'")
-	@Test
-	public void checkBarkReturnsWoof() {
 
-		Dog dog = new Dog("Buddy");
-		
-		assertEquals("Bark method does not return 'Woof!'", dog.bark(), "Woof!");
+		assertEquals("Output format incorrect", "Name: " + dog.getName() + "\nAnimal: Dog", dog.describe());
 	}
 }

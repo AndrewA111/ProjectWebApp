@@ -20,12 +20,9 @@ public class Owner {
 		
 		// set name
 		this.name = name;
-		
-		/*
-		 * create an empty ArrayList
-         */
+
 	}
-	W
+
 	/*
 	 * complete the addPet method to add
 	 * a pet to this owner's pet list
@@ -33,7 +30,7 @@ public class Owner {
 	public void addPet(Pet p) {
 
 	}
-	
+
 	/*
 	 * Getters
 	 */
@@ -45,7 +42,4 @@ public class Owner {
 	public ArrayList<Pet> getPetList() {
 		return petList;
 	}
-	
-	
-
 }

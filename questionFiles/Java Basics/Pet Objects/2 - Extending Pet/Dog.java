@@ -4,22 +4,34 @@
  * Take a look at the implementation for
  * the 'Cat' class.
  * 
- * In a similar way, update this dog class 
- * to extend 'Pet', and create a new method
- * 'bark' that returns the String "Woof!"
+ * In a similar way, update this Dog class
+ * to overwrite the 'describe' method given in
+ * the Pet class
  */
-public class Dog{
-	
+
+/*
+ * Note that Dog extends (inherits) Pet
+ */
+public class Dog extends Pet{
+
 	// constructor
 	public Dog(String name) {
-		
-		/*
-		 * Don't forget to call the constructor 
-		 * of the superclass (Pet)
-		 */
 
+		/*
+		 * We need to call the constructor
+		 * of the superclass (Pet), to make
+		 * sure that the value 'name' is set
+		 */
+		super(name);
 	}
-	
-	// create 'bark' method here
+
+	/*
+	 * Overwrite the describe method to return:
+	 *
+	 * 	'Name: <name>
+	 * 	Animal: Dog'
+	 *
+	 * where name is the name of this dog
+	 */
 
 }

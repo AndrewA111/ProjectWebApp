@@ -6,6 +6,6 @@ ArrayList is an example of a Java Collection object (data structure provided by 
 
 This is not included by default and must be imported using the import statement 'import java.util.ArrayList;' which we have also included.
 
-Complete the constructor for Owner by creating a new ArrayList of generic type pet and assigning this to the petList isntance variable.
+Complete the constructor for Owner by creating a new ArrayList of generic type pet and assigning this to the petList instance variable.
 
 Next, complete the method 'addPet(Pet p)' in the Owner class. This class should take the passed pet, p, and add it to the Owner's petList.

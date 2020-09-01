@@ -1,16 +1,24 @@
+/*
+ * Class to represent a pet
+ */
 public class Pet {
 	
 	// pet name
-	private String name;
+	protected String name;
 	
 	/*
-	 * Complete the constructor to assigned the passed
-	 * argument to the instance variable name
+	 * Constructor (this is the 'super' constructor
+	 * referenced in Dog and Cat when extending)
 	 */
 	public Pet(String name) {
 		
 		this.name = name;
 	}
+	
+	// Method to describe a pet
+		public String describe() {
+			return "Name: " + name;
+		}
 	
 	/*
 	 * 'Getters' - these are used to access objects
@@ -20,6 +28,4 @@ public class Pet {
 	public String getName() {
 		return name;
 	}
-
-	
 }

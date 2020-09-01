@@ -19,10 +19,10 @@ public class Cat extends Pet{
 	}
 	
 	/*
-	 * We can create a method specific 
-	 * to cats.
+	 * Method to describe a cat
 	 */
-	public String meow() {
-		return "Meow!";
+	public String describe() {
+		return "Name: " + this.name +
+				"\nAnimal: Cat";
 	}
 }

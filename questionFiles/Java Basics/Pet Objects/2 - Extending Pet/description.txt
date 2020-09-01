@@ -1,5 +1,14 @@
 We can use inheritance to represent divergent pet objects.
 
-Take a look at the class 'Cat', it extends 'Pet', gaining all of it's properties. We can then include behaviour specific to the 'Cat' class (e.g. meow() method).
+Take a look at the class 'Pet', which now has a new method named 'describe()'.
 
-Considering the 'Cat', implement the 'Dog' class to extend 'Pet' and add another method names 'bark()' which returns the String "Woof!".
+'Cat' and 'Dog' have both been updated to extend (inherit) from the Pet class, and therefore have access to Pet's describe() method.
+
+Classes which extend other classes can over-write the behaviour of their parent class's methods. Over-write the class describe() in the Dog class, so it returns the following string:
+
+Name: <name><br>
+Animal: Dog
+
+Where <name> is the name of the Dog calling the method.
+
+Have a look at the Cat class to see how the describe method is implemented there.

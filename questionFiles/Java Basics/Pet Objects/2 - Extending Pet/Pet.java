@@ -1,7 +1,10 @@
+/*
+ * Class to represent a pet
+ */
 public class Pet {
 	
 	// pet name
-	private String name;
+	protected String name;
 	
 	/*
 	 * Constructor (this is the 'super' constructor
@@ -12,6 +15,11 @@ public class Pet {
 		this.name = name;
 	}
 	
+	// Method to describe a pet
+	public String describe() {
+		return "Name: " + name;
+	}
+	
 	/*
 	 * 'Getters' - these are used to access objects
 	 *  of this class's private variables from code 
@@ -20,6 +28,4 @@ public class Pet {
 	public String getName() {
 		return name;
 	}
-
-	
 }
