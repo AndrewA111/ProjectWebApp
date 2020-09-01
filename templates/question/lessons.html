@@ -55,12 +55,14 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
+                                    {% if perms.question.can_create and course.owner == user %}
                                     <div class="btn-group mr-2" role="group" aria-label="First group">
                                         <button type="button" class="arrow upArrow btn btn-dark"><h4 class="p-0 m-0">&uarr;</h4></button>
                                         <button type="button" class="arrow downArrow btn btn-dark"><h4 class="p-0 m-0">&darr;</h4></button>
 
                                     </div>
                                     <button type="button" class="deleteButton btn btn-danger" data-token="{{ csrf_token }}">Delete</button>
+                                    {% endif %}
                                 </div>
                             </div>
 
