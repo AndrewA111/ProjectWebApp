@@ -96,7 +96,16 @@ $(document).ready(function(){
                             $("#test" + name + "Description").text(description);
 
                             $($("#test" + name).find("p")[1]).attr("id", "test" + name + "Result");
-                            $("#test" + name + "Result").text(passed);
+
+                            if(passed == true){
+                                $("#test" + name + "Result").text("Passed");
+                                $("#test" + name + "Result").css("color", "green");
+                            }
+                            else{
+                                $("#test" + name + "Result").text("Failed");
+                                $("#test" + name + "Result").css("color", "red");
+                            }
+
 
                             $($("#test" + name).find("p")[2]).attr("id", "test" + name + "Failure");
                             $("#test" + name + "Failure").text(failure);
