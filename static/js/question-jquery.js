@@ -68,6 +68,9 @@ $(document).ready(function(){
                         // empty any old test results
                         $("#output").empty();
 
+                        // variable to track whether any tests fail
+                        var anyFailures = false;
+
                         // loop through results and add results boxes to the DOM
                         for(var i = 0; i < output['tests'].length; i++){
 
@@ -104,6 +107,7 @@ $(document).ready(function(){
                             else{
                                 $("#test" + name + "Result").text("Failed");
                                 $("#test" + name + "Result").css("color", "red");
+                                anyFailures = true;
                             }
 
 
@@ -126,6 +130,11 @@ $(document).ready(function(){
                             // show output section
                             $(".testOutput").show();
 
+                        }
+
+                        // show completed badge when solved
+                        if(!anyFailures){
+                            $("#completedBadge").show();
                         }
 
 //                        if(results.summaryCode == 0){

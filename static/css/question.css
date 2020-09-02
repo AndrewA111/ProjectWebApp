@@ -60,3 +60,7 @@
 .CodeMirror {
     height: 100%;
 }
+
+#completedBadge{
+    font-size: 11px
+}

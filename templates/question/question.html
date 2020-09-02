@@ -67,7 +67,19 @@
                     <h6 class="mt-1">Author: <a href="/question/profile/{{ question.owner.username }}">{{ question.owner }}</a></h6>
                 </div>
                 <br/>
-                <h4>{{ question.name }}</h4>
+                <div class="row pb-1">
+                    <div class="col-md-9">
+                        <h4>{{ question.name }}</h4>
+                    </div>
+                    <div class="col-md-3">
+                        {% if has_solved %}
+                            <span id="completedBadge" class="badge badge-pill badge-primary float-right mt-1">Completed</span>
+                        {% else %}
+                            <span id="completedBadge" class="displayNone badge badge-pill badge-primary float-right mt-1">Completed</span>
+                        {% endif %}
+                    </div>
+                </div>
+
                 {{ question.description | markdownify }}
 
                 <hr/>

@@ -262,6 +262,10 @@ def question(request, question_slug, lesson_slug, course_slug):
 
         formset_context = SubmissionFileFormSet(initial=formset_data)
 
+        # check if user has solved question already
+        has_solved = Submission.objects.filter(question=question_obj,
+                                               owner=request.user).exists()
+
         # create context dict to pass to template
         context_dict = {
             'question': question_obj,
@@ -272,6 +276,7 @@ def question(request, question_slug, lesson_slug, course_slug):
             'course': course_obj,
             'file_formset': formset_context,
             'is_bookmarked': is_bookmarked,
+            'has_solved': has_solved,
         }
 
         # render question with default/original files
