@@ -472,7 +472,7 @@ def upload(request, course_slug, lesson_slug):
     # set of forms for files
     UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0, can_delete=True)
 
-    pre_load_questions = True
+    pre_load_questions = False
 
 
 
