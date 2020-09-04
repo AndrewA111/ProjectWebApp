@@ -5,7 +5,7 @@ from question import views
 app_name = 'question'
 
 urlpatterns = [
-    # Content hierarchy/navigation
+    # Content hierarchy: course > lesson > question
     path('courses/', views.CourseListView.as_view(), name="course_list"),
     path('courses/<slug:course_slug>/', views.CourseView.as_view(), name="course"),
     path('courses/<slug:course_slug>/<slug:lesson_slug>/', views.LessonView.as_view(), name="lesson"),
@@ -15,8 +15,8 @@ urlpatterns = [
     # --- to be converted ---
     # path('courses/<slug:course_slug>/<slug:lesson_slug>/<slug:question_slug>/ajax/',
     #      views.question_ajax, name='question_ajax'),
-    path('courses/create_course/', views.create_course, name='create_course'),
-    path('courses/<slug:course_slug>/create_lesson/', views.create_lesson, name='create_lesson'),
+    path('create_course/', views.create_course, name='create_course'),
+    path('create_lesson/<slug:course_slug>/create_lesson/', views.create_lesson, name='create_lesson'),
 
     # Content ordering
     path('courses/<slug:course_slug>/<slug:lesson_slug>/move/<str:direction>/',
