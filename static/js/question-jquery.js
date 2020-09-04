@@ -25,7 +25,7 @@ $(document).ready(function(){
         // post to django server
         $.ajax({
             type: 'POST',
-            url: "/question/courses/" + course + "/" + lesson + "/" + question_slug + "/ajax/",
+            url: "/question/courses/" + course + "/" + lesson + "/" + question_slug + "/",
             data: formData,
             success: function(response){
                  // results available, show output

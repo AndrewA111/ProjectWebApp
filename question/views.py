@@ -1,22 +1,20 @@
 from json.decoder import JSONDecodeError
-
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
+from django.utils.decorators import method_decorator
 from question.models import Question, File, Submission, UserProfile, Course, Lesson, SubmissionFile, Bookmark
-from question.forms import SubmissionFileForm, UploadFileForm, UploadForm, UserForm, UserProfileForm, CreateCourseForm, \
-    CreateLessonForm
-from django.forms.models import model_to_dict
-import json
-import requests
+from question.forms import SubmissionFileForm, UploadFileForm, UploadForm, CreateCourseForm, CreateLessonForm
 from django.forms.formsets import formset_factory
 from django.forms.formsets import BaseFormSet
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core import serializers
+from django.views import View
 import markdown as md
+import json
+import requests
 
 
 
@@ -26,63 +24,66 @@ API_URL = "http://192.168.0.17:8080/java/submit"
 # API_URL = "http://localhost:8080/java/submit"
 
 
-def index(request):
+class IndexView(View):
 
-    questions = Question.objects.all()
+    def get(self, request):
 
-    # get most recently modified courses
-    courses = Course.objects.order_by('created')[:5]
+        questions = Question.objects.all()
 
-    context_dict = {
-        'questions': questions,
-        'courses': courses
-    }
+        # get most recently modified courses
+        courses = Course.objects.order_by('created')[:5]
 
-    lessons = []
-    # bookmark_list = None
+        context_dict = {
+            'questions': questions,
+            'courses': courses
+        }
 
-    if request.user.is_authenticated:
-        # get user's submissions
-        submissions = Submission.objects.filter(owner=request.user).order_by('-created')
-
-        # list to store lessons (may include duplicates)
-        dup_lessons = []
-
-        for submission in submissions:
-            dup_lessons.append(submission.question.lesson)
-
-        # set to store lessons
-        lesson_set = set()
-
-        # list for unique lessons
         lessons = []
+        # bookmark_list = None
 
-        # remove duplicated from list
-        for l in dup_lessons:
-            if l not in lesson_set:
-                lessons.append(l)
-                lesson_set.add(l)
+        if request.user.is_authenticated:
+            # get user's submissions
+            submissions = Submission.objects.filter(owner=request.user).order_by('-created')
 
-        # get bookmarks
-        bookmark_list = Bookmark.objects.filter(owner=request.user).order_by('-created')[:5]
+            # list to store lessons (may include duplicates)
+            dup_lessons = []
 
-        context_dict["bookmark_list"] = bookmark_list
+            for submission in submissions:
+                dup_lessons.append(submission.question.lesson)
 
-    context_dict['lessons'] = lessons
+            # set to store lessons
+            lesson_set = set()
+
+            # list for unique lessons
+            lessons = []
+
+            # remove duplicated from list
+            for l in dup_lessons:
+                if l not in lesson_set:
+                    lessons.append(l)
+                    lesson_set.add(l)
+
+            # get bookmarks
+            bookmark_list = Bookmark.objects.filter(owner=request.user).order_by('-created')[:5]
+
+            context_dict["bookmark_list"] = bookmark_list
+
+        context_dict['lessons'] = lessons
+
+        return render(request, 'question/index.html', context=context_dict)
 
 
-    return render(request, 'question/index.html', context=context_dict)
+class CourseListView(View):
 
+    def get(self, request):
 
-def course_list(request):
+        courses = Course.objects.all()
 
-    courses = Course.objects.all()
+        context_dict = {
+            'courses': courses
+        }
 
-    context_dict = {
-        'courses': courses
-    }
-
-    return render(request, 'question/courses.html', context=context_dict)
+        return render(request, 'question/courses.html', context=context_dict)
 
 
 def create_course(request):
@@ -114,16 +115,16 @@ def create_course(request):
         return render(request, 'question/createCourse.html', context=context_dict)
 
 
-def course(request, course_slug):
+class CourseView(View):
 
-    if request.method == 'GET':
+    def get(self, request, course_slug):
 
-        course = Course.objects.get(slug=course_slug)
-        lessons = Lesson.objects.filter(course=course).order_by('position')
+        course_obj = Course.objects.get(slug=course_slug)
+        lessons = Lesson.objects.filter(course=course_obj).order_by('position')
 
         context_dict = {
             'lessons': lessons,
-            'course': course,
+            'course': course_obj,
         }
 
         return render(request, 'question/lessons.html', context=context_dict)
@@ -176,14 +177,14 @@ def create_lesson(request, course_slug):
 
         return render(request, 'question/createLesson.html', context_dict)
 
+class LessonView(View):
 
-def lesson(request, course_slug, lesson_slug):
+    def get(self, request, course_slug, lesson_slug):
 
-    course_obj = Course.objects.get(slug=course_slug)
-    lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
-    questions = Question.objects.filter(lesson=lesson_obj).order_by('position')
-
-    if request.method == 'GET':
+        # get relevant objects from database
+        course_obj = Course.objects.get(slug=course_slug)
+        lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
+        questions = Question.objects.filter(lesson=lesson_obj).order_by('position')
 
         context_dict = {
             'questions': questions,
@@ -193,10 +194,11 @@ def lesson(request, course_slug, lesson_slug):
 
         return render(request, 'question/questions.html', context=context_dict)
 
-    if request.method == 'DELETE':
+    def delete(self, request, course_slug, lesson_slug):
 
-        # get pos of this lesson
-        # this_pos = lesson_obj.position
+        # get relevant objects from database
+        course_obj = Course.objects.get(slug=course_slug)
+        lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
 
         # get other lessons in this course
         course_lessons_qset = Lesson.objects.filter(course=course_obj).order_by('position')
@@ -221,36 +223,35 @@ def lesson(request, course_slug, lesson_slug):
         return HttpResponse(course_json, content_type='application/json')
 
 
-def question(request, question_slug, lesson_slug, course_slug):
+class QuestionView(View):
 
-    # get model objects
-    course_obj = Course.objects.get(slug=course_slug)
-    lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
-    question_obj = Question.objects.get(slug=question_slug, lesson=lesson_obj)
-    files = File.objects.filter(question=question_obj)
+    def get(self, request, question_slug, lesson_slug, course_slug):
 
-    # check if bookmarked
-    if request.user.is_authenticated:
-        is_bookmarked = Bookmark.objects.filter(question=question_obj, owner=request.user)
-    else:
-        is_bookmarked = None
+        # get model objects
+        course_obj = Course.objects.get(slug=course_slug)
+        lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
+        question_obj = Question.objects.get(slug=question_slug, lesson=lesson_obj)
+        files = File.objects.filter(question=question_obj)
 
-    # get questions in lesson
-    lesson_questions_qset = Question.objects.filter(lesson=lesson_obj).order_by('position')
-    lesson_questions = list(lesson_questions_qset)
-    index = lesson_questions.index(question_obj)
+        # check if bookmarked
+        if request.user.is_authenticated:
+            is_bookmarked = Bookmark.objects.filter(question=question_obj, owner=request.user)
+        else:
+            is_bookmarked = None
 
-    # get next question for 'next' button if there is one
-    if index < (len(lesson_questions) - 1):
-        next_question = lesson_questions[index + 1]
-    else:
-        next_question = None
+        # get questions in lesson
+        lesson_questions_qset = Question.objects.filter(lesson=lesson_obj).order_by('position')
+        lesson_questions = list(lesson_questions_qset)
+        index = lesson_questions.index(question_obj)
 
-    # set of forms for files
-    SubmissionFileFormSet = formset_factory(SubmissionFileForm, formset=BaseFormSet, extra=0)
+        # get next question for 'next' button if there is one
+        if index < (len(lesson_questions) - 1):
+            next_question = lesson_questions[index + 1]
+        else:
+            next_question = None
 
-    # Get request
-    if request.method == 'GET':
+        # set of forms for files
+        SubmissionFileFormSet = formset_factory(SubmissionFileForm, formset=BaseFormSet, extra=0)
 
         formset_data = []
 
@@ -282,54 +283,13 @@ def question(request, question_slug, lesson_slug, course_slug):
         # render question with default/original files
         return render(request, 'question/question.html', context=context_dict)
 
+    # post an answer to question
+    def post(self, request, course_slug, lesson_slug, question_slug):
 
-    if (request.method == 'DELETE'):
+        course = Course.objects.get(slug=course_slug)
+        lesson = Lesson.objects.get(slug=lesson_slug, course=course)
+        question_obj = Question.objects.get(slug=question_slug, lesson=lesson)
 
-        # get pos of this question
-        # this_pos = question_obj.position
-
-        # get other questions in this lesson
-        lesson_questions_qset = Question.objects.filter(lesson=lesson_obj).order_by('position')
-        lesson_questions = list(lesson_questions_qset)
-        index = lesson_questions.index(question_obj)
-
-        # for every question after current position,
-        # set position to position on previous element
-        sub_list = lesson_questions[index:]
-
-        for prev, curr in zip(reversed(sub_list[:-1]), reversed(sub_list)):
-            curr.position = prev.position
-            curr.save()
-
-        # for pos, question in enumerate(sub_list):
-        #
-        #     last = sub_list[0].position
-        #
-        #     # avoid out-of-bounds error
-        #     if pos < len(sub_list) - 1:
-        #         temp = sub_list[pos + 1].position
-        #         sub_list[pos + 1].position = last
-        #         sub_list[pos + 1].save()
-        #         last = temp
-
-
-        # delete question
-        question_obj.delete()
-
-        # get updated set of questions
-        lesson_questions_updated = Question.objects.filter(lesson=lesson_obj).order_by('position')
-        lesson_json = serializers.serialize('json', lesson_questions_updated)
-        return HttpResponse(lesson_json, content_type="application/json")
-
-
-def question_ajax(request, course_slug, lesson_slug, question_slug):
-
-    course = Course.objects.get(slug=course_slug)
-    lesson = Lesson.objects.get(slug=lesson_slug, course=course)
-    question_obj = Question.objects.get(slug=question_slug, lesson=lesson)
-
-    # Post request
-    if request.method == 'POST':
         # set of forms for files
         SubmissionFileFormSet = formset_factory(SubmissionFileForm, formset=BaseFormSet, extra=0)
 
@@ -346,7 +306,6 @@ def question_ajax(request, course_slug, lesson_slug, question_slug):
         if formset.is_valid():
 
             for f in formset:
-
                 cleaned_data = f.cleaned_data
 
                 API_dict['files'].append({
@@ -392,7 +351,6 @@ def question_ajax(request, course_slug, lesson_slug, question_slug):
 
             # create files and associate with submission
             for file in API_dict['files']:
-
                 print(file)
 
                 submissionFile = SubmissionFile.objects.create(submission=submission,
@@ -403,8 +361,43 @@ def question_ajax(request, course_slug, lesson_slug, question_slug):
         # return results
         return HttpResponse(json.dumps(json_return_object))
 
+    # delete a question
+    # returns an updated list of questions in the delete question's parent lesson
+    def delete(self, request, question_slug, lesson_slug, course_slug):
 
-# Helper method to handle API communication
+        # get model objects
+        course_obj = Course.objects.get(slug=course_slug)
+        lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
+        question_obj = Question.objects.get(slug=question_slug, lesson=lesson_obj)
+
+        # get questions in lesson
+        lesson_questions_qset = Question.objects.filter(lesson=lesson_obj).order_by('position')
+        lesson_questions = list(lesson_questions_qset)
+        index = lesson_questions.index(question_obj)
+
+        # get other questions in this lesson
+        lesson_questions_qset = Question.objects.filter(lesson=lesson_obj).order_by('position')
+        lesson_questions = list(lesson_questions_qset)
+        index = lesson_questions.index(question_obj)
+
+        # for every question after current position,
+        # set position to position on previous element
+        sub_list = lesson_questions[index:]
+
+        for prev, curr in zip(reversed(sub_list[:-1]), reversed(sub_list)):
+            curr.position = prev.position
+            curr.save()
+
+        # delete question
+        question_obj.delete()
+
+        # get updated set of questions
+        lesson_questions_updated = Question.objects.filter(lesson=lesson_obj).order_by('position')
+        lesson_json = serializers.serialize('json', lesson_questions_updated)
+        return HttpResponse(lesson_json, content_type="application/json")
+
+
+# Helper function to handle API communication
 def submit_to_API(API_dict):
 
             # testing
@@ -462,112 +455,110 @@ def submit_to_API(API_dict):
             return json_return_object
 
 
-@login_required
-@user_passes_test(lambda u: u.has_perm('question.can_create'), login_url="/")
-def upload(request, course_slug, lesson_slug):
+class UploadView(View):
 
-    course = Course.objects.get(slug=course_slug)
-    lesson = Lesson.objects.get(slug=lesson_slug, course=course)
+    @method_decorator(login_required)
+    @method_decorator(user_passes_test(lambda u: u.has_perm('question.can_create'), login_url="/"))
+    def get(self, request, course_slug, lesson_slug):
 
-    # set of forms for files
-    UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0, can_delete=True)
+        course = Course.objects.get(slug=course_slug)
+        lesson = Lesson.objects.get(slug=lesson_slug, course=course)
 
-    pre_load_questions = False
+        # set of forms for files
+        UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0, can_delete=True)
 
+        pre_load_questions = False
 
+        if (pre_load_questions):
+            pre_load_course = Course.objects.get(name="Java Basics")
+            pre_load_lesson = Lesson.objects.get(name="Methods", course=pre_load_course)
 
-    if(pre_load_questions):
+            # get question
+            question_obj = Question.objects.get(slug="calculator",
+                                                lesson=pre_load_lesson)
 
-        pre_load_course = Course.objects.get(name="Java Basics")
-        pre_load_lesson = Lesson.objects.get(name="Methods", course=pre_load_course)
+            # get files
+            files = File.objects.filter(question=question_obj)
 
-        # get question
-        question_obj = Question.objects.get(slug="calculator",
-                                            lesson=pre_load_lesson)
+        # Get request
+        if request.method == 'GET':
 
-        # get files
-        files = File.objects.filter(question=question_obj)
+            if pre_load_questions:
 
-    # Get request
-    if request.method == 'GET':
-
-        if pre_load_questions:
-
-            formset_data = [{
-                'name': "File",
-                'contents': "<write file contents here>",
-            },
-            ]
-
-            for file in files:
-                formset_data.append({
-                    'name': file.name,
-                    'contents': file.contents
-                })
-
-            form_data = {
-                'question_name': question_obj.name,
-                'question_description': question_obj.description,
-                'test_file': question_obj.testFile
-            }
-
-            formset_context = UploadFileFormSet(initial=formset_data)
-
-            # form for rest of question data
-            form_context = UploadForm(initial=form_data)
-        else:
-
-            formset_context = UploadFileFormSet(initial=[
-                {
+                formset_data = [{
                     'name': "File",
                     'contents': "<write file contents here>",
                 },
-                {
-                    'name': "FileName.java",
-                    'contents': "<write file contents here>",
-                 },
-            ])
+                ]
 
-            # form for rest of question data
-            form_context = UploadForm(initial={
-                'question_name': "{Question-name}",
-                'question_description': "{Text-describing question}",
-                'test_file': 'import static org.junit.Assert.*;\n' +
-                             'import org.junit.Test;\n\n' +
-                             'public class Tests{\n\n}'
-            })
+                for file in files:
+                    formset_data.append({
+                        'name': file.name,
+                        'contents': file.contents
+                    })
 
-        context_dict = {
-            'upload_form': form_context,
-            'upload_file_formset': formset_context,
-            'course': course,
-            'lesson': lesson,
-        }
+                form_data = {
+                    'question_name': question_obj.name,
+                    'question_description': question_obj.description,
+                    'test_file': question_obj.testFile
+                }
 
-        return render(request, 'question/upload.html', context_dict)
+                formset_context = UploadFileFormSet(initial=formset_data)
 
+                # form for rest of question data
+                form_context = UploadForm(initial=form_data)
+            else:
 
-# Method to handle AJAX request to create new question
-#
-# Summary codes (json_return_object['summaryCode']):
-#
-#        0 - all tests passed
-#        1 - all tests failed
-#        2 - mixture of tests failed/passed
-#        3 - no tests present
-#        4 - question name already taken
-#
-@login_required
-@user_passes_test(lambda u: u.has_perm('question.can_create'), login_url="/")
-def ajax_upload(request, course_slug, lesson_slug):
+                formset_context = UploadFileFormSet(initial=[
+                    {
+                        'name': "File",
+                        'contents': "<write file contents here>",
+                    },
+                    {
+                        'name': "FileName.java",
+                        'contents': "<write file contents here>",
+                    },
+                ])
 
-    course = Course.objects.get(slug=course_slug)
-    lesson = Lesson.objects.get(slug=lesson_slug, course=course)
+                # form for rest of question data
+                form_context = UploadForm(initial={
+                    'question_name': "{Question-name}",
+                    'question_description': "{Text-describing question}",
+                    'test_file': 'import static org.junit.Assert.*;\n' +
+                                 'import org.junit.Test;\n\n' +
+                                 'public class Tests{\n\n}'
+                })
 
-    owner = request.user
+            context_dict = {
+                'upload_form': form_context,
+                'upload_file_formset': formset_context,
+                'course': course,
+                'lesson': lesson,
+            }
 
-    # Post request
-    if request.method == 'POST':
+            return render(request, 'question/upload.html', context_dict)
+
+    # Method to handle AJAX request to create new question
+    #
+    # Summary codes (json_return_object['summaryCode']):
+    #
+    #        0 - all tests passed
+    #        1 - all tests failed
+    #        2 - mixture of tests failed/passed
+    #        3 - no tests present
+    #        4 - question name already taken
+    #
+    @method_decorator(login_required)
+    @method_decorator(user_passes_test(lambda u: u.has_perm('question.can_create'), login_url="/"))
+    def post(self, request, course_slug, lesson_slug):
+
+        course = Course.objects.get(slug=course_slug)
+        lesson = Lesson.objects.get(slug=lesson_slug, course=course)
+
+        owner = request.user
+
+        # # Post request
+        # if request.method == 'POST':
 
         # set of forms for files
         UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0, can_delete=True)
@@ -634,6 +625,7 @@ def ajax_upload(request, course_slug, lesson_slug):
         return HttpResponse(json.dumps(json_return_object))
 
 
+# additional view function to check authors can solve uploaded questions
 def ajax_solve(request, course_slug, lesson_slug):
 
     course = Course.objects.get(slug=course_slug)
@@ -669,7 +661,7 @@ def ajax_solve(request, course_slug, lesson_slug):
         return HttpResponse(json.dumps(json_return_object))
 
 
-# Helper method to handle API communication
+# Helper function to handle API communication
 def send_to_API(formset, upload_form):
     # dict to send to API
     API_dict = {
@@ -851,17 +843,6 @@ def move_question_ajax(request, course_slug, lesson_slug, question_slug, directi
         return HttpResponse(lesson_json, content_type="application/json")
 
 
-# # function to delete a question
-# @transaction.atomic
-# def delete_question_ajax(request, course_slug, lesson_slug, question_slug):
-#
-#     if request.method == 'GET':
-#         # get question and associated course & lesson
-#         course_obj = Course.objects.get(slug=course_slug)
-#         lesson_obj = Lesson.objects.get(slug=lesson_slug, course=course_obj)
-#         question_obj = Question.objects.get(slug=question_slug, lesson=lesson_obj)
-
-
 def move_lesson_ajax(request, course_slug, lesson_slug, direction):
 
     if request.method == 'GET':
@@ -920,12 +901,13 @@ def move_lesson_ajax(request, course_slug, lesson_slug, direction):
 def create_profile(request):
     user_profile = UserProfile.objects.get_or_create(user=request.user)
     user_profile[0].save()
-    return redirect(index)
+    return redirect("/")
 
 
-def view_profile(request, username):
+class ProfileView(View):
 
-    if request.method == 'GET':
+    def get(self, request, username):
+
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
@@ -966,6 +948,20 @@ def update_profile(request):
         # return markdown converted to html
         return HttpResponse(converted)
 
+
+class BookmarksView(View):
+
+    @method_decorator(login_required)
+    def get(self, request):
+        bookmark_list = Bookmark.objects.filter(owner=request.user)
+
+        context_dict = {
+            "bookmark_list": bookmark_list
+        }
+
+        return render(request, "question/bookmarks.html", context_dict)
+
+
 # bookmark a question for current user
 def bookmark_ajax(request, question_slug, lesson_slug, course_slug):
 
@@ -994,14 +990,3 @@ def bookmark_ajax(request, question_slug, lesson_slug, course_slug):
             bookmark = None
 
         return HttpResponse("deleted")
-
-@login_required
-def bookmarks(request):
-
-    bookmark_list = Bookmark.objects.filter(owner=request.user)
-
-    context_dict = {
-        "bookmark_list": bookmark_list
-    }
-
-    return render(request, "question/bookmarks.html", context_dict)
