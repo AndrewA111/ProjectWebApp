@@ -13,7 +13,7 @@
     <br/>
     <h3>Create a New Course:</h3>
     <br/>
-    <form id="course_form" method="post" action="/question/create_course/">
+    <form id="course_form" method="post" action="/question/courses/create_course/">
         {% csrf_token %}
         {% for hidden in form.hidden_fields %}
             {{ hidden }}

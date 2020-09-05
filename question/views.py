@@ -75,7 +75,6 @@ class IndexView(View):
 
 class CourseListView(View):
 
-    # get list of courses
     def get(self, request):
 
         courses = Course.objects.all()
@@ -85,32 +84,6 @@ class CourseListView(View):
         }
 
         return render(request, 'question/courses.html', context=context_dict)
-
-    # create a new course
-    def post(self, request):
-
-        print(request.body)
-
-        # get course name
-        course_name = request.POST.get('courseName', None)
-
-        if course_name:
-
-            # create course
-            course = Course.objects.get_or_create(name=course_name, owner=request.user)
-            course[0].save()
-
-            course_json = serializers.serialize('json', [course[0], ])
-
-            # if course created, return details as json
-            if course[1]:
-                return HttpResponse(course_json, content_type="application/json")
-            # else course already existed, return none
-            else:
-                return HttpResponse(None)
-
-        else:
-            return HttpResponse(None)
 
 
 def create_course(request):
@@ -128,7 +101,7 @@ def create_course(request):
             'course': course
         }
 
-        return redirect(reverse('question:course',
+        return redirect(reverse('question:lesson_list',
                                 kwargs={'course_slug': course.slug}))
 
     if request.method == 'GET':

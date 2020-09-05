@@ -28,38 +28,27 @@
                             <div class="row pt-3">
                                 {% if perms.question.can_create %}
                                 <div class="col-md-6 border-right">
-                                    <div id="ownerCourseHolder">
-                                        <h5 class="mt-3 mb-3">My Courses:</h5>
-                                        {% for course in courses %}
-                                            {% if course.owner == user %}
-                                                <div class="ownerLink col-md-8 bg-dark ml-3 mb-3 align-middle rounded">
-                                                    <div class="row">
-                                                        <p class="ml-2 mt-2 mb-2"><a href="/question/courses/{{ course.slug }}">{{ course.name }}</a></p>
-                                                    </div>
+                                    <h5 class="mt-3 mb-3">My Courses:</h5>
+                                    {% for course in courses %}
+                                        {% if course.owner == user %}
+                                            <div class="col-md-8 bg-dark ml-3 mb-3 align-middle rounded">
+                                                <div class="row">
+                                                    <p class="ml-2 mt-2 mb-2"><a href="/question/courses/{{ course.slug }}">{{ course.name }}</a></p>
                                                 </div>
+                                            </div>
 
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-
+                                        {% endif %}
+                                    {% endfor %}
                                     <br/>
-                                    <h5>Create new course:</h5>
-
-                                    <div class="pt-2">
-                                        <div class="m-2">Course name:</div>
-                                        <div class="m-2"><input type="text" id="newCourseInput" name="newCourseInput"></div>
-                                        <div class="m-2"><a href="#" id="submitNewCourse" class="submitNewCourse btn btn-dark">Submit</a></div>
-                                    </div>
-
-
+                                    <p class="ml-2"><a href="/question/courses/create_course">Create new course</a></p>
 <!--                                <hr/>-->
                                 </div>
 
                             {% endif %}
-                                <div id="allCoursesHolder" class="col-md-6">
+                                <div class="col-md-6">
                                     <h5 class="mt-3 mb-3">All Courses:</h5>
                                     {% for course in courses %}
-                                    <div class="allLink col-md-8 bg-dark ml-3 mb-3 align-middle rounded">
+                                    <div class="col-md-8 bg-dark ml-3 mb-3 align-middle rounded">
                                         <div class="row">
                                             <p class="ml-2 mt-2 mb-2"><a href="/question/courses/{{ course.slug }}">{{ course.name }}</a></p>
                                         </div>
@@ -81,20 +70,4 @@
             </div>
 
         </div>
-
-        <div id="templateLink" class="displayNone col-md-8 bg-dark ml-3 mb-3 align-middle rounded">
-            <div class="row">
-                <p class="ml-2 mt-2 mb-2"><a href="/question/courses/{{ course.slug }}">{{ course.name }}</a></p>
-            </div>
-        </div>
-
-        <!--    - JQuery - -->
-        <script src="https://code.jquery.com/jquery-3.5.1.js"
-          integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-          crossorigin="anonymous">></script>
-
-<!--    JQuery functions for questions.html-->
-    <script src="{% static 'js/course-list-jquery.js' %}" crossorigin="anonymous"></script>
-
-{% csrf_token %}
 {% endblock %}
