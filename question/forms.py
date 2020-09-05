@@ -10,7 +10,7 @@ from question.models import SubmissionFile, Submission, UserProfile, Course, Les
 class CreateCourseForm(forms.ModelForm):
 
     #  course name
-    name = forms.CharField(max_length=128, help_text="Enter category name: ")
+    name = forms.CharField(max_length=128, help_text="Course name: ")
 
     class Meta:
 

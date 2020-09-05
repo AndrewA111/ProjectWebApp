@@ -12,6 +12,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core import serializers
 from django.views import View
+from django.db.utils import IntegrityError
 import markdown as md
 import json
 import requests
@@ -77,13 +78,37 @@ class CourseListView(View):
 
     def get(self, request):
 
+        # list of courses
         courses = Course.objects.all()
 
+        # form for new course
+        form = CreateCourseForm()
+
         context_dict = {
-            'courses': courses
+            'courses': courses,
+            'form': form,
         }
 
         return render(request, 'question/courses.html', context=context_dict)
+
+    def post(self, request):
+
+        form = CreateCourseForm(request.POST)
+
+        if form.is_valid():
+            course = form.save(commit=False)
+            course.owner = request.user
+            course.save()
+
+            context_dict = {
+                'course': course
+            }
+
+            return redirect(reverse('question:course',
+                                    kwargs={'course_slug': course.slug}))
+
+        else:
+            return redirect(reverse('question:course_list'))
 
 
 def create_course(request):
@@ -122,12 +147,53 @@ class CourseView(View):
         course_obj = Course.objects.get(slug=course_slug)
         lessons = Lesson.objects.filter(course=course_obj).order_by('position')
 
+        form = CreateLessonForm()
+
         context_dict = {
             'lessons': lessons,
             'course': course_obj,
+            'form': form,
         }
 
         return render(request, 'question/lessons.html', context=context_dict)
+
+    def post(self, request, course_slug):
+
+        course = Course.objects.get(slug=course_slug)
+
+        form = CreateLessonForm(request.POST)
+
+        if form.is_valid():
+
+            # get other lessons in this course
+            course_lessons = Lesson.objects.filter(course=course).order_by('position')
+
+            # work out next position available
+            if len(course_lessons) > 0:
+                position = course_lessons[len(course_lessons) - 1].position + 1
+            else:
+                position = 1
+
+            lesson = form.save(commit=False)
+            lesson.owner = request.user
+            lesson.course = course
+            lesson.position = position
+
+            # try to save, if unsuccessful reload page
+            try:
+                lesson.save()
+            except IntegrityError:
+                return redirect(reverse('question:course',
+                                        kwargs={'course_slug': course.slug}))
+
+        context_dict = {
+            'course': course,
+            'lesson': lesson
+        }
+
+        return redirect(reverse('question:lesson',
+                                kwargs={'course_slug': course.slug,
+                                        'lesson_slug': lesson.slug}))
 
 
 def create_lesson(request, course_slug):
