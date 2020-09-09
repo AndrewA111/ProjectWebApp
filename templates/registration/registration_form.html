@@ -1,17 +1,34 @@
 {% extends 'question/base.html' %}
+{% load staticfiles %}
 
 {% block title_block %}
     Register
 {% endblock %}
 
+{% block link_block %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/sharedStyles.css' %}">
+{% endblock %}
+
 {% block body_block %}
-<h1>Register Here</h1>
 
-<form method="post" action=".">
-    {% csrf_token %}
+<div class="container-fluid h-100">
+            <div class="row h-100">
+                <div class="col-md-1 h-100 gutterColor">
+                </div>
+                <div class="col-md-10 bg-secondary text-white h-100">
+                    <h1 class="mt-2 mb-4">Register Here</h1>
 
-    {{ form.as_p }}
+                    <form method="post" action=".">
+                        {% csrf_token %}
 
-    <input type="submit" value="Register" />
-</form>
+                        {{ form.as_p }}
+
+                        <input class="mt-2 mb-2 btn btn-dark" type="submit" value="Register" />
+                    </form>
+                </div>
+                <div class="col-md-1 h-100 gutterColor">
+                </div>
+            </div>
+</div>
+
 {% endblock %}
