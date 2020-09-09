@@ -25,7 +25,7 @@ class MyRegistrationView(RegistrationView):
         return reverse('question:create_profile')
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.IndexView.as_view(), name='index'),
     path('question/', include('question.urls')),
     path('admin/', admin.site.urls),
     path('accounts/register/', MyRegistrationView.as_view(), name='registration_register'),

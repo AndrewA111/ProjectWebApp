@@ -32,10 +32,29 @@
 
                             </div>
 
-                            <div class="border-bottom">
+                            <div class="border-bottom pb-4">
                                 {% if perms.question.can_create and course.owner == user %}
                                 <br/>
-                                <p class="ml-2"><a href="/question/courses/{{ course.slug }}/create_lesson">Create new lesson</a></p>
+<!--                                <p class="ml-2"><a href="/question/courses/{{ course.slug }}/create_lesson">Create new lesson</a></p>-->
+
+                                <h5>Create new lesson:</h5>
+
+                                    <div class="pt-2">
+                                        <div class="m-2">Lesson name:</div>
+                                        <form class="ml-2" id="course_form" method="post" action="/question/courses/{{ course.slug}}/">
+                                            {% csrf_token %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+
+                                            {% for field in form.visible_fields %}
+                                                {{ field.errors }}
+                                                {{ field }}
+                                                <br/><br/>
+                                            {% endfor %}
+                                            <input class="btn btn-dark" type="submit" name="submit" value="Create Lesson" />
+                                        </form>
+                                    </div>
                             {% endif %}
                             </div>
 

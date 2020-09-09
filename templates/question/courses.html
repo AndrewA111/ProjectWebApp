@@ -40,8 +40,26 @@
                                         {% endif %}
                                     {% endfor %}
                                     <br/>
-                                    <p class="ml-2"><a href="/question/courses/create_course">Create new course</a></p>
+<!--                                    <p class="ml-2"><a href="/question/courses/create_course">Create new course</a></p>-->
 <!--                                <hr/>-->
+                                    <h5>Create new course:</h5>
+
+                                    <div class="pt-2">
+                                        <div class="m-2">Course name:</div>
+                                        <form class="ml-2" id="course_form" method="post" action="/question/courses/">
+                                            {% csrf_token %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+
+                                            {% for field in form.visible_fields %}
+                                                {{ field.errors }}
+                                                {{ field }}
+                                                <br/><br/>
+                                            {% endfor %}
+                                            <input class="btn btn-dark" type="submit" name="submit" value="Create Course" />
+                                        </form>
+                                    </div>
                                 </div>
 
                             {% endif %}

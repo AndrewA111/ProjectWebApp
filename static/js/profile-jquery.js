@@ -1,11 +1,11 @@
 $(document).ready(function(){
 
-    // when a 'hint' button is clicked
+    // when edit bio button clicked
     $(document).on("click", "#editBioButton", function(){
         $("#bioEditDiv").toggle(500);
     });
 
-    // when a 'hint' button is clicked
+    // when submit bio button clicked
     $(document).on("click", "#submitBio", function(){
 
         var text = $("#bioTextarea").val();

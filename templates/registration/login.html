@@ -1,23 +1,39 @@
 {% extends 'question/base.html' %}
+{% load staticfiles %}
 
 {% block title_block %}
     Login
 {% endblock %}
 
+{% block link_block %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/sharedStyles.css' %}">
+{% endblock %}
+
 {% block body_block %}
-<h1>Login</h1>
+<div class="container-fluid h-100">
+            <div class="row h-100">
+                <div class="col-md-1 h-100 gutterColor">
+                </div>
+                <div class="col-md-10 bg-secondary text-white h-100">
+                    <h1 class="mt-2 mb-4">Login</h1>
 
-<form method="post" action=".">
-    {% csrf_token %}
+                    <form method="post" action=".">
+                        {% csrf_token %}
 
-    {{ form.as_p }}
+                        {{ form.as_p }}
 
-    <input type="submit" value="Log In" />
-    <input type="submit" name="next" value="{{ next }}" />
-</form>
+                        <input class="mt-2 mb-2 btn btn-dark" type="submit" value="Log In" />
+                    <!--    <input type="submit" name="next" value="{{ next }}" />-->
+                    </form>
 
-<p>
-    Not registered?
-    <a href="{% url 'registration_register' %}">Register here!</a>
-</p>
+                    <p>
+                        Not registered?
+                        <a href="{% url 'registration_register' %}">Register here!</a>
+                    </p>
+                </div>
+                <div class="col-md-1 h-100 gutterColor">
+                </div>
+            </div>
+</div>
+
 {% endblock %}
