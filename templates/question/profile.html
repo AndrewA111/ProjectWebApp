@@ -54,14 +54,25 @@
             </div>
             <br/>
             <div class="row">
-                <div class="col-md-6 bg-secondary text-white p-0 border-right">
-                    <div class=""><h4>Bookmarked questions:</h4></div>
+                <div class="col-md-6 bg-secondary text-white p-0">
+                    <div class="mb-3"><h4>Recent Questions:</h4></div>
+                    {% for question in questions %}
+                        <div class="col-md-6 bg-dark mb-3 mr-2 align-middle rounded">
+                            <div class="row">
+                                <p class="ml-2 mt-2 mb-2"><a href="">{{ question.name }}</a></p>
+                            </div>
+                        </div>
+                    {% endfor %}
 
                 </div>
-                <div class="col-md-6 bg-secondary text-white pl-3">
-                    <h4>Published Courses:</h4><br/>
+                <div class="col-md-6 bg-secondary text-white pl-3 border-left">
+                    <div class="mb-3"><h4>Published Courses:</h4></div>
                     {% for course in user_courses %}
-                        <p class="ml-2"><a href="/question/courses/{{ course.slug }}">{{ course.name }}</a></p>
+                        <div class="col-md-6 bg-dark mb-3 mr-2 align-middle rounded">
+                            <div class="row">
+                                <p class="ml-2 mt-2 mb-2"><a href="/question/courses/{{ course.slug }}">{{ course.name }}</a></p>
+                            </div>
+                        </div>
                     {% endfor %}
 
                 </div>

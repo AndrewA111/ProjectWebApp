@@ -530,6 +530,10 @@ class UploadView(View):
         course = Course.objects.get(slug=course_slug)
         lesson = Lesson.objects.get(slug=lesson_slug, course=course)
 
+        # if not owner, redirect to index
+        if course.owner != request.user:
+            return redirect("/")
+
         # set of forms for files
         UploadFileFormSet = formset_factory(UploadFileForm, formset=BaseFormSet, extra=0, can_delete=True)
 
@@ -620,6 +624,10 @@ class UploadView(View):
 
         course = Course.objects.get(slug=course_slug)
         lesson = Lesson.objects.get(slug=lesson_slug, course=course)
+
+        # if not owner, redirect to index
+        if course.owner != request.user:
+            return redirect("/")
 
         owner = request.user
 
@@ -983,6 +991,12 @@ class ProfileView(View):
 
         user_courses = Course.objects.filter(owner=request.user)
 
+        # get recent submissions
+        submissions = Submission.objects.filter(owner=user).order_by('-created')[:5]
+        recent_questions = []
+        for submission in submissions:
+            recent_questions.append(submission.question)
+
         # convert markdown to html
         # converted = md.markdown(user_profile.bio, extensions=['markdown.extensions.fenced_code'])
 
@@ -990,6 +1004,7 @@ class ProfileView(View):
             'user_profile': user_profile,
             'selected_user': user,
             'user_courses': user_courses,
+            'questions': recent_questions,
         }
 
         return render(request, 'question/profile.html', context_dict)

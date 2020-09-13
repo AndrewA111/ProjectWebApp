@@ -11,6 +11,6 @@ public class Tests {
 
 		Pet pet = new Pet("Buddy");
 		
-		assertEquals("\'new Pet(\"Buddy\") should set name to \"Buddy\"", pet.getName(), "Buddy");
+		assertEquals("\'new Pet(\"Buddy\") should set name to \"Buddy\"", "Buddy", pet.getName());
 	}
 }

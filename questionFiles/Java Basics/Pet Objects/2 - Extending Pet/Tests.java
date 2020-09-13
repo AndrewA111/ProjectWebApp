@@ -19,7 +19,7 @@ public class Tests {
 	@TestDescription (value = "Output of calling a Dog's describe() method should match spec.")
 	@TestHint (value = "Have a look at the formatting in Cat.java")
 	@Test
-	public void checkDogExtendsPet() {
+	public void checkDescribeFormat() {
 
 		Dog dog = new Dog("Buddy");
 
