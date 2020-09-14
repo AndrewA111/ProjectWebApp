@@ -1057,6 +1057,7 @@ class BookmarksView(View):
 
 
 # bookmark a question for current user (via AJAX)
+@login_required
 def bookmark_ajax(request, question_slug, lesson_slug, course_slug):
 
     # get question
