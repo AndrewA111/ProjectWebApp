@@ -332,9 +332,13 @@ class QuestionView(View):
 
         formset_context = SubmissionFileFormSet(initial=formset_data)
 
+        # set solved to false by default
+        has_solved = False
+
         # check if user has solved question already
-        has_solved = Submission.objects.filter(question=question_obj,
-                                               owner=request.user).exists()
+        if request.user.is_authenticated:
+            has_solved = Submission.objects.filter(question=question_obj,
+                                                   owner=request.user).exists()
 
         # create context dict to pass to template
         context_dict = {
@@ -401,31 +405,32 @@ class QuestionView(View):
         # if all tests pass, create submission to store
         if json_return_object['summaryCode'] == 0:
 
-            # remove any existing submissions
-            existing_submissions = Submission.objects.filter(owner=request.user,
-                                                             question=question_obj)
+            if request.user.is_authenticated:
+                # remove any existing submissions
+                existing_submissions = Submission.objects.filter(owner=request.user,
+                                                                 question=question_obj)
 
-            # remove any files associated with existing submissions
-            for sub in existing_submissions:
-                existing_submission_files = SubmissionFile.objects.filter(submission=sub)
-                existing_submission_files.delete()
+                # remove any files associated with existing submissions
+                for sub in existing_submissions:
+                    existing_submission_files = SubmissionFile.objects.filter(submission=sub)
+                    existing_submission_files.delete()
 
-            # remove submissions
-            existing_submissions.delete()
+                # remove submissions
+                existing_submissions.delete()
 
-            # create submission associated with question
-            submission = Submission.objects.create(question=question_obj,
-                                                   owner=request.user)
-            submission.save()
+                # create submission associated with question
+                submission = Submission.objects.create(question=question_obj,
+                                                       owner=request.user)
+                submission.save()
 
-            # create files and associate with submission
-            for file in API_dict['files']:
-                print(file)
+                # create files and associate with submission
+                for file in API_dict['files']:
+                    print(file)
 
-                submissionFile = SubmissionFile.objects.create(submission=submission,
-                                                               name=file['name'],
-                                                               contents=file['content'])
-                submissionFile.save()
+                    submissionFile = SubmissionFile.objects.create(submission=submission,
+                                                                   name=file['name'],
+                                                                   contents=file['content'])
+                    submissionFile.save()
 
         # return results
         return HttpResponse(json.dumps(json_return_object))
