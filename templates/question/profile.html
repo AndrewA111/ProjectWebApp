@@ -18,16 +18,22 @@
 {% block body_block %}
 <div class="container-fluid h-100">
     <div class="row h-100">
+
+<!--        empty left margin-->
         <div class="col-md-1 h-100 gutterColor">
         </div>
 
+<!--        main container column-->
         <div class="col-md-10 bg-secondary text-white h-100 pl-5">
             <div class="row border-bottom mr-2">
                 <div class="mt-3">
+
                     <div class="border-bottom">
                         <h1>{{ selected_user.username }}'s Profile</h1>
                     </div>
                     <br/>
+
+<!--                    bio-->
                     <div>
                         <h3>Bio</h3>
                         <div id="#bioText" class="hideOnSubmit">
@@ -36,7 +42,7 @@
 
                         <div id="updatedBio" class="displayNone"></div>
 
-
+<!--                        show edit bio feature to users-->
                         {% if selected_user == user %}
                             <div class="pb-2">
                                 <a href="#" id="editBioButton" class="badge badge-light">Edit</a>
@@ -47,13 +53,14 @@
                                     <a href="#" id="submitBio" class="btn btn-dark">Submit</a>
                                 </div>
                             </div>
-
                         {% endif %}
                     </div>
                 </div>
             </div>
             <br/>
             <div class="row">
+
+<!--                list 5 most recent questions completed by profile's owner-->
                 <div class="col-md-6 bg-secondary text-white p-0">
                     <div class="mb-3"><h4>Recent Questions:</h4></div>
                     {% for question in questions %}
@@ -63,8 +70,9 @@
                             </div>
                         </div>
                     {% endfor %}
-
                 </div>
+
+<!--                list any course published by user-->
                 <div class="col-md-6 bg-secondary text-white pl-3 border-left">
                     <div class="mb-3"><h4>Published Courses:</h4></div>
                     {% for course in user_courses %}
@@ -74,13 +82,15 @@
                             </div>
                         </div>
                     {% endfor %}
-
                 </div>
             </div>
         </div>
 
+<!--        empty right margin-->
         <div class="col-md-1 h-100 gutterColor">
         </div>
+    </div>
+</div>
 
         <!--    - JQuery - -->
         <script src="https://code.jquery.com/jquery-3.5.1.js"

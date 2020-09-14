@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+    // on arrow button click, change order of lessons appropriately
     $(document).on("click", ".arrow", function(){
 
         // set direction
@@ -33,14 +34,11 @@ $(document).ready(function(){
                     // update question label
                     $("#lessonLink-" + i).text(lessons[i].fields.name);
                 }
-
             }
-
         });
-
     });
 
-
+    // on delete button click delete associated lesson
     $(document).on("click", ".deleteButton", function(){
 
         // get slug data from template variables
@@ -86,12 +84,7 @@ $(document).ready(function(){
                     // remove last row
                     $($("#lesson-0").parent().parent().parent()).remove();
                 }
-
-
             }
         });
     });
-
-
-
 });

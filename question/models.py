@@ -174,6 +174,7 @@ class Bookmark(models.Model):
         return str(self.owner.username) + "-" + str(self.question.name)
 
 
+# Model to allow users to store profile information
 class UserProfile(models.Model):
 
     # link this profile to a User model

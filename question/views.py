@@ -24,7 +24,7 @@ import requests
 API_URL = "http://192.168.0.17:8080/java/submit"
 # API_URL = "http://localhost:8080/java/submit"
 
-
+# Homepage
 class IndexView(View):
 
     def get(self, request):
@@ -73,7 +73,7 @@ class IndexView(View):
 
         return render(request, 'question/index.html', context=context_dict)
 
-
+# List of all courses
 class CourseListView(View):
 
     def get(self, request):
@@ -111,35 +111,35 @@ class CourseListView(View):
             return redirect(reverse('question:course_list'))
 
 
-def create_course(request):
+# def create_course(request):
+#
+#     if request.method == 'POST':
+#
+#         form = CreateCourseForm(request.POST)
+#
+#         if form.is_valid():
+#             course = form.save(commit=False)
+#             course.owner = request.user
+#             course.save()
+#
+#         context_dict = {
+#             'course': course
+#         }
+#
+#         return redirect(reverse('question:lesson_list',
+#                                 kwargs={'course_slug': course.slug}))
+#
+#     if request.method == 'GET':
+#
+#         form = CreateCourseForm()
+#
+#         context_dict = {
+#             'form': form,
+#         }
+#
+#         return render(request, 'question/createCourse.html', context=context_dict)
 
-    if request.method == 'POST':
-
-        form = CreateCourseForm(request.POST)
-
-        if form.is_valid():
-            course = form.save(commit=False)
-            course.owner = request.user
-            course.save()
-
-        context_dict = {
-            'course': course
-        }
-
-        return redirect(reverse('question:lesson_list',
-                                kwargs={'course_slug': course.slug}))
-
-    if request.method == 'GET':
-
-        form = CreateCourseForm()
-
-        context_dict = {
-            'form': form,
-        }
-
-        return render(request, 'question/createCourse.html', context=context_dict)
-
-
+# Course (container for Lessons)
 class CourseView(View):
 
     def get(self, request, course_slug):
@@ -196,53 +196,54 @@ class CourseView(View):
                                         'lesson_slug': lesson.slug}))
 
 
-def create_lesson(request, course_slug):
+# def create_lesson(request, course_slug):
+#
+#     course = Course.objects.get(slug=course_slug)
+#
+#     if request.method == 'POST':
+#
+#         form = CreateLessonForm(request.POST)
+#
+#         if form.is_valid():
+#
+#             # get other lessons in this course
+#             course_lessons = Lesson.objects.filter(course=course).order_by('position')
+#
+#             # work out next position available
+#             if len(course_lessons) > 0:
+#                 position = course_lessons[len(course_lessons) - 1].position + 1
+#             else:
+#                 position = 1
+#
+#             lesson = form.save(commit=False)
+#             lesson.owner = request.user
+#             lesson.course = course
+#             lesson.position = position
+#             lesson.save()
+#
+#
+#
+#         context_dict = {
+#             'course': course,
+#             'lesson': lesson
+#         }
+#
+#         return redirect(reverse('question:question_list',
+#                                 kwargs={'course_slug': course.slug,
+#                                         'lesson_slug': lesson.slug}))
+#
+#     if request.method == 'GET':
+#
+#         form = CreateLessonForm()
+#
+#         context_dict = {
+#             'form': form,
+#             'course': course
+#         }
+#
+#         return render(request, 'question/createLesson.html', context_dict)
 
-    course = Course.objects.get(slug=course_slug)
-
-    if request.method == 'POST':
-
-        form = CreateLessonForm(request.POST)
-
-        if form.is_valid():
-
-            # get other lessons in this course
-            course_lessons = Lesson.objects.filter(course=course).order_by('position')
-
-            # work out next position available
-            if len(course_lessons) > 0:
-                position = course_lessons[len(course_lessons) - 1].position + 1
-            else:
-                position = 1
-
-            lesson = form.save(commit=False)
-            lesson.owner = request.user
-            lesson.course = course
-            lesson.position = position
-            lesson.save()
-
-
-
-        context_dict = {
-            'course': course,
-            'lesson': lesson
-        }
-
-        return redirect(reverse('question:question_list',
-                                kwargs={'course_slug': course.slug,
-                                        'lesson_slug': lesson.slug}))
-
-    if request.method == 'GET':
-
-        form = CreateLessonForm()
-
-        context_dict = {
-            'form': form,
-            'course': course
-        }
-
-        return render(request, 'question/createLesson.html', context_dict)
-
+# Lesson (container for Questions)
 class LessonView(View):
 
     def get(self, request, course_slug, lesson_slug):
@@ -288,7 +289,9 @@ class LessonView(View):
 
         return HttpResponse(course_json, content_type='application/json')
 
-
+# Question
+#
+# Shows question descriptive information and initial source files/code
 class QuestionView(View):
 
     def get(self, request, question_slug, lesson_slug, course_slug):
@@ -520,7 +523,7 @@ def submit_to_API(API_dict):
 
             return json_return_object
 
-
+# Editor page to allow new questions to be created and stored
 class UploadView(View):
 
     @method_decorator(login_required)
@@ -860,7 +863,7 @@ def markdown_ajax(request):
         return HttpResponse(converted)
 
 
-# function to move question up one place in the
+# function to move question position within a course (via AJAX)
 @transaction.atomic
 def move_question_ajax(request, course_slug, lesson_slug, question_slug, direction):
 
@@ -917,6 +920,7 @@ def move_question_ajax(request, course_slug, lesson_slug, question_slug, directi
         return HttpResponse(lesson_json, content_type="application/json")
 
 
+# function to move lesson position within a course (via AJAX)
 def move_lesson_ajax(request, course_slug, lesson_slug, direction):
 
     if request.method == 'GET':
@@ -971,6 +975,7 @@ def move_lesson_ajax(request, course_slug, lesson_slug, direction):
         return HttpResponse(course_json, content_type='application/json')
 
 
+# function to create a user profile
 @login_required
 def create_profile(request):
     user_profile = UserProfile.objects.get_or_create(user=request.user)
@@ -978,6 +983,7 @@ def create_profile(request):
     return redirect("/")
 
 
+# User profile
 class ProfileView(View):
 
     def get(self, request, username):
@@ -1010,6 +1016,7 @@ class ProfileView(View):
         return render(request, 'question/profile.html', context_dict)
 
 
+# function to update profile bio
 @login_required
 def update_profile(request):
 
@@ -1030,6 +1037,7 @@ def update_profile(request):
         return HttpResponse(converted)
 
 
+# Bookmarks page
 class BookmarksView(View):
 
     @method_decorator(login_required)
@@ -1043,7 +1051,7 @@ class BookmarksView(View):
         return render(request, "question/bookmarks.html", context_dict)
 
 
-# bookmark a question for current user
+# bookmark a question for current user (via AJAX)
 def bookmark_ajax(request, question_slug, lesson_slug, course_slug):
 
     # get question

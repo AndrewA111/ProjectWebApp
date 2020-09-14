@@ -1,10 +1,9 @@
 $(document).ready(function(){
 
+    // on arrow button click, change order of questions appropriately
     $(document).on("click", ".arrow", function(){
-//    $(".upArrow").click(function(){
 
         // set direction
-
         var direction = "up";
 
         if($(this).hasClass("downArrow")){
@@ -46,6 +45,7 @@ $(document).ready(function(){
 
     })
 
+    // on delete button click delete associate question
     $(document).on("click", ".deleteButton", function(){
 
         // get slug data from template variables
@@ -91,12 +91,7 @@ $(document).ready(function(){
                     // remove last row
                     $($("#question-0").parent().parent().parent()).remove();
                 }
-
-
             }
         });
     });
-
-
-
 });

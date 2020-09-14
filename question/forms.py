@@ -18,7 +18,7 @@ class CreateCourseForm(forms.ModelForm):
 
         exclude = ('owner', 'slug')
 
-
+# Form for creating a new lesson
 class CreateLessonForm(forms.ModelForm):
 
     # lesson name
@@ -58,6 +58,7 @@ class UploadFileForm(forms.Form):
     contents = forms.CharField(widget=forms.Textarea(), required=False)
 
 
+# Form for uploading question information
 class UploadForm(forms.Form):
 
     question_name = forms.CharField(max_length=32);
@@ -67,6 +68,7 @@ class UploadForm(forms.Form):
     test_file = forms.CharField(widget=forms.Textarea, required=False)
 
 
+# Form for creating new profile
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
 
@@ -75,6 +77,7 @@ class UserForm(forms.ModelForm):
         fields = ('username', 'email', 'password',)
 
 
+# Form for creating user profile
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile

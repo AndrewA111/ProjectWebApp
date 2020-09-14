@@ -15,8 +15,8 @@ urlpatterns = [
     # --- to be converted ---
     # path('courses/<slug:course_slug>/<slug:lesson_slug>/<slug:question_slug>/ajax/',
     #      views.question_ajax, name='question_ajax'),
-    path('courses/create_course/', views.create_course, name='create_course'),
-    path('courses/<slug:course_slug>/create_lesson/', views.create_lesson, name='create_lesson'),
+    # path('courses/create_course/', views.create_course, name='create_course'),
+    # path('courses/<slug:course_slug>/create_lesson/', views.create_lesson, name='create_lesson'),
 
     # Content ordering
     path('courses/<slug:course_slug>/<slug:lesson_slug>/move/<str:direction>/',
