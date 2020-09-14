@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+    // submit
     $("#ajaxSubmit").click(function(){
 
         $("#ajaxSubmit").hide();
@@ -136,22 +137,6 @@ $(document).ready(function(){
                         if(!anyFailures){
                             $("#completedBadge").show();
                         }
-
-//                        if(results.summaryCode == 0){
-//                        // popup text
-//                            $("#messagePopupTitle").text("Solved.");
-//                            $("#messagePopupText").text("Question has now been verified.");
-//                            $("#messagePopup").show();
-//                            $("#spinner").hide();
-////                                alert("Upload solved.");
-//                        }
-//                        else{
-//                            $("#messagePopupTitle").text("Unsuccessful.");
-//                            $("#messagePopupText").text("Solution must pass all tests to verify question.");
-//                            $("#messagePopup").show();
-//                            $("#spinner").hide();
-//                            $('#solve').show();
-//                        }
                     } catch(e){
                         // output could not be parsed and displayed
                         console.log("Error loading output JSON")
@@ -160,17 +145,17 @@ $(document).ready(function(){
                     $('#ajaxSubmit').show();
                 }
             }
-
         })
     });
 
+    // file tab highlight
      $(".tab").hover(function(){
         $(this).addClass('highlightGray');
      }, function(){
         $(this).removeClass('highlightGray');
      });
 
-    // when a tab is clicked
+    // when a tab is clicked, access that file in editor
     $(".tab").click(function(){
 
         // get the target text area
@@ -192,15 +177,15 @@ $(document).ready(function(){
 
     });
 
-    // when a 'hint' button is clicked
+    // when a 'hint' button is clicked toggle hint
     $(document).on("click", ".hintButton", function(){
-
         $($(this).parent().parent().parent().parent().parent().find(".hint")[0]).toggle(500);
 
     });
 
     // -- bookmark functionality --
 
+    // bookmark question
     $(".bookmark").click(function(){
 
          // get slug data from template variables
@@ -221,10 +206,10 @@ $(document).ready(function(){
                 $(".bookmark").hide();
                 $(".unbookmark").show();
             }
-
         });
     });
 
+    // remove bookmark from question
     $(".unbookmark").click(function(){
 
          // get slug data from template variables
@@ -245,8 +230,6 @@ $(document).ready(function(){
                 $(".unbookmark").hide();
                 $(".bookmark").show();
             }
-
         });
     });
-
 });

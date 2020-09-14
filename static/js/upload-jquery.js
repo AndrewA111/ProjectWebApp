@@ -185,10 +185,12 @@ $(document).ready(function(){
 
     })
 
+    // hide popup message
     $("#closeMessagePopup").click(function(){
         $("#messagePopup").hide();
     })
 
+    // solve newly uploaded question (to verify)
     $("#solve").click(function(){
 
         $("#solve").hide();
@@ -594,10 +596,6 @@ $(document).ready(function(){
 
     // when a 'hint' button is clicked
     $(document).on("click", ".hintButton", function(){
-
         $($(this).parent().parent().parent().parent().parent().find(".hint")[0]).toggle(500);
-
     });
-
-
 });

@@ -1,11 +1,11 @@
 $(document).ready(function(){
 
-    // when edit bio button clicked
+    // when edit bio button clicked, show inputs
     $(document).on("click", "#editBioButton", function(){
         $("#bioEditDiv").toggle(500);
     });
 
-    // when submit bio button clicked
+    // submit bio
     $(document).on("click", "#submitBio", function(){
 
         var text = $("#bioTextarea").val();
@@ -28,7 +28,4 @@ $(document).ready(function(){
             }
         })
     });
-
-
-
 });
