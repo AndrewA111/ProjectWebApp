@@ -6,11 +6,8 @@
 {% block link_block %}
 <!--- Boostrap --->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
 <link rel="stylesheet" type="text/css" href="{% static 'css/upload.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/sharedStyles.css' %}">
-
-
 <!--    Codemirror-->
 <link rel="stylesheet" type="text/css" href="{% static 'css/codemirror.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/question.css' %}">
@@ -28,13 +25,14 @@
         <div class="row h-100">
 
 <!--            column containing question description-->
-
             <div class="col-md-3 bg-secondary text-white border border-white rounded-lg h-100 overflow-auto autoOverflow">
                 <div class="row">
                     <div class="col-md-9">
                         <a href="/question/courses/{{ course.slug }}"><h3 class="mt-3"> {{ question.lesson.course.name }}</h3></a>
                     </div>
                     <div class="col-md-3">
+
+<!--                        bookmark button-->
                         {% if is_bookmarked %}
                             <button type="button" title="Bookmark this question" class="displayNone bookmark btn btn-dark float-right mt-3 p-0">
                                 <h3 class="p-0 ml-1 mr-1 mb-1 mt-0">
@@ -80,10 +78,12 @@
                     </div>
                 </div>
 
+<!--                description, rendered from Markdown-->
                 {{ question.description | markdownify }}
 
                 <hr/>
                 <h5 class="mb-3">Files</h5>
+
                 <!--                        tabs-->
                 <div class="row mb-5">
                     {% for file_form in file_formset %}
@@ -93,7 +93,7 @@
 
             </div>
 
-<!--                column containing interactive section-->
+<!--                form section containing editor, results and buttons-->
             <form id="submission_form"
                   method="post"
                   action="/question/courses/{{ question.lesson.course.slug}}/{{ question.lesson.slug }}/{{ question.slug }}/"
@@ -102,7 +102,8 @@
 <!--            <div >-->
                     {% csrf_token %}
                     {{ file_formset.management_form }}
-                    <!--                Input and output row-->
+
+<!--                editor and results row-->
                 <div class="row inputAreaHeight">
 
 <!--                    input col-->
@@ -131,17 +132,20 @@
                             </div>
                         </div>
                     </div>
-<!--                    output col -->
+
+<!--                    results col -->
                     <div class="col-md-5 bg-secondary text-white border border-white rounded-lg h-100 overflow-auto">
                         <h4 class="mt-1">Test Results</h4></br>
 
+<!--                        errors-->
                         <h5 class="testErrors displayNone">Errors</h5>
                         <pre id="errorText" class="testErrors displayNone testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1" style="overflow-x: auto;"> - space for errors - </pre>
 
+<!--                        test results-->
                         <h5 class="testOutput displayNone">Output</h5>
                         <div id="output" class="testOutput displayNone"></div>
 
-<!--                        hidden elements for displaying test results -->
+<!--                        hidden templates for cloning to display test results -->
                         <div id="hiddenTemplates" class="displayNone">
 
                             <div id="testTemplate" class="testBoxColor text-dark rounded ml-1 pl-1 mt-1 pt-1 mb-3 pb-1 mr-1 pr-1">
@@ -175,7 +179,7 @@
                 </div>
 
 
-<!--                Submission button row-->
+<!--                'Submission' & 'Next' button row-->
             <div class="submitHeight">
                 <div class="row">
                     <div class="col-md-7 pt-1">
@@ -193,22 +197,12 @@
                             <a href="/question/courses/{{ course.slug }}" class="btn btn-dark float-right m-2">Next</a>
                         {% endif %}
                     </div>
-
                 </div>
             </div>
-
-
 <!--            </div>-->
             </form>
-
         </div>
-
-
     </div>
-
-
-
-<!--    - js CDNs- -->
 
 <!--    - JQuery - -->
     <script src="https://code.jquery.com/jquery-3.5.1.js"

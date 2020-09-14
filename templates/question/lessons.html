@@ -14,12 +14,17 @@
 {% block body_block %}
     <div class="container-fluid h-100">
             <div class="row h-100">
+
+<!--                empty left margin-->
                 <div class="col-md-1 h-100 gutterColor">
                 </div>
-                <div class="col-md-10 bg-secondary text-white h-100">
 
+<!--                main container column-->
+                <div class="col-md-10 bg-secondary text-white h-100">
                     <div class="row">
                         <div class="col-md-12">
+
+<!--                            course details-->
                             <div class="border-bottom">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -29,39 +34,34 @@
                                         <h6 class="float-right mt-4 mr-3">Author: <a href="/question/profile/{{ course.owner.username }}">{{ course.owner }}</a></h6>
                                     </div>
                                 </div>
-
                             </div>
 
+<!--                                if owner, show create-lesson form-->
+                            {% if perms.question.can_create and course.owner == user %}
                             <div class="border-bottom pb-4">
-                                {% if perms.question.can_create and course.owner == user %}
                                 <br/>
-<!--                                <p class="ml-2"><a href="/question/courses/{{ course.slug }}/create_lesson">Create new lesson</a></p>-->
-
                                 <h5>Create new lesson:</h5>
+                                <div class="pt-2">
+                                    <div class="m-2">Lesson name:</div>
+                                    <form class="ml-2" id="course_form" method="post" action="/question/courses/{{ course.slug}}/">
+                                        {% csrf_token %}
+                                        {% for hidden in form.hidden_fields %}
+                                            {{ hidden }}
+                                        {% endfor %}
 
-                                    <div class="pt-2">
-                                        <div class="m-2">Lesson name:</div>
-                                        <form class="ml-2" id="course_form" method="post" action="/question/courses/{{ course.slug}}/">
-                                            {% csrf_token %}
-                                            {% for hidden in form.hidden_fields %}
-                                                {{ hidden }}
-                                            {% endfor %}
-
-                                            {% for field in form.visible_fields %}
-                                                {{ field.errors }}
-                                                {{ field }}
-                                                <br/><br/>
-                                            {% endfor %}
-                                            <input class="btn btn-dark" type="submit" name="submit" value="Create Lesson" />
-                                        </form>
-                                    </div>
-                            {% endif %}
+                                        {% for field in form.visible_fields %}
+                                            {{ field.errors }}
+                                            {{ field }}
+                                            <br/><br/>
+                                        {% endfor %}
+                                        <input class="btn btn-dark" type="submit" name="submit" value="Create Lesson" />
+                                    </form>
+                                </div>
                             </div>
+                            {% endif %}
 
-
-
+<!--                            show list of lessons in course-->
                             <h5 class="mt-3 mb-3">All Lessons:</h5>
-
                             {% for lesson in lessons %}
                             <div class="row">
                                 <div class="col-md-4 bg-dark ml-3 mb-3 align-middle rounded">
@@ -73,30 +73,27 @@
                                        </p>
                                     </div>
                                 </div>
+
+<!--                                buttons to rearrange and delete (visible to owner only)-->
                                 <div class="col-md-4">
                                     {% if perms.question.can_create and course.owner == user %}
                                     <div class="btn-group mr-2" role="group" aria-label="First group">
                                         <button type="button" class="arrow upArrow btn btn-dark"><h4 class="p-0 m-0">&uarr;</h4></button>
                                         <button type="button" class="arrow downArrow btn btn-dark"><h4 class="p-0 m-0">&darr;</h4></button>
-
                                     </div>
                                     <button type="button" class="deleteButton btn btn-danger" data-token="{{ csrf_token }}">Delete</button>
                                     {% endif %}
                                 </div>
                             </div>
-
                             {% endfor %}
                         </div>
-
                     </div>
-
-
-
                 </div>
+
+<!--                empty right margin-->
                 <div class="col-md-1 h-100 gutterColor">
                 </div>
             </div>
-
         </div>
 
 <!--    - JQuery - -->

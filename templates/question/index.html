@@ -1,99 +1,98 @@
-<!DOCTYPE html>
 {% extends 'question/base.html' %}
 {% load staticfiles %}
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% block link_block %}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/upload.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/sharedStyles.css' %}">
 
-    {% endblock %}
+{% block link_block %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/upload.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/sharedStyles.css' %}">
+{% endblock %}
 
-    {% block title_block %}
-        Solvr
-    {% endblock %}
-</head>
-<body>
-    {% block body_block %}
-        <div class="container-fluid h-100">
-            <div class="row h-100">
-                <div class="col-md-1 h-100 gutterColor">
+{% block title_block %}
+    Solvr
+{% endblock %}
+
+{% block body_block %}
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+
+<!--                empty left margin-->
+            <div class="col-md-1 h-100 gutterColor">
+            </div>
+
+<!--                main container column-->
+            <div class="col-md-10 bg-secondary text-white h-100">
+                <div class="mt-3 mb-3 border-bottom">
+                    <h3 class="mb-3">Solvr</h3>
+                    <h6 class="mb-3">Coding tutorial platform</h6>
                 </div>
-                <div class="col-md-10 bg-secondary text-white h-100">
-                    <div class="mt-3 mb-3 border-bottom">
-                        <h3 class="mb-3">Solvr</h3>
-                        <h6 class="mb-3">Coding tutorial platform</h6>
-<!--                        <hr/>-->
+
+
+                <div class="row pt-3">
+                    <div class="col-md-4 border-right border-white">
+
+<!--                            list 5 courses most recently added to site-->
+                        <h4 class="mb-3">Recently Added Courses</h4>
+                        {% for course in courses %}
+                            <div class="col-md-12 bg-dark mb-3 align-middle rounded">
+                                <div class="row">
+                                    <p class="ml-2 mt-2 mb-2"><a href="/question/courses/{{ course.slug }}/">{{ course.name }}</a></p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <br/>
+                        <p ><a href="/question/courses">View all courses</a></p>
                     </div>
 
+<!--                        if signed in-->
+                    {% if user.is_authenticated %}
 
-                    <div class="row pt-3">
+<!--                            list 5 most recent lessons this user has completed a question on-->
                         <div class="col-md-4 border-right border-white">
-                            <h4 class="mb-3">Recently Added Courses</h4>
-
-                            {% for course in courses %}
-                                <div class="col-md-12 bg-dark mb-3 align-middle rounded">
-                                    <div class="row">
-                                        <p class="ml-2 mt-2 mb-2"><a href="/question/courses/{{ course.slug }}/">{{ course.name }}</a></p>
-                                    </div>
+                            <h4 class="mb-3">Your Recent Lessons</h4>
+                            {% for lesson in lessons %}
+                            <div class="col-md-12 bg-dark mb-3 align-middle rounded">
+                                <div class="row">
+                                    <p class="ml-2 mt-2 mb-2"><a href="/question/courses/{{ lesson.course.slug }}/{{ lesson.slug }}">{{ lesson.name }}</a></p>
                                 </div>
+                            </div>
                             {% endfor %}
-
-                            <br/>
-                            <p ><a href="/question/courses">View all courses</a></p>
-
                         </div>
-                        {% if user.is_authenticated %}
-                            <div class="col-md-4 border-right border-white">
-                                 <h4 class="mb-3">Your Recent Lessons</h4>
-                                {% for lesson in lessons %}
-<!--                                    <p class="ml-2"><a href="/question/courses/{{ question.lesson.course.slug}}/{{ question.lesson.slug }}/{{ question.slug }}">{{ question.name }}</a></p>-->
 
-                                <div class="col-md-12 bg-dark mb-3 align-middle rounded">
-                                    <div class="row">
-                                        <p class="ml-2 mt-2 mb-2"><a href="/question/courses/{{ lesson.course.slug }}/{{ lesson.slug }}">{{ lesson.name }}</a></p>
+<!--                            list 5 most recently bookmarked questions-->
+                        <div class="col-md-4">
+                            <h4 class="mb-3">Recently Bookmarked</h4>
+                            {% if bookmark_list %}
+                                {% for bookmark in bookmark_list %}
+                                    <div class="col-md-12 bg-dark mb-3 align-middle rounded">
+                                        <div class="row">
+                                            <p class="ml-2 mt-2 mb-2">
+                                                <a href="/question/courses/{{ bookmark.question.lesson.course.slug }}/{{ bookmark.question.lesson.slug }}/{{ bookmark.question.slug }}">{{ bookmark.question.name }}</a>
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
                                 {% endfor %}
 
-                            </div>
-                            <div class="col-md-4">
-                                <h4 class="mb-3">Recently Bookmarked</h4>
-                                {% if bookmark_list %}
-                                    {% for bookmark in bookmark_list %}
-                                        <div class="col-md-12 bg-dark mb-3 align-middle rounded">
-                                            <div class="row">
-                                                <p class="ml-2 mt-2 mb-2">
-                                                    <a href="/question/courses/{{ bookmark.question.lesson.course.slug }}/{{ bookmark.question.lesson.slug }}/{{ bookmark.question.slug }}">{{ bookmark.question.name }}</a>
-                                                </p>
-                                            </div>
-                                        </div>
+<!--                                if no bookmarks, prompt user to bookmark pages-->
+                            {% else %}
+                                <p>Bookmark pages to come back to them later.</p>
+                            {% endif %}
+                        </div>
 
-                                    {% endfor %}
-                                {% else %}
-                                    <p>Bookmark pages to come back to them later.</p>
-                                {% endif %}
-                            </div>
-                        {% else %}
-                            <div class="col-md-8 border-right border-white">
-                                <h4 class="mb-3">Sign in to track your progress</h4>
-                                <p>Sign up for an account record your solutions and bookmark questions</p>
-                            </div>
-                        {% endif %}
-
-                    </div>
-
-
-
-                </div>
-                <div class="col-md-1 h-100 gutterColor">
+<!--                        if not authenticated, prompt to sign up for an account-->
+                    {% else %}
+                        <div class="col-md-8 border-right border-white">
+                            <h4 class="mb-3">Sign in to track your progress</h4>
+                            <p>Sign up for an account record your solutions and bookmark questions</p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 
+<!--                empty right margin-->
+            <div class="col-md-1 h-100 gutterColor">
+            </div>
         </div>
-    {% endblock %}
-</body>
-</html>
+
+    </div>
+{% endblock %}

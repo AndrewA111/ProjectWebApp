@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 {% load staticfiles %}
 
+
+<!--base template containing navbar, used as base tempalte for all other pages-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,6 +10,7 @@
      <!--- Boostrap --->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
+<!--    block for sub-pages to include their own css sheets-->
     {% block link_block %}
 
     {% endblock %}
@@ -20,6 +23,8 @@
 </head>
 <body>
     <div class="fill100 displayFlex">
+
+<!--        navbar-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
           <a class="navbar-brand ml-1" href="/">
             <img src="/static/images/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
@@ -30,7 +35,6 @@
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto ml-1">
               <li class="nav-item active">
@@ -42,21 +46,9 @@
               <li class="nav-item active">
                 <a class="nav-link" href="/question/bookmarks/">Bookmarks <span class="sr-only">(current)</span></a>
               </li>
-<!--              <li class="nav-item dropdown">-->
-<!--                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-<!--                  Questions-->
-<!--                </a>-->
-<!--                <div class="dropdown-menu" aria-labelledby="navbarDropdown">-->
-<!--                  <a class="dropdown-item" href="#">Question 1</a>-->
-<!--                  <a class="dropdown-item" href="#">Question 2</a>-->
-<!--                  <a class="dropdown-item" href="#">Question 3</a>-->
-<!--                </div>-->
-<!--              </li>-->
-
-
-
             </ul>
 
+<!--              login-->
               {% if user.is_authenticated %}
                 <ul class="navbar-nav mr-5">
                     <li class="nav-item active">
@@ -66,6 +58,8 @@
                         <a class="nav-link" href="{% url 'auth_logout' %}?next={% url 'index' %}">Logout</a>
                     </li>
                 </ul>
+
+<!--              if not logged in, give option to login or register-->
               {% else %}
                 <ul class="navbar-nav mr-5">
                     <li class="nav-item active">
@@ -76,26 +70,22 @@
                     </li>
                 </ul>
                 {% endif %}
-<!--            <form class="form-inline my-2 my-lg-0">-->
-<!--              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
-<!--              <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>-->
-<!--            </form>-->
-
-
           </div>
         </nav>
 
+<!--        block for containing sub-page elements-->
         <div class="heightMinusNav">
             {% block body_block %}
             {% endblock %}
         </div>
     </div>
 
+<!--    jquery js-->
         <script src="https://code.jquery.com/jquery-3.5.1.js"
       integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
       crossorigin="anonymous">></script>
 
-    <!--    - Boostrap - -->
+<!--    Boostrap js-->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
 </body>

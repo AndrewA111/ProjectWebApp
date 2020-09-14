@@ -13,19 +13,24 @@
 
 <div class="container-fluid h-100">
             <div class="row h-100">
+
+<!--                empty left margin-->
                 <div class="col-md-1 h-100 gutterColor">
                 </div>
+
+<!--                main container column-->
                 <div class="col-md-10 bg-secondary text-white h-100">
                     <h1 class="mt-2 mb-4">Register Here</h1>
 
+<!--                    registration form-->
                     <form method="post" action=".">
                         {% csrf_token %}
-
                         {{ form.as_p }}
-
                         <input class="mt-2 mb-2 btn btn-dark" type="submit" value="Register" />
                     </form>
                 </div>
+
+<!--                empty right margin-->
                 <div class="col-md-1 h-100 gutterColor">
                 </div>
             </div>
