@@ -995,7 +995,7 @@ class ProfileView(View):
 
         user_profile = UserProfile.objects.get_or_create(user=user)[0]
 
-        user_courses = Course.objects.filter(owner=request.user)
+        user_courses = Course.objects.filter(owner=user)
 
         # get recent submissions
         submissions = Submission.objects.filter(owner=user).order_by('-created')[:5]
