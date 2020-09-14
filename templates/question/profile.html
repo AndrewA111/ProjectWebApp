@@ -73,6 +73,7 @@
                 </div>
 
 <!--                list any course published by user-->
+                {% if perms.question.can_create %}
                 <div class="col-md-6 bg-secondary text-white pl-3 border-left">
                     <div class="mb-3"><h4>Published Courses:</h4></div>
                     {% for course in user_courses %}
@@ -83,6 +84,7 @@
                         </div>
                     {% endfor %}
                 </div>
+                {% endif %}
             </div>
         </div>
 
