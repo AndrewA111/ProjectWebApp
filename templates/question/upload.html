@@ -75,12 +75,21 @@
                 {% for form in upload_file_formset %}
                     {% if not forloop.first %}
                         <div id="tab{{ forloop.counter0 }}" class="row">
-                            <div class="tab tabBox col-md-6 p-2 border border-white rounded-lg" data-no="{{ forloop.counter0 }}">
-                                <div class="sameLine">
-                                    <p class=noMargin id="tab{{ forloop.counter0 }}text">{{ form.name.value|default_if_none:'' }}</p>
 
+<!--                            highlight first tab only-->
+                            {% if forloop.counter0 == 1 %}
+                                <div style="background-color: #424242" class="tab tabBox col-md-6 p-2 border border-white rounded-lg" data-no="{{ forloop.counter0 }}">
+                                    <div class="sameLine">
+                                        <p class=noMargin id="tab{{ forloop.counter0 }}text">{{ form.name.value|default_if_none:'' }}</p>
+                                    </div>
                                 </div>
-                            </div>
+                            {% else %}
+                                <div class="tab tabBox col-md-6 p-2 border border-white rounded-lg" data-no="{{ forloop.counter0 }}">
+                                    <div class="sameLine">
+                                        <p class=noMargin id="tab{{ forloop.counter0 }}text">{{ form.name.value|default_if_none:'' }}</p>
+                                    </div>
+                                </div>
+                            {% endif %}
                             <div class="col-md-6">
                                 <p class="noMargin"> &nbsp
                                         <a href="#" id="tab{{ forloop.counter0 }}Edit"
