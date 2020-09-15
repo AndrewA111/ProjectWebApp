@@ -195,6 +195,22 @@ class CourseView(View):
                                 kwargs={'course_slug': course.slug,
                                         'lesson_slug': lesson.slug}))
 
+    def delete(self, request, course_slug):
+
+        # get course object from database
+        course_obj = Course.objects.get(slug=course_slug)
+
+        # delete course
+        course_obj.delete()
+
+        # get updated list of courses
+        courses_updated = Course.objects.filter(owner=request.user)
+
+        # convert to json
+        courses_json = serializers.serialize('json', courses_updated)
+
+        # return response
+        return HttpResponse(courses_json, content_type='application/json')
 
 # def create_lesson(request, course_slug):
 #
