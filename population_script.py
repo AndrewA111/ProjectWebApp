@@ -177,6 +177,8 @@ def getFolderNames(parentDir):
     for file in os.listdir(parentDir):
         dirList.append(file)
 
+    dirList.sort()
+
     return dirList
 
 

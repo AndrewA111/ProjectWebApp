@@ -21,9 +21,9 @@ import requests
 
 # URL to submit questions
 # API_URL = "http://192.168.56.103:8080/java/submit"
-API_URL = "http://192.168.0.17:8080/java/submit"
+# API_URL = "http://192.168.0.17:8080/java/submit"
 # API_URL = "http://localhost:8080/java/submit"
-# API_URL = "http://0.0.0.0:8080/java/submit"
+API_URL = "http://0.0.0.0:8080/java/submit"
 
 # Homepage
 class IndexView(View):
