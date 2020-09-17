@@ -23,6 +23,7 @@ import requests
 # API_URL = "http://192.168.56.103:8080/java/submit"
 API_URL = "http://192.168.0.17:8080/java/submit"
 # API_URL = "http://localhost:8080/java/submit"
+# API_URL = "http://0.0.0.0:8080/java/submit"
 
 # Homepage
 class IndexView(View):
@@ -195,6 +196,22 @@ class CourseView(View):
                                 kwargs={'course_slug': course.slug,
                                         'lesson_slug': lesson.slug}))
 
+    def delete(self, request, course_slug):
+
+        # get course object from database
+        course_obj = Course.objects.get(slug=course_slug)
+
+        # delete course
+        course_obj.delete()
+
+        # get updated list of courses
+        courses_updated = Course.objects.filter(owner=request.user)
+
+        # convert to json
+        courses_json = serializers.serialize('json', courses_updated)
+
+        # return response
+        return HttpResponse(courses_json, content_type='application/json')
 
 # def create_lesson(request, course_slug):
 #
@@ -332,9 +349,13 @@ class QuestionView(View):
 
         formset_context = SubmissionFileFormSet(initial=formset_data)
 
+        # set solved to false by default
+        has_solved = False
+
         # check if user has solved question already
-        has_solved = Submission.objects.filter(question=question_obj,
-                                               owner=request.user).exists()
+        if request.user.is_authenticated:
+            has_solved = Submission.objects.filter(question=question_obj,
+                                                   owner=request.user).exists()
 
         # create context dict to pass to template
         context_dict = {
@@ -401,31 +422,32 @@ class QuestionView(View):
         # if all tests pass, create submission to store
         if json_return_object['summaryCode'] == 0:
 
-            # remove any existing submissions
-            existing_submissions = Submission.objects.filter(owner=request.user,
-                                                             question=question_obj)
+            if request.user.is_authenticated:
+                # remove any existing submissions
+                existing_submissions = Submission.objects.filter(owner=request.user,
+                                                                 question=question_obj)
 
-            # remove any files associated with existing submissions
-            for sub in existing_submissions:
-                existing_submission_files = SubmissionFile.objects.filter(submission=sub)
-                existing_submission_files.delete()
+                # remove any files associated with existing submissions
+                for sub in existing_submissions:
+                    existing_submission_files = SubmissionFile.objects.filter(submission=sub)
+                    existing_submission_files.delete()
 
-            # remove submissions
-            existing_submissions.delete()
+                # remove submissions
+                existing_submissions.delete()
 
-            # create submission associated with question
-            submission = Submission.objects.create(question=question_obj,
-                                                   owner=request.user)
-            submission.save()
+                # create submission associated with question
+                submission = Submission.objects.create(question=question_obj,
+                                                       owner=request.user)
+                submission.save()
 
-            # create files and associate with submission
-            for file in API_dict['files']:
-                print(file)
+                # create files and associate with submission
+                for file in API_dict['files']:
+                    print(file)
 
-                submissionFile = SubmissionFile.objects.create(submission=submission,
-                                                               name=file['name'],
-                                                               contents=file['content'])
-                submissionFile.save()
+                    submissionFile = SubmissionFile.objects.create(submission=submission,
+                                                                   name=file['name'],
+                                                                   contents=file['content'])
+                    submissionFile.save()
 
         # return results
         return HttpResponse(json.dumps(json_return_object))
@@ -995,7 +1017,7 @@ class ProfileView(View):
 
         user_profile = UserProfile.objects.get_or_create(user=user)[0]
 
-        user_courses = Course.objects.filter(owner=request.user)
+        user_courses = Course.objects.filter(owner=user)
 
         # get recent submissions
         submissions = Submission.objects.filter(owner=user).order_by('-created')[:5]
@@ -1052,6 +1074,7 @@ class BookmarksView(View):
 
 
 # bookmark a question for current user (via AJAX)
+@login_required
 def bookmark_ajax(request, question_slug, lesson_slug, course_slug):
 
     # get question

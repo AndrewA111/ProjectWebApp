@@ -73,7 +73,7 @@ def populate():
                 # pprint.pprint(questionDetails)
 
                 # get description
-                description = readFile("Description.txt", questionPath)
+                description = readFile("description.txt", questionPath)
 
                 # make question
                 question = add_question(questionDir, tutor_user, lesson_obj, questionDetails['testFile']['contents'], description)

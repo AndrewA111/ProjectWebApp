@@ -87,7 +87,17 @@
                 <!--                        tabs-->
                 <div class="row mb-5">
                     {% for file_form in file_formset %}
-                    <div class="tab col-md-6 p-2 border border-white rounded-lg" data-file="textarea{{ forloop.counter }}">{{ file_form.name.value }}</div>
+
+<!--                        highlight first tab only-->
+                        {% if forloop.counter == 1 %}
+                            <div style="background-color: #424242" class="tab col-md-6 p-2 border border-white rounded-lg" data-file="textarea{{ forloop.counter }}">
+                                {{ file_form.name.value }}
+                            </div>
+                        {% else %}
+                            <div class="tab col-md-6 p-2 border border-white rounded-lg" data-file="textarea{{ forloop.counter }}">
+                                {{ file_form.name.value }}
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
 
