@@ -5,7 +5,7 @@ import org.junit.Test;
 public class Tests {
 
     @TestDescription (value = "Check that addition works")
-    @TestHint (value = "+ hint")
+    @TestHint (value = "Return value should be a + b")
 	@Test
 	public void addTest() {
 		assertEquals("1 + 2 = 3", Calculator.add(1, 2), 3);
@@ -13,6 +13,7 @@ public class Tests {
 	}
 
 	@TestDescription (value = "Check subtraction works")
+    @TestHint (value = "Return value should be a - b")
 	@Test
 	public void subtractionTest() {
 		assertEquals("2 - 1 = 1", 1, Calculator.subtract(2, 1));
