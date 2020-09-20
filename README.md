@@ -11,13 +11,19 @@ Before running this web-application, the web-serivce used to compile user code m
 
 The address of this web-service must be included at the top of `/question/views.py`, as the variable `API_URL`.
 
-### Running the application
-Download the project then navigate to the project root directory and type the following commands:
+This application has been developed using Python version 3.7.5.
 
->python manage.py makemigrations<br>
->python manage.py migrate<br>
->python population_script.py<br>
->python manage.py runserver
+### Running the application
+It is recommended that this application is run in a virtual environment. Within your virtual environment, navigate to the project root directory and enter the following command to install dependencies:
+
+`pip install -r requirements.txt` 
+
+Still in the project root directory, type the following commands:
+
+`python manage.py makemigrations`<br>
+`python manage.py migrate`<br>
+`python population_script.py`<br>
+`python manage.py runserver`
 
 The console output should provide the address where the website can be accessed.
 
