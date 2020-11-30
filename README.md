@@ -7,7 +7,7 @@ Application also allows priviledged users to upload new questions via an editor 
 ## Setup
 
 ### Pre-requisites
-Before running this web-application, the web-serivce used to compile user code must be running (see CompilerAPI).
+Before running this web-application, the web-serivce used to compile user code must be running (see [CompilerAPI](https://github.com/AndrewA111/CompilerAPI)).
 
 The address of this web-service must be included at the top of `/question/views.py`, as the variable `API_URL`.
 
